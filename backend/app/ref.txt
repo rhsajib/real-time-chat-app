@@ -1,0 +1,8 @@
+https://www.mongodb.com/developer/languages/python/farm-stack-fastapi-react-mongodb/?_ga=2.90922393.223949474.1695978290-117376634.1695978282
+https://github.com/mongodb-developer/FARM-Intro
+https://github.com/alexk1919/fastapi-motor-mongo-template
+
+
+https://www.mongodb.com/developer/languages/python/python-quickstart-fastapi/
+https://www.mongodb.com/community/forums/t/connecting-to-mongodb-atlas-using-motor/150356/4
+
