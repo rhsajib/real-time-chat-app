@@ -1,23 +1,33 @@
 from fastapi import FastAPI
-from app.database.db import mongo_client, mongo_db
-
+from app.api.v1 import user
+from app.database.db import (
+    startup_db_client,
+    shutdown_db_client,
+    db_connection_status,
+)
 
 
 app = FastAPI()
 
-# Startup event handler for MongoDB
+
+# Register the startup event handler
 @app.on_event("startup")
-async def startup_db_client():
-    app.mongodb_client = mongo_client
-    app.mongodb = mongo_db
+async def startup_event():
+    await startup_db_client(app)
+    await db_connection_status()
 
 
-# Shutdown event handler for MongoDB
+# Register the shutdown event handler
 @app.on_event("shutdown")
-async def shutdown_db_client():
-    app.mongodb_client.close()
+async def shutdown_event():
+    await shutdown_db_client(app)
 
 
-@app.get('/')
+# App root
+@app.get("/", tags=["Root"])
 async def root():
-    return({'message': 'Hello World'})
+    return {"message": "Welcome to this fantastic app!"}
+
+
+# Routers
+app.include_router(user.router, tags=["User"], prefix="/api/v1/user")
