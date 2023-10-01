@@ -1,6 +1,6 @@
 
 from datetime import datetime, timezone
-from uuid import UUID, uuid4
+from uuid import uuid4
 from passlib.context import CryptContext
 
 
@@ -13,7 +13,7 @@ def datetime_now() -> datetime:
 
 
 # Generate a random UUID
-def get_uuid4() -> UUID:
+def get_uuid4() -> str:
     return uuid4().hex
 
 

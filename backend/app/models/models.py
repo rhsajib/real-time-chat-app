@@ -1,6 +1,5 @@
 from datetime import datetime
-from uuid import UUID
-from pydantic import BaseModel, Field, EmailStr
+from pydantic import BaseModel, Field, EmailStr, root_validator
 from ..core.utils import(
     datetime_now, 
     get_uuid4
@@ -8,15 +7,31 @@ from ..core.utils import(
 
 
 class UserModel(BaseModel):
-    id: UUID = Field(default_factory=get_uuid4)
+    id: str = Field(default_factory=get_uuid4)
     first_name: str | None = Field(None, max_length=100)
     last_name: str | None = Field(None, max_length=100)
     username: str = Field(..., max_length=20)
     email: EmailStr = Field(..., max_length=50)
+    phone: str | None =Field(None, max_length=30)
     password: str = Field(...) 
     created_at: datetime = Field(default_factory=datetime_now)
     updated: datetime = Field(default_factory=datetime_now)
     active: bool = False
+
+    # add email, username validator
+
+    # @root_validator(skip_on_failure=True)
+    # def one_of_email_or_mobile_must_be_present(cls, values: dict) -> dict:
+    #     assert values["email"] != None or values["mobile"] != None, "either one of email or mobile must be present"
+    #     return values
+
+
+    # @validator("profession", pre=True)
+    # def set_default_profession(cls, val: str) -> str:
+    #     if not val:
+    #         return OTHER
+
+    #     return val.strip().lower()
 
 
 
