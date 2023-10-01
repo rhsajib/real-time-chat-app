@@ -56,20 +56,41 @@ async def db_update_user(
 ) -> user_schemas.User:
 
 
-    existing_user = await db['Users'].find_one({'id': user_id})
+    existing_user = await db_get_user(user_id, db)
 
-    print(existing_user)
+    result = await db['Users'].update_one(
+        {'id': user_id}, {'$set': updated_data.model_dump()}
+    )
 
-    if existing_user:
-        result = await db['Users'].update_one(
-            {'id': user_id}, {'$set': updated_data.model_dump()}
-        )
-
-        # Check if the update was successful
-        if result.modified_count == 1:
-            # If the update was successful, return the updated user data
-            updated_user = await db_get_user(user_id, db)
-            return updated_user
+    # Check if the update was successful
+    if result.modified_count == 1:
+        # If the update was successful, return the updated user data
+        updated_user = await db_get_user(user_id, db)
+        return updated_user
+    
         
+# Delete user from database
+async def db_delete_user(
+    user_id: str,
+    db: AsyncIOMotorDatabase
+) -> user_schemas.User:
+    
+    user = await db_get_user(user_id, db)
+    deleted_user = await db['Users'].delete_one({'id': user_id})
+    if deleted_user.deleted_count == 0:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                            detail=f'User not deleted')
+    
+    # user['_id'] deleted because
+    # MongoDB's ObjectId cannot be directly serialized to JSON.
+    # we should convert the ObjectId to a string or delete it before 
+    # returning it as part of the user object.
+    # otherwise it will cause error
+    del user['_id']
+    print('user', user)
+    return user
+
+
+
 
 
