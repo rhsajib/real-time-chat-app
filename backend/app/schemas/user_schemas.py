@@ -1,5 +1,7 @@
 from pydantic import BaseModel, EmailStr
 from datetime import datetime
+from app.schemas.chat_schemas import MessageRecipient
+
 
 class UserBase(BaseModel):
     email: EmailStr
@@ -16,7 +18,9 @@ class UserUpdate(UserBase):
 class User(UserUpdate):
     id: str
     created_at: datetime
-    updated: datetime
+    updated_at: datetime
     active: bool
+    private_message_recipients: list[MessageRecipient | None]
+    group_chat_ids: list[str | None]
 
 

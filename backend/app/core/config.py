@@ -21,7 +21,7 @@ class DatabaseSettings(BaseSettings):
     DB_NAME: str = os.environ.get('DB_NAME')
 
 class CollectionSettings(BaseSettings):
-    USER: str = os.environ.get('USER_COLLECTION')
+    USERS: str = os.environ.get('USER_COLLECTION')
     PRIVATE_CHAT: str = os.environ.get('PRIVATE_CHAT_COLLECTION')
     GROUP_CHAT: str = os.environ.get('GROUP_CHAT_COLLECTION')
 

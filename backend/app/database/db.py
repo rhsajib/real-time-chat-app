@@ -28,7 +28,7 @@ async def get_db() -> AsyncIOMotorDatabase:
 async def ping_mongodb():
     try:
         await mongo_client.admin.command('ping')
-        print("Pinged your connection. You have successfully connected to MongoDB!")
+        print("Connection status: You have successfully connected to MongoDB!")
     except Exception as e:
         print(e)
 

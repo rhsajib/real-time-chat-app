@@ -1,15 +1,16 @@
 from fastapi import status, HTTPException
 from fastapi.responses import JSONResponse
 from motor.motor_asyncio import AsyncIOMotorDatabase
+from app.core.config import settings
 from app.models.chat_models import GroupChatModel, MessageModel, MessageRecipientModel, PrivateChatModel
 from app.schemas import chat_schemas
 
 
-async def is_chat_member(user_id: str, chat_id: str, db: AsyncIOMotorDatabase) -> bool:
-    chat = get_chat(chat_id, db)
-    if user_id in chat.get('members'):
-        return True
-    return False
+# async def is_chat_member(user_id: str, chat_id: str, db: AsyncIOMotorDatabase) -> bool:
+#     chat = get_chat(chat_id, db)
+#     if user_id in chat.get('members'):
+#         return True
+#     return False
 
 
 
@@ -38,10 +39,11 @@ async def get_group_chat(chat_id: str,
 
 
 
-async def update_sent_messages_recipients(user_id, recipient, db):
-    result = await db['Users'].update_one(
+async def update_private_message_recipients(user_id, recipient, db):
+    user_collection = settings.USERS
+    result = await db[user_collection].update_one(
         {'id': user_id},
-        {'$push': {'sent_messages_recipients': recipient}}
+        {'$push': {'private_message_recipients': recipient}}
     )
     if result.matched_count == 1 and result.modified_count == 1:
         return True
@@ -60,8 +62,8 @@ async def add_chat_id_to_users(member_ids: list, chat_id: str, db: AsyncIOMotorD
     user2_recipient2 = MessageRecipientModel(
         recipient_id=recipient2, chat_id=chat_id)
 
-    update1 = await update_sent_messages_recipients(user1, user1_recipient1.model_dump(), db)
-    update2 = await update_sent_messages_recipients(user2, user2_recipient2.model_dump(), db)
+    update1 = await update_private_message_recipients(user1, user1_recipient1.model_dump(), db)
+    update2 = await update_private_message_recipients(user2, user2_recipient2.model_dump(), db)
 
     if update1 and update2:
         return True
@@ -71,20 +73,22 @@ async def add_chat_id_to_users(member_ids: list, chat_id: str, db: AsyncIOMotorD
 
 async def db_get_existing_chat(current_user_id: str,
                                recipient_id: str,
-                               db: AsyncIOMotorDatabase):
+                               db: AsyncIOMotorDatabase,
+                               collection):
     query = {
         'id': current_user_id,
-        'sent_messages_recipients.recipient_id': recipient_id
+        'private_message_recipients.recipient_id': recipient_id
     }
 
     # Retrieve the user with the matching query
-    user = await db['Users'].find_one(query)
+    user_collection = settings.USERS
+    user = await db[user_collection].find_one(query)
 
     if user:
-        for recipients in user['sent_messages_recipients']:
+        for recipients in user['private_message_recipients']:
             if recipients['recipient_id'] == recipient_id:
                 chat_id = recipients['chat_id']
-                chat = await get_chat(chat_id, db)
+                chat = await get_chat(chat_id, db, collection)
                 return chat
 
     return []
@@ -94,19 +98,20 @@ async def db_get_existing_chat(current_user_id: str,
 
 async def db_create_private_chat(current_user_id: str,
                                  recipient_id: str,
-                                 db: AsyncIOMotorDatabase):
+                                 db: AsyncIOMotorDatabase,
+                                 collection: str):
 
     member_ids = [current_user_id, recipient_id]
     serialized_chat = PrivateChatModel(member_ids=member_ids)
 
-    result = await db['PrivateChat'].insert_one(serialized_chat.model_dump())
+    result = await db[collection].insert_one(serialized_chat.model_dump())
 
     if result.acknowledged:
-        # add chat_id to member's sent_messages_recipients field
+        # add chat_id to member's private_message_recipients field
         added = await add_chat_id_to_users(member_ids, serialized_chat.chat_id, db)
 
         if added:
-            created_chat = await get_chat(serialized_chat.chat_id, db)
+            created_chat = await get_chat(serialized_chat.chat_id, db, collection)
             # print('created_chat', created_chat)
             return created_chat
 
@@ -134,9 +139,10 @@ async def add_group_chat_id_to_users(chat_id: str,
 
 
 async def db_create_group_chat(group_data: chat_schemas.GroupChatCreate,
-                               db: AsyncIOMotorDatabase):
+                               db: AsyncIOMotorDatabase,
+                               collection):
     serialized_chat = GroupChatModel(**group_data.model_dump())
-    result = await db['GroupChat'].insert_one(serialized_chat.model_dump())
+    result = await db[collection].insert_one(serialized_chat.model_dump())
 
     if result.acknowledged:
         # add chat_id to every member's group_chat_ids
@@ -162,10 +168,15 @@ async def db_create_message(current_user_id: str,
                             message: str,
                             db: AsyncIOMotorDatabase,
                             collection: str):
+    
+    chat = await get_chat(chat_id, db, collection)
+
+    if current_user_id not in chat.get('member_ids'):
+        return JSONResponse(content={'message': 'message was not sent'})
 
     serialized_message = MessageModel(user_id=current_user_id, message=message)
-    print(serialized_message)
-    print(serialized_message.model_dump())
+    # print(serialized_message)
+    # print(serialized_message.model_dump())
     result = await db[collection].update_one(
         {'chat_id': chat_id},
         {'$push': {'messages': serialized_message.model_dump()}}

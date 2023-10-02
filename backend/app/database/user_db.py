@@ -1,4 +1,5 @@
 
+from app.serializers import serializers
 from app.models.user_models import UserModel
 from fastapi import status, HTTPException
 from app.schemas import user_schemas
@@ -7,13 +8,13 @@ from app.exceptions.exceptions import UserCreationError
 from app.core.config import settings
 
 
-user_collection = settings.USER
+user_collection = settings.USERS
 
 
 # Get a user from database
 async def db_get_user(
     user_id: str,
-    db: AsyncIOMotorDatabase) -> user_schemas.User:
+    db: AsyncIOMotorDatabase):
 
     user = await db[user_collection].find_one({'id': user_id})
     if not user:
@@ -23,10 +24,29 @@ async def db_get_user(
     return user
 
 
+
+
+# Get all user from database
+async def db_get_all_user(db: AsyncIOMotorDatabase):
+    cursor = db[user_collection].find({})
+    users = await cursor.to_list(length=None)  # to_list to retrieve the documents as a list
+
+    serialized_users = []
+    for user in users:
+        serialized_user = serializers.user_serializer(user)
+        serialized_users.append(serialized_user)
+
+    # print('serialized_users', serialized_users)
+    return serialized_users
+
+
+
+
+
 # Create a new user in database
 async def db_create_user(
     user: user_schemas.UserCreate,
-    db: AsyncIOMotorDatabase) -> user_schemas.User:
+    db: AsyncIOMotorDatabase):
     
     try:
         new_user = UserModel(**user.model_dump())
@@ -54,7 +74,7 @@ async def db_create_user(
 async def db_update_user(
     user_id: str,
     updated_data: user_schemas.UserUpdate,
-    db: AsyncIOMotorDatabase) -> user_schemas.User:
+    db: AsyncIOMotorDatabase):
 
 
     existing_user = await db_get_user(user_id, db)
@@ -73,7 +93,7 @@ async def db_update_user(
 # Delete user from database
 async def db_delete_user(
     user_id: str,
-    db: AsyncIOMotorDatabase) -> user_schemas.User:
+    db: AsyncIOMotorDatabase):
     
     user = await db_get_user(user_id, db)
     deleted_user = await db[user_collection].delete_one({'id': user_id})

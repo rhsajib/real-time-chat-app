@@ -17,7 +17,7 @@ class UserModel(BaseModel):
     phone: str | None =Field(None, max_length=30)
     password: str = Field(...) 
     created_at: datetime = Field(default_factory=datetime_now)
-    updated: datetime = Field(default_factory=datetime_now)
+    updated_at: datetime = Field(default_factory=datetime_now)
     active: bool = False
     private_message_recipients: list[MessageRecipient | None] = Field([])   # it will store ids of the recipients
     group_chat_ids: list[str | None] = Field([])

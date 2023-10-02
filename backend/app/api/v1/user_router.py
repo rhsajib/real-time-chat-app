@@ -6,8 +6,9 @@ from motor.motor_asyncio import AsyncIOMotorDatabase
 from app.database.user_db import (
     db_create_user,
     db_get_user,
+    db_get_all_user,
     db_update_user,
-    db_delete_user
+    db_delete_user,
 )
 
 
@@ -37,17 +38,27 @@ async def create_user(
     return new_user
 
 
-# Get user data
-@router.get('/{user_id}', status_code=status.HTTP_200_OK, response_model=user_schemas.User)
-async def get_user(user_id: str,
+
+# Get a user data
+@router.get('/detail/{user_id}', status_code=status.HTTP_200_OK, response_model=user_schemas.User)
+async def get_user_detail(user_id: str,
                    db: AsyncIOMotorDatabase = Depends(get_db)):
 
     user = await db_get_user(user_id, db)
     return user
 
+# [user_schemas.User]
+
+#Get all user
+@router.get('/all', status_code=status.HTTP_200_OK, response_model=list)
+async def get_all_user(db: AsyncIOMotorDatabase = Depends(get_db)):
+    users = await db_get_all_user(db)
+    return users
+
+
 
 # Update user data
-@router.put('/update/{user_id}', status_code=status.HTTP_200_OK, response_model=user_schemas.User)
+@router.put('/update/detail/{user_id}', status_code=status.HTTP_200_OK, response_model=user_schemas.User)
 async def update_user(
     user_id: str,
     updated_data: user_schemas.UserUpdate,
