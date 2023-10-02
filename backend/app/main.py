@@ -23,6 +23,7 @@ async def shutdown_event():
     await shutdown_db_client(app)
 
 
+
 # App root
 @app.get("/", tags=["Root"])
 async def root():

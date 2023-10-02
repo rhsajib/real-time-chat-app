@@ -22,4 +22,7 @@ class PrivateChatModel(BaseModel):
     member_ids: list[str] = Field(...)
     messages: list[Message | None] = Field([])
 
+class GroupChatModel(PrivateChatModel):
+    chat_name: str | None = Field(None)
+
 

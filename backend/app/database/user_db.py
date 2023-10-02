@@ -4,15 +4,18 @@ from fastapi import status, HTTPException
 from app.schemas import user_schemas
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from app.exceptions.exceptions import UserCreationError
+from app.core.config import settings
+
+
+user_collection = settings.USER
 
 
 # Get a user from database
 async def db_get_user(
     user_id: str,
-    db: AsyncIOMotorDatabase
-) -> user_schemas.User:
+    db: AsyncIOMotorDatabase) -> user_schemas.User:
 
-    user = await db['Users'].find_one({'id': user_id})
+    user = await db[user_collection].find_one({'id': user_id})
     if not user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f'User not found')
@@ -23,12 +26,11 @@ async def db_get_user(
 # Create a new user in database
 async def db_create_user(
     user: user_schemas.UserCreate,
-    db: AsyncIOMotorDatabase
-) -> user_schemas.User:
+    db: AsyncIOMotorDatabase) -> user_schemas.User:
     
     try:
         new_user = UserModel(**user.model_dump())
-        result = await db['Users'].insert_one(new_user.model_dump())
+        result = await db[user_collection].insert_one(new_user.model_dump())
 
         # Check if the user creation was successful
         if result.acknowledged:
@@ -52,13 +54,12 @@ async def db_create_user(
 async def db_update_user(
     user_id: str,
     updated_data: user_schemas.UserUpdate,
-    db: AsyncIOMotorDatabase
-) -> user_schemas.User:
+    db: AsyncIOMotorDatabase) -> user_schemas.User:
 
 
     existing_user = await db_get_user(user_id, db)
 
-    result = await db['Users'].update_one(
+    result = await db[user_collection].update_one(
         {'id': user_id}, {'$set': updated_data.model_dump()}
     )
 
@@ -72,11 +73,10 @@ async def db_update_user(
 # Delete user from database
 async def db_delete_user(
     user_id: str,
-    db: AsyncIOMotorDatabase
-) -> user_schemas.User:
+    db: AsyncIOMotorDatabase) -> user_schemas.User:
     
     user = await db_get_user(user_id, db)
-    deleted_user = await db['Users'].delete_one({'id': user_id})
+    deleted_user = await db[user_collection].delete_one({'id': user_id})
     if deleted_user.deleted_count == 0:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                             detail=f'User not deleted')

@@ -19,7 +19,8 @@ class UserModel(BaseModel):
     created_at: datetime = Field(default_factory=datetime_now)
     updated: datetime = Field(default_factory=datetime_now)
     active: bool = False
-    sent_messages_recipients: list[MessageRecipient | None] = Field([])   # it will store ids of the recipients
+    private_message_recipients: list[MessageRecipient | None] = Field([])   # it will store ids of the recipients
+    group_chat_ids: list[str | None] = Field([])
 
 
 
