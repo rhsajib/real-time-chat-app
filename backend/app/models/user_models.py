@@ -1,9 +1,11 @@
 from datetime import datetime
 from pydantic import BaseModel, Field, EmailStr, root_validator
+from app.schemas.chat_schemas import MessageRecipient
 from ..core.utils import(
     datetime_now, 
     get_uuid4
 )
+
 
 
 class UserModel(BaseModel):
@@ -17,6 +19,9 @@ class UserModel(BaseModel):
     created_at: datetime = Field(default_factory=datetime_now)
     updated: datetime = Field(default_factory=datetime_now)
     active: bool = False
+    sent_messages_recipients: list[MessageRecipient | None] = Field([])   # it will store ids of the recipients
+
+
 
     # add email, username validator
 
@@ -25,6 +30,13 @@ class UserModel(BaseModel):
     #     assert values["email"] != None or values["mobile"] != None, "either one of email or mobile must be present"
     #     return values
 
+
+    # @validator("email")
+    # async def validate_unique_email(cls, value):
+    #     existing_user = await db["Users"].find_one({"email": value})
+    #     if existing_user:
+    #         raise HTTPException(status_code=400, detail="Email already registered")
+    #     return value
 
     # @validator("profession", pre=True)
     # def set_default_profession(cls, val: str) -> str:

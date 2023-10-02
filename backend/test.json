@@ -1,0 +1,36 @@
+[
+    {
+        "name":"sajib",
+        "chats":[
+            {
+                "rec": "r1",
+                "chat": "c1"
+            },
+            {
+                "rec": "r2",
+                "chat": "c2"
+            },
+            {
+                "rec": "r3",
+                "chat": "c3"
+            }
+        ] 
+    },
+    {
+        "name":"akash",
+        "chats":[
+            {
+                "rec": "d1",
+                "chat": "f1"
+            },
+            {
+                "rec": "d2",
+                "chat": "f2"
+            },
+            {
+                "rec": "d3",
+                "chat": "f3"
+            }
+        ] 
+    }
+]

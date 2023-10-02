@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from app.api.v1 import user_router
+from app.api.v1 import user_router, chat_router
 from app.database.db import (
     startup_db_client,
     shutdown_db_client,
@@ -31,3 +31,4 @@ async def root():
 
 # Routers
 app.include_router(user_router.router, tags=["User"], prefix="/api/v1/user")
+app.include_router(chat_router.router, tags=["Chat"], prefix="/api/v1/chat")

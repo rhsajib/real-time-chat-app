@@ -1,9 +1,9 @@
 
-from app.models.models import UserModel
+from app.models.user_models import UserModel
 from fastapi import status, HTTPException
 from app.schemas import user_schemas
 from motor.motor_asyncio import AsyncIOMotorDatabase
-from app.exceptions import UserCreationError
+from app.exceptions.exceptions import UserCreationError
 
 
 # Get a user from database
@@ -88,7 +88,7 @@ async def db_delete_user(
     # otherwise it will cause error
     del user['_id']
     print('user', user)
-    return user
+    return user 
 
 
 
