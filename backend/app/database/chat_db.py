@@ -74,7 +74,7 @@ async def add_chat_id_to_users(member_ids: list, chat_id: str, db: AsyncIOMotorD
 async def db_get_existing_chat(current_user_id: str,
                                recipient_id: str,
                                db: AsyncIOMotorDatabase,
-                               collection):
+                               collection: str):
     query = {
         'id': current_user_id,
         'private_message_recipients.recipient_id': recipient_id

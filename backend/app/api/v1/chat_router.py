@@ -26,13 +26,13 @@ user4 d4511f3932be45199ff23c4ae76faf96
 
 
 # Create private chat
-@router.post('/private/create/{recipient_id}',
-             status_code=status.HTTP_201_CREATED,
+@router.get('/private/{recipient_id}',
+             status_code=status.HTTP_200_OK,
              response_model=chat_schemas.ChatResponse)
-async def create_private_chat(recipient_id: str,
+async def get_private_chat(recipient_id: str,
                        db: AsyncIOMotorDatabase = Depends(get_db)):
 
-    current_user_id = '2123bb0ec29d4471bd295be4cca68aed'  # user3
+    current_user_id = '2123bb0ec29d4471bd295be4cca68aed'  # user2
 
     if current_user_id == recipient_id:
         content = {'message': 'self messaging is not available!!'}
@@ -44,6 +44,7 @@ async def create_private_chat(recipient_id: str,
     existing_chat = await db_get_existing_chat(current_user_id, recipient_id, db, db_collection)
     if existing_chat:
         print('chat already exists')
+        print(existing_chat)
         return existing_chat
 
     new_chat = await db_create_private_chat(current_user_id, recipient_id, db, db_collection)
@@ -54,7 +55,7 @@ async def create_private_chat(recipient_id: str,
 
 
 # Create new private message
-@ router.post('/private/message/send/{chat_id}', 
+@ router.post('/private/message/create/{chat_id}', 
               status_code=status.HTTP_201_CREATED, 
               response_model=chat_schemas.Message)
 async def create_private_message(chat_id: str,
@@ -64,7 +65,7 @@ async def create_private_message(chat_id: str,
     # get collection name for private chat
     db_collection = settings.PRIVATE_CHAT
 
-    current_user_id = 'a675245042e34b149d8504902b7b58d5'  # user3
+    current_user_id = '2123bb0ec29d4471bd295be4cca68aed'  # user2
     message = await db_create_message(current_user_id, chat_id, message, db, db_collection)
     return message
 
