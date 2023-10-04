@@ -7,8 +7,8 @@ const Chats = () => {
     const users = useLoaderData();
     // console.log(users)
     return (
-        <div className="flex flex-row">
-            <div className="flex flex-col w-1/3 border h-screen">
+        <div className="flex flex-row h-screen">
+            <div className="flex flex-col w-1/3 border">
                 <div className="sticky top-0 mx-3">
                     <ChatSearch />
                 </div>
@@ -16,10 +16,9 @@ const Chats = () => {
                     <Users key={1} users={users} />
                 </div>
             </div>
-            <div className="w-full h-screen">
+            <div className="w-full">
                 <div>
-
-                <Outlet />
+                    <Outlet />
                 </div>
             </div>
         </div>

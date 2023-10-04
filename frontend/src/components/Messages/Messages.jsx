@@ -3,6 +3,7 @@ import Message from "../Message/Message";
 import { useLoaderData } from "react-router-dom";
 import NoMessage from "../NoMessage/NoMessage";
 import SendMessage from "../SendMessage/SendMessage";
+import axios from "axios";
 
 const Messages = () => {
     // loades data from api
@@ -18,37 +19,59 @@ const Messages = () => {
     }, [messages]);
 
     // handler to send message
-    const handleSendMesaage = (message) => {
-        // step 1: handle messages in client side
-        const modelMessage = {
-            user_id: "2123bb0ec29d4471bd295be4cca68aed",
+    const handleSendMesaage = async (message) => {
+        // step 1: handle messages in server side
+        // Send a POST request to your API endpoint
+        const apiUrl = `http://127.0.0.1:8000/api/v1/chat/private/message/create/${chat_id}`;
+        const data = {
             message: message,
-            created_at: Date.now(),
         };
-        // console.log(modelMessage);
 
-        // React er state gula immutable. tai amra push pop use korte pari na
-        // tai new array create kori
-        const currentMessages = [...previousMessages, modelMessage];
-        setPreviousMessages(currentMessages);
+        const response = await axios
+            .post(apiUrl, data, {
+                headers: {
+                    "Content-Type": "application/json", // Set the content type to JSON
+                },
+            })
+            .then((response) => {
+                // Handle the response as needed
+                console.log("Message sent successfully:", response.data);
 
-        // step : handle messages in server side
+                // step 2: handle messages in client side
+                // React er state gula immutable. tai amra push pop use korte pari na
+                // tai new array create kori
+                const createdMessage = response.data;
+                const currentMessages = [...previousMessages, createdMessage];
+                setPreviousMessages(currentMessages);
+                // Update the state with the new message
+                // setPreviousMessages((previousMessages) => [
+                //     ...previousMessages,
+                //     response.data,
+                // ]);
+            })
+            .catch((error) => {
+                // Handle any errors that occur during the POST request
+                console.error("Error sending message:", error);
+                setResponseMessage("Error sending message");
+            });
     };
 
     // console.log(previousMessages);
 
     return (
         // <div className="flex flex-col w-[800px] border h-screen">
-        <div className="flex flex-col h-screen">
-            <div className="flex-grow flex flex-col justify-end overflow-y-auto">
-                <div className="">
-                    {previousMessages.length !== 0 ? (
-                        previousMessages.map((message, index) => (
-                            <Message key={index} message={message} />
-                        ))
-                    ) : (
-                        <NoMessage />
-                    )}
+        <div className="grid grid-cols-1 content-end h-screen">
+            <div className="overflow-y-auto">
+                <div className="flex flex-col justify-end ">
+                    <div className="">
+                        {previousMessages.length !== 0 ? (
+                            previousMessages.map((message, index) => (
+                                <Message key={index} message={message} />
+                            ))
+                        ) : (
+                            <NoMessage />
+                        )}
+                    </div>
                 </div>
             </div>
 
