@@ -1,40 +1,62 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Message from "../Message/Message";
 import { useLoaderData } from "react-router-dom";
+import NoMessage from "../NoMessage/NoMessage";
+import SendMessage from "../SendMessage/SendMessage";
 
 const Messages = () => {
-    const chat = useLoaderData();
-    // console.log(chat);
-    const { chat_id, messages } = chat;
+    // loades data from api
+    const chatMessages = useLoaderData();
 
-    const [previousMessages, setPreviousMessages] = useState(messages)
+    // data destructure
+    const { chat_id, messages } = chatMessages;
 
-    const handleSendMesaage = (newMessage) => {
-        const newMessages = [...previousMessages, newMessage]
-        setPreviousMessages(newMessages)
-    }
+    // previous messages
+    const [previousMessages, setPreviousMessages] = useState([]);
+    useEffect(() => {
+        setPreviousMessages(messages);
+    }, [messages]);
+
+    // handler to send message
+    const handleSendMesaage = (message) => {
+        // step 1: handle messages in client side
+        const modelMessage = {
+            user_id: "2123bb0ec29d4471bd295be4cca68aed",
+            message: message,
+            created_at: Date.now(),
+        };
+        // console.log(modelMessage);
+
+        // React er state gula immutable. tai amra push pop use korte pari na
+        // tai new array create kori
+        const currentMessages = [...previousMessages, modelMessage];
+        setPreviousMessages(currentMessages);
+
+        // step : handle messages in server side
+    };
+
+    // console.log(previousMessages);
 
     return (
-        <div className="flex flex-col mx-6 w-[800px] border h-screen">
-            <div className="flex flex-col-reverse  h-screen overflow-y-auto">
-                {messages.length !== 0 ? (
-                    messages.map((message) => (
-                        <Message key={message.id} message={message} />
-                    ))
-                ) : (
-                    <div>
-                        <h1>No messages</h1>
-                    </div>
-                )}
+        // <div className="flex flex-col w-[800px] border h-screen">
+        <div className="flex flex-col h-screen">
+            <div className="flex-grow flex flex-col justify-end overflow-y-auto">
+                <div className="">
+                    {previousMessages.length !== 0 ? (
+                        previousMessages.map((message, index) => (
+                            <Message key={index} message={message} />
+                        ))
+                    ) : (
+                        <NoMessage />
+                    )}
+                </div>
             </div>
-            <div className="my-3 flex flex-row">
-                <input
-                    className="placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 px-4 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1"
-                    placeholder="Write text..."
-                    type="text"
-                    name="newMessage"
+
+            <div className="bg-white border-t-2 sticky bottom-0">
+                <SendMessage
+                    // messageInput={messageInput}
+                    handleSendMesaage={handleSendMesaage}
                 />
-                <button className="bg-slate-400 rounded-lg ml-3 px-4" onClick={() => handleSendMesaage(newMessage)}>Send</button>
             </div>
         </div>
     );

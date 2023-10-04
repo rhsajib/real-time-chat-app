@@ -1,23 +1,26 @@
 import React from "react";
 import { Outlet, useLoaderData } from "react-router-dom";
 import Users from "../Users/Users";
+import ChatSearch from "../ChatSearch/ChatSearch";
 
 const Chats = () => {
     const users = useLoaderData();
     // console.log(users)
     return (
-        <div className="lg:flex">
-            <div className="w-[300px] border h-screen overflow-y-auto px-2 pt-4">
-                <input
-                    className="placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 px-4 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
-                    placeholder="Chat with..."
-                    type="text"
-                    name="search"
-                />
-                <Users key={1} users={users} />
+        <div className="flex flex-row">
+            <div className="flex flex-col w-1/3 border h-screen">
+                <div className="sticky top-0 mx-3">
+                    <ChatSearch />
+                </div>
+                <div className="flex flex-col overflow-y-auto">
+                    <Users key={1} users={users} />
+                </div>
             </div>
-            <div className="">
+            <div className="w-full h-screen">
+                <div>
+
                 <Outlet />
+                </div>
             </div>
         </div>
     );

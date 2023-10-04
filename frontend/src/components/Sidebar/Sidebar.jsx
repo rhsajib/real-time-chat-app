@@ -3,8 +3,9 @@ import { Link } from "react-router-dom";
 
 const Sidebar = () => {
     return (
-        <div className="flex flex-row lg:flex-col w-full lg:w-[150px] justify-between bg-gray-800 lg:h-screen lg:top-0 lg:left-0">
-            <div className="p-4 text-white flex items-center text-center">
+        // <div className="flex flex-row lg:flex-col w-full lg:w-[150px] justify-between bg-gray-800 lg:h-screen lg:top-0 lg:left-0">
+        <div className="flex flex-row lg:flex-col justify-between bg-gray-800 lg:h-screen lg:top-0 lg:left-0 p-2">
+            <div className="p-4 text-white items-center">
                 <h1 className="text-2xl font-bold">Chat</h1>
             </div>
 
@@ -39,7 +40,8 @@ const Sidebar = () => {
                 </ul>
             </div>
 
-            <div className="p-4 text-white flex items-center text-center">
+
+            <div className="p-4 text-white">
                 <h1 className="text-l font-bold">Profile Photo</h1>
             </div>
         </div>

@@ -6,11 +6,13 @@ import { Outlet } from "react-router-dom";
 
 const Home = () => {
     return (
-        <div className="lg:flex">
-            <div className="">
+        <div className="lg:flex lg:flex-row">
+            <div className="lg:w-1/6">
                 <Sidebar />
             </div>
-            <Outlet />
+            <div className="w-full">
+                <Outlet />
+            </div>
         </div>
     );
 };
