@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Message from "../Message/Message";
 import { useLoaderData } from "react-router-dom";
 import NoMessage from "../NoMessage/NoMessage";
@@ -6,19 +6,22 @@ import SendMessage from "../SendMessage/SendMessage";
 import axios from "axios";
 
 const Messages = () => {
-    // loades data from api
+    // Load data from API
     const chatMessages = useLoaderData();
 
-    // data destructure
+    // Data destructuring
     const { chat_id, messages } = chatMessages;
 
-    // previous messages
+    // Reference for the chat container
+    const chatContainerRef = useRef(null);
+
+    // Previous messages
     const [previousMessages, setPreviousMessages] = useState([]);
     useEffect(() => {
         setPreviousMessages(messages);
     }, [messages]);
 
-    // handler to send message
+    // Handler to send a message
     const handleSendMesaage = async (message) => {
         // step 1: handle messages in server side
         // Send a POST request to your API endpoint
@@ -43,11 +46,15 @@ const Messages = () => {
                 const createdMessage = response.data;
                 const currentMessages = [...previousMessages, createdMessage];
                 setPreviousMessages(currentMessages);
-                // Update the state with the new message
+
+                // or
                 // setPreviousMessages((previousMessages) => [
                 //     ...previousMessages,
-                //     response.data,
+                //     createdMessage,
                 // ]);
+
+                // Scroll to the bottom after adding a new message
+                // scrollToBottom();
             })
             .catch((error) => {
                 // Handle any errors that occur during the POST request
@@ -56,23 +63,37 @@ const Messages = () => {
             });
     };
 
+    // Function to scroll to the bottom
+    const scrollToBottom = () => {
+        if (chatContainerRef.current) {
+            chatContainerRef.current.scrollTop =
+                chatContainerRef.current.scrollHeight;
+        }
+    };
+
+    // Use useEffect to scroll to the bottom when the component mounts
+    useEffect(() => {
+        scrollToBottom();
+    }, [previousMessages]);
+
     // console.log(previousMessages);
 
     return (
         // <div className="flex flex-col w-[800px] border h-screen">
         <div className="grid grid-cols-1 content-end h-screen">
-            <div className="overflow-y-auto">
-                <div className="flex flex-col justify-end ">
-                    <div className="">
-                        {previousMessages.length !== 0 ? (
-                            previousMessages.map((message, index) => (
-                                <Message key={index} message={message} />
-                            ))
-                        ) : (
-                            <NoMessage />
-                        )}
-                    </div>
-                </div>
+            <div
+                ref={chatContainerRef}
+                className="flex flex-col h-full overflow-y-auto"
+            >
+                {" "}
+                {/* max-h-80vh for 80% of view height*/}
+                {previousMessages.length !== 0 ? (
+                    previousMessages.map((message, index) => (
+                        <Message key={index} message={message} />
+                    ))
+                ) : (
+                    <NoMessage />
+                )}
             </div>
 
             <div className="bg-white border-t-2 sticky bottom-0">
