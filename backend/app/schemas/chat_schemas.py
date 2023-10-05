@@ -6,10 +6,13 @@ class MessageRecipient(BaseModel):
     recipient_id: str
     chat_id: str
 
-
-class Message(BaseModel):
-    user_id: str
+class MessageCreate(BaseModel):
     message: str
+
+
+class Message(MessageCreate):
+    # id: str
+    user_id: str
     created_at: datetime
 
 

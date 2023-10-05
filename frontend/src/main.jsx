@@ -8,6 +8,7 @@ import Contacts from "./components/Contacts/Contacts";
 import Profile from "./components/Profile/Profile";
 import Groups from "./components/Groups/Groups";
 import Messages from "./components/Messages/Messages";
+import App from './App.jsx'
 
 const router = createBrowserRouter([
     {
@@ -52,5 +53,6 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById("root")).render(
     <React.StrictMode>
         <RouterProvider router={router} />
+        {/* <App /> */}
     </React.StrictMode>
 );

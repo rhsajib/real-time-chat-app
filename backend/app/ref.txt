@@ -1,5 +1,8 @@
 https://www.mongodb.com/developer/languages/python/farm-stack-fastapi-react-mongodb/?_ga=2.90922393.223949474.1695978290-117376634.1695978282
 
+https://www.mongodb.com/developer/languages/python/farm-stack-authentication/
+
+
 https://github.com/alexk1919/fastapi-motor-mongo-template
 https://github.com/klee1611/cookiecutter-fastapi-mongo
 https://github.com/mongodb-developer/FARM-Intro

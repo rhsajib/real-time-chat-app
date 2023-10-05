@@ -1,0 +1,7 @@
+- dynamically user id neowa
+
+-filter userid in users
+
+- message model e change korte hoeb.
+    user_id -> created_by
+
