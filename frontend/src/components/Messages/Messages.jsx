@@ -8,9 +8,11 @@ import axios from "axios";
 const Messages = () => {
     // Load data from API
     const chatMessages = useLoaderData();
+    // console.log(chatMessages)
 
     // Data destructuring
     const { chat_id, messages } = chatMessages;
+
 
     // Reference for the chat container
     const chatContainerRef = useRef(null);
@@ -79,7 +81,6 @@ const Messages = () => {
     // console.log(previousMessages);
 
     return (
-        // <div className="flex flex-col w-[800px] border h-screen">
         <div className="grid grid-cols-1 content-end h-screen">
             <div
                 ref={chatContainerRef}

@@ -15,11 +15,13 @@ class UserUpdate(UserBase):
     last_name: str | None
     phone: str | None
 
-class User(UserUpdate):
+class UserResponse(UserUpdate):
     id: str
+    active: bool
+
+class UserDetail(UserResponse):
     created_at: datetime
     updated_at: datetime
-    active: bool
     private_message_recipients: list[MessageRecipient | None]
     group_chat_ids: list[str | None]
 

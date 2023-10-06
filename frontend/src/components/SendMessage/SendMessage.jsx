@@ -6,7 +6,8 @@ const SendMessage = ({ handleSendMesaage }) => {
 
     const handleSendClick = () => {
         // Call the parent's handleSendMessage function to send the message
-        handleSendMesaage(messageText);
+        
+        handleSendMesaage(messageText.trim());    // Trim leading and trailing whitespace
 
         // Clear the input field by resetting messageText to an empty string
         setMessageText("");
@@ -26,48 +27,52 @@ const SendMessage = ({ handleSendMesaage }) => {
 
         const { value } = e.target;
 
-        setMessageText(value.trim());   // Trim leading and trailing whitespace 
+        setMessageText(value);
 
         // or
         // setMessageText(e.target.value);
 
-        if (value.length !==0) {          
+        if (value.length !== 0) {
             setTextareaClasses("max-h-24");
+            // Function to scroll to the bottom
+
         } else {
-            setTextareaClasses("max-h-10");
+            setTextareaClasses("max-h-10"); // we can do ot with dom manupulation
         }
     };
 
     return (
         <form onSubmit={handleFormSubmit}>
-            <div className="my-3 flex flex-row justify-center mx-4">
-                <textarea
-                    // ref={textAreaRef}  // scroll below to see the implementation of ref
-                    className={`${textareaClasses} resize-none w-full border rounded-md py-2 px-4 shadow-sm placeholder:italic placeholder:text-slate-400 bg-white border-slate-300 focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1`}
-                    type="text"
-                    id="message"
-                    name="message"
-                    value={messageText}
-                    onChange={handleMessageTextChange}
-                    placeholder="Write text..."
-                    autoComplete="off"
-                />
+            <div className="my-3 flex flex-row justify-center items-center mx-4">
+                <div className="grow">
+                    <textarea
+                        // ref={textAreaRef}  // scroll below to see the implementation of ref
+                        className={`${textareaClasses} w-full border rounded-md py-2 px-4 shadow-sm placeholder:italic placeholder:text-slate-400 bg-white border-slate-300 focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1`}
+                        
+                        id="message"
+                        name="message"
+                        value={messageText}
+                        onChange={handleMessageTextChange}
+                        placeholder="Write text..."
+                        autoComplete="off"
+                    />
+                </div>
+                <div className="">
+                    <button
+                        type="submit"
+                        className="bg-slate-400 rounded-lg ml-3 px-4 py-1"
 
-                <button
-                    type="text"
-                    className="bg-slate-400 rounded-lg ml-3 px-4"
-
-                    // onClick={handleSendClick}
-                >
-                    Send
-                </button>
+                        // onClick={handleSendClick}
+                    >
+                        Send
+                    </button>
+                </div>
             </div>
         </form>
     );
 };
 
 export default SendMessage;
-
 
 /* 
 

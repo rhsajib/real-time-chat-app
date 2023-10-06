@@ -15,7 +15,7 @@ from app.database.user_db import (
 router = APIRouter()
 
 
-@router.post('/create', status_code=status.HTTP_201_CREATED, response_model=user_schemas.User)
+@router.post('/create', status_code=status.HTTP_201_CREATED, response_model=user_schemas.UserResponse)
 async def create_user(
         user: user_schemas.UserCreate,
         db: AsyncIOMotorDatabase = Depends(get_db)):
@@ -40,17 +40,23 @@ async def create_user(
 
 
 # Get a user data
-@router.get('/detail/{user_id}', status_code=status.HTTP_200_OK, response_model=user_schemas.User)
+@router.get('/info/{user_id}', status_code=status.HTTP_200_OK, response_model=user_schemas.UserResponse)
 async def get_user_detail(user_id: str,
                    db: AsyncIOMotorDatabase = Depends(get_db)):
 
     user = await db_get_user(user_id, db)
     return user
 
-# [user_schemas.User]
+# Get current user data
+@router.get('/detail/me', status_code=status.HTTP_200_OK, response_model=user_schemas.UserResponse)
+async def get_current_user_detail(db: AsyncIOMotorDatabase = Depends(get_db)):
+    current_user_id = '2123bb0ec29d4471bd295be4cca68aed'  # user2
+    user = await db_get_user(current_user_id, db)
+    return user
 
-#Get all user
-@router.get('/all', status_code=status.HTTP_200_OK, response_model=list)
+
+# Get all user
+@router.get('/all', status_code=status.HTTP_200_OK, response_model=list[user_schemas.UserResponse])
 async def get_all_user(db: AsyncIOMotorDatabase = Depends(get_db)):
     users = await db_get_all_user(db)
     return users
@@ -58,7 +64,7 @@ async def get_all_user(db: AsyncIOMotorDatabase = Depends(get_db)):
 
 
 # Update user data
-@router.put('/update/detail/{user_id}', status_code=status.HTTP_200_OK, response_model=user_schemas.User)
+@router.put('/update/info/{user_id}', status_code=status.HTTP_200_OK, response_model=user_schemas.UserResponse)
 async def update_user(
     user_id: str,
     updated_data: user_schemas.UserUpdate,

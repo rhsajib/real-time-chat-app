@@ -4,11 +4,20 @@ import "./index.css";
 import Home from "./components/Layout/Home";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Chats from "./components/Chats/Chats";
-import Contacts from "./components/Contacts/Contacts";
 import Profile from "./components/Profile/Profile";
 import Groups from "./components/Groups/Groups";
 import Messages from "./components/Messages/Messages";
-import App from './App.jsx'
+import App from "./App.jsx";
+import {
+    privateChatsLoader,
+    usersLoader,
+    userProfileLoader,
+    messageLoader,
+    myProfileLoader,
+} from "./loaders/apiLoaders";
+import Users from "./components/Users/Users";
+import MyProfile from "./components/MyProfile/MyProfile";
+import Settings from "./components/Settings/Settings";
 
 const router = createBrowserRouter([
     {
@@ -18,19 +27,19 @@ const router = createBrowserRouter([
             {
                 path: "/chats",
                 element: <Chats />,
-                loader: () => fetch("http://127.0.0.1:8000/api/v1/user/all"),
+                loader: privateChatsLoader,
                 children: [
                     {
-                        path: "/chats/private/:userId",
+                        path: "/chats/private/:chatId",
                         element: <Messages />,
-                        loader: ({params}) => fetch(`http://127.0.0.1:8000/api/v1/chat/private/${params.userId}`)
+                        loader: ({ params }) => messageLoader(params.chatId),
                     },
                 ],
             },
             {
-                path: "/profile",
-                element: <Profile />,
-                // loader={}
+                path: "/myprofile",
+                element: <MyProfile />,
+                loader: myProfileLoader
             },
             {
                 path: "/groups",
@@ -38,13 +47,24 @@ const router = createBrowserRouter([
                 // loader={}
             },
             {
-                path: "/contacts",
-                element: <Contacts />,
-                // loader={}
+                path: "/users",
+                element: <Users />,
+                loader: usersLoader,
+                children: [
+                    {
+                        path: "/users/profile/:userId",
+                        element: <Profile />,
+                        loader: ({params}) => userProfileLoader(params.userId)
+                    },
+                    {
+                        path: "/users/profile",
+                        element: <Profile />,
+                    },
+                ],
             },
             {
                 path: "/settings",
-                element: <Contacts />,
+                element: <Settings />,
                 // loader={}
             },
         ],

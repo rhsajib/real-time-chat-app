@@ -8,7 +8,7 @@ from app.exceptions.exceptions import UserCreationError
 from app.core.config import settings
 
 
-user_collection = settings.USERS
+USER_CCOLLECTION = settings.USERS
 
 
 # Get a user from database
@@ -16,7 +16,7 @@ async def db_get_user(
     user_id: str,
     db: AsyncIOMotorDatabase):
 
-    user = await db[user_collection].find_one({'id': user_id})
+    user = await db[USER_CCOLLECTION].find_one({'id': user_id})
     if not user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f'User not found')
@@ -28,7 +28,7 @@ async def db_get_user(
 
 # Get all user from database
 async def db_get_all_user(db: AsyncIOMotorDatabase):
-    cursor = db[user_collection].find({})
+    cursor = db[USER_CCOLLECTION].find({})
     users = await cursor.to_list(length=None)  # to_list to retrieve the documents as a list
 
     serialized_users = []
@@ -50,7 +50,8 @@ async def db_create_user(
     
     try:
         new_user = UserModel(**user.model_dump())
-        result = await db[user_collection].insert_one(new_user.model_dump())
+        print(new_user)
+        result = await db[USER_CCOLLECTION].insert_one(new_user.model_dump())
 
         # Check if the user creation was successful
         if result.acknowledged:
@@ -79,7 +80,7 @@ async def db_update_user(
 
     existing_user = await db_get_user(user_id, db)
 
-    result = await db[user_collection].update_one(
+    result = await db[USER_CCOLLECTION].update_one(
         {'id': user_id}, {'$set': updated_data.model_dump()}
     )
 
@@ -96,7 +97,7 @@ async def db_delete_user(
     db: AsyncIOMotorDatabase):
     
     user = await db_get_user(user_id, db)
-    deleted_user = await db[user_collection].delete_one({'id': user_id})
+    deleted_user = await db[USER_CCOLLECTION].delete_one({'id': user_id})
     if deleted_user.deleted_count == 0:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                             detail=f'User not deleted')

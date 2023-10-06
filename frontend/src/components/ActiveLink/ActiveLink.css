@@ -1,0 +1,16 @@
+.active-link {
+    background-color: rgb(56, 209, 199);
+    color: rgb(11, 11, 53);
+    border: 1px solid gray;
+    border-radius: 8px;
+    padding: 5px 10px 5px 10px;
+    /* padding: top right bottom left; */
+}
+
+.inactive-link {
+    background-color: rgb(222, 238, 235);
+    border: 1px solid gray;
+    border-radius: 8px;
+    padding: 5px 10px 5px 10px;
+    /* padding: top right bottom left; */
+}

@@ -20,6 +20,9 @@ class GroupChatCreate(BaseModel):
     member_ids: list[str]
     chat_name: str | None
 
+class ChatId(BaseModel):
+    chat_id: str | None
+
 
 class ChatResponse(BaseModel):
     chat_id: str

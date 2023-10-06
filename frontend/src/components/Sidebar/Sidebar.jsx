@@ -18,7 +18,7 @@ const Sidebar = () => {
                         </Link>
                     </li>
                     <li className="mr-2 lg:my-2">
-                        <Link to="/profile" className="text-white hover:text-blue-500">
+                        <Link to="/myprofile" className="text-white hover:text-blue-500">
                             Profile
                         </Link>
                     </li>
@@ -28,8 +28,8 @@ const Sidebar = () => {
                         </Link>
                     </li>
                     <li className="mr-2 lg:my-2">
-                        <Link to="/contacts" className="text-white hover:text-blue-500">
-                            Contacts
+                        <Link to="/users" className="text-white hover:text-blue-500">
+                            Users
                         </Link>
                     </li>
                     <li className="mr-2 lg:my-2">
