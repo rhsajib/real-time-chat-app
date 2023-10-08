@@ -45,12 +45,14 @@ async def db_get_all_user(db: AsyncIOMotorDatabase):
 
 # Create a new user in database
 async def db_create_user(
-    user: user_schemas.UserCreate,
+    user: dict,
     db: AsyncIOMotorDatabase):
     
     try:
-        new_user = UserModel(**user.model_dump())
+        new_user = UserModel(**user)
+
         print(new_user)
+        
         result = await db[USER_CCOLLECTION].insert_one(new_user.model_dump())
 
         # Check if the user creation was successful

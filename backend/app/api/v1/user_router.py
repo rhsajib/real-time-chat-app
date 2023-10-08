@@ -1,4 +1,5 @@
-from fastapi import status, Depends, APIRouter
+from fastapi import HTTPException, status, Depends, APIRouter
+from app.exceptions.exceptions import UserCreationError
 from app.schemas import user_schemas
 from app.database.db import get_db
 from app.core.utils import get_password_hash
@@ -17,37 +18,52 @@ router = APIRouter()
 
 @router.post('/create', status_code=status.HTTP_201_CREATED, response_model=user_schemas.UserResponse)
 async def create_user(
-        user: user_schemas.UserCreate,
+        user_data: user_schemas.UserCreate,
         db: AsyncIOMotorDatabase = Depends(get_db)):
 
-    # print(user.email)
-    # print(user.model_dump().get('email'))
+    try:
+        # print(user)
+        # print(user.email)
+        # print(user.model_dump().get('email'))
+        if user_data.password1 != user_data.password2:
+            raise UserCreationError("password", "Passwords do not match")
 
-    # hash password
-    password_hash = get_password_hash(user.password)
+        # hash password
+        password_hash = get_password_hash(user_data.password1)
 
-    # Set hashed password as user password
-    user.password = password_hash
+        # Create a new dictionary with the original fields from user_data
+        # and the new 'password' field
+        # Set hashed password as user password
+        updated_user_data = {
+            **user_data.model_dump(),
+            "password": password_hash
+        }
+        
+        
 
-    # def validate_unique_phone_number(cls, value):
+        # def validate_unique_phone_number(cls, value):
 
-    # Add new user to database
-    new_user = await db_create_user(user, db)
+        # Add new user to database
+        new_user = await db_create_user(updated_user_data, db)
 
-    # print(new_user)
-    return new_user.model_dump()
-
+        # print(new_user)
+        return new_user
+    except UserCreationError as e:
+        raise HTTPException(status_code=422, detail={"error": "Validation Failed", "errors": [
+                            {"field": e.field, "message": e.message}]})
 
 
 # Get a user data
 @router.get('/info/{user_id}', status_code=status.HTTP_200_OK, response_model=user_schemas.UserResponse)
 async def get_user_detail(user_id: str,
-                   db: AsyncIOMotorDatabase = Depends(get_db)):
+                          db: AsyncIOMotorDatabase = Depends(get_db)):
 
     user = await db_get_user(user_id, db)
     return user
 
 # Get current user data
+
+
 @router.get('/detail/me', status_code=status.HTTP_200_OK, response_model=user_schemas.UserResponse)
 async def get_current_user_detail(db: AsyncIOMotorDatabase = Depends(get_db)):
     current_user_id = '2123bb0ec29d4471bd295be4cca68aed'  # user2
@@ -60,7 +76,6 @@ async def get_current_user_detail(db: AsyncIOMotorDatabase = Depends(get_db)):
 async def get_all_user(db: AsyncIOMotorDatabase = Depends(get_db)):
     users = await db_get_all_user(db)
     return users
-
 
 
 # Update user data
@@ -82,6 +97,6 @@ async def delete_use(
     db: AsyncIOMotorDatabase = Depends(get_db)
 ):
     deleted_user = await db_delete_user(user_id, db)
-    
+
     # return {'message': 'User deleted'}
     return deleted_user

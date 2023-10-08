@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useLoaderData, useNavigate } from "react-router-dom";
-import { chatIdLoader, newChatIdLoader } from "../../loaders/apiLoaders";
+import { chatIdLoader, newChatIdLoader } from "../../utilities/apiLoaders";
 
 const MyProfile = () => {
     const profile = useLoaderData();

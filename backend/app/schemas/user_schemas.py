@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, Field
 from datetime import datetime
 from app.schemas.chat_schemas import MessageRecipient
 
@@ -8,7 +8,9 @@ class UserBase(BaseModel):
     username: str
 
 class UserCreate(UserBase):
-    password: str
+    password1: str
+    password2: str
+
 
 class UserUpdate(UserBase):
     first_name: str | None

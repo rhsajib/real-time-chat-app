@@ -14,56 +14,61 @@ import {
     userProfileLoader,
     messageLoader,
     myProfileLoader,
-} from "./loaders/apiLoaders";
+} from "./utilities/apiLoaders";
 import Users from "./components/Users/Users";
 import MyProfile from "./components/MyProfile/MyProfile";
 import Settings from "./components/Settings/Settings";
+import SignupLogin from "./components/SignupLogin/SignupLogin";
 
 const router = createBrowserRouter([
     {
         path: "/",
+        element: <SignupLogin />
+    },
+    {
+        path: "/home",
         element: <Home />,
         children: [
             {
-                path: "/chats",
+                path: "/home/chats",
                 element: <Chats />,
                 loader: privateChatsLoader,
                 children: [
                     {
-                        path: "/chats/private/:chatId",
+                        path: "/home/chats/private/:chatId",
                         element: <Messages />,
                         loader: ({ params }) => messageLoader(params.chatId),
                     },
                 ],
             },
             {
-                path: "/myprofile",
+                path: "/home/myprofile",
                 element: <MyProfile />,
                 loader: myProfileLoader
             },
             {
-                path: "/groups",
+                path: "/home/groups",
                 element: <Groups />,
                 // loader={}
             },
             {
-                path: "/users",
+                path: "/home/users",
                 element: <Users />,
                 loader: usersLoader,
                 children: [
                     {
-                        path: "/users/profile/:userId",
+                        path: "/home/users/profile/:userId",
                         element: <Profile />,
                         loader: ({params}) => userProfileLoader(params.userId)
                     },
                     {
-                        path: "/users/profile",
+                        path: "/home/users/profile",
                         element: <Profile />,
                     },
                 ],
             },
             {
-                path: "/settings",
+                path: "/home/settings",
                 element: <Settings />,
                 // loader={}
             },
