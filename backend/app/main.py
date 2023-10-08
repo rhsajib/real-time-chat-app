@@ -1,11 +1,14 @@
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from app.api.v1 import user_router, chat_router
+from app.api.v1.wsocket import chat_websocket_endpoint
 from app.database.db import (
     startup_db_client,
     shutdown_db_client,
     db_connection_status,
 )
+
+from fastapi.routing import APIWebSocketRoute
 
 
 app = FastAPI()
@@ -45,53 +48,18 @@ async def root():
     return {'message': 'Welcome to this fantastic app!'}
 
 
-# Routers
+# Api Routers
 app.include_router(user_router.router, tags=['User'], prefix='/api/v1/user')
 app.include_router(chat_router.router, tags=['Chat'], prefix='/api/v1/chat')
 
 
-# Store connected WebSocket clients
-connected_clients = set()
+# Register the WebSocket endpoint
+app.router.routes.append(APIWebSocketRoute('/ws/chat/{chat_id}', chat_websocket_endpoint))
 
-# WebSocket endpoint to handle connections
+# routes = [WebSocketRoute(path, endpoint=...), ...]
+# app = Starlette(routes=routes)
 
-
-@app.websocket('/ws/chat/{client_id}')
-async def websocket_endpoint(client_id: str, websocket: WebSocket):
-    await websocket.accept()
-    print(f"WebSocket connection established for client {client_id}.")
-
-    # Add the WebSocket to the set of connected clients
-    connected_clients.add((client_id, websocket))
-
-    print(connected_clients)
-
-    try:
-        while True:
-            data = await websocket.receive_text()
-            print("Message received:", data)
-
-            # Handle incoming messages here
-            # ............................
-            # ............................
-            # ............................
-
-            # Broadcast the message to all connected clients
-            for client in connected_clients:
-                client_id, client_ws = client
-                print('client_ws', client_ws)
-                await client_ws.send_text(data)
-
-    except WebSocketDisconnect:
-        print("WebSocket connection closed.")
-
-    finally:
-        # Remove disconnected client from the set
-        print(
-            f'Remove disconnected client from the set {client_id}, {websocket}')
-        connected_clients.remove((client_id, websocket))
-        print(connected_clients)
-
+ 
 
 """
 

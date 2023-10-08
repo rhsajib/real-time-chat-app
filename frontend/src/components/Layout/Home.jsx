@@ -9,7 +9,7 @@ const Home = () => {
             <div className="lg:w-1/6">
                 <Sidebar />
             </div>
-            <div className="w-full">
+            <div className="w-full border-r">
                 <Outlet />
             </div>
         </div>

@@ -6,6 +6,7 @@ class MessageRecipient(BaseModel):
     recipient_id: str
     chat_id: str
 
+
 class MessageCreate(BaseModel):
     message: str
 
@@ -13,22 +14,32 @@ class MessageCreate(BaseModel):
 class Message(MessageCreate):
     # id: str
     user_id: str
+    # created_at=datetime(2023, 10, 4, 21, 5, 52, 637000)
     created_at: datetime
 
 
-class GroupChatCreate(BaseModel):
-    member_ids: list[str]
-    chat_name: str | None
+class MessageResponse(Message):
+    created_at: str  # Define the field as a string
+
+# class MessageResponse(Message):
+#     class Config:
+#         exclude = ["created_at"]
+
 
 class ChatId(BaseModel):
     chat_id: str | None
 
 
-class ChatResponse(BaseModel):
-    chat_id: str
+class GroupChatCreate(ChatId):
+    chat_name: str | None
     member_ids: list[str]
     messages: list[Message | None]
 
 
-class GroupChatResponse(ChatResponse):
-    chat_name: str | None
+class ChatResponse(ChatId):
+    member_ids: list[str]
+    messages: list[Message | None]
+
+
+class GroupChatResponse(GroupChatCreate):
+    pass

@@ -120,10 +120,6 @@ async def get_private_chat_info(chat_id: str,
 
 
 
-
-
-
-
 # Get private chat messages
 # recipient_id = 8766afaf17bf42fc8970400e4d35ebb9
 @router.get('/private/messages/{chat_id}',

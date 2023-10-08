@@ -39,7 +39,7 @@ function App() {
         e.preventDefault(); // Prevent the default form submission behavior
 
         if (socket) {
-            socket.send(messageText);
+            socket.send(messageText);        // https://websockets.readthedocs.io/en/stable/intro/tutorial1.html
             setMessageText("");
         }
     };

@@ -231,6 +231,8 @@ async def add_group_chat_id_to_users(chat_id: str,
     return True
 
 
+
+"""------------------------Section: handle messages------------------------"""
 # Section: handle messages
 async def db_get_messages(chat_id: str, db: AsyncIOMotorDatabase):
     chat = await db_get_chat(chat_id, db, collection=PRIVATE_CHAT_COLLECTION)
@@ -240,22 +242,21 @@ async def db_get_messages(chat_id: str, db: AsyncIOMotorDatabase):
 async def db_create_message(current_user_id: str,
                             chat_id: str,
                             message: str,
-                            db: AsyncIOMotorDatabase,
-                            collection: str):
+                            db: AsyncIOMotorDatabase) -> chat_schemas.Message:
 
-    chat = await db_get_chat(chat_id, db, collection)
+    chat = await db_get_chat(chat_id, db, collection=PRIVATE_CHAT_COLLECTION)
 
     if current_user_id not in chat.get('member_ids'):
         return JSONResponse(content={'message': 'message was not sent'})
 
-    serialized_message = MessageModel(user_id=current_user_id, message=message)
-    # print(serialized_message)
-    # print(serialized_message.model_dump())
-    result = await db[collection].update_one(
+    new_message = MessageModel(user_id=current_user_id, message=message)
+    # print(new_message)
+
+    result = await db[PRIVATE_CHAT_COLLECTION].update_one(
         {'chat_id': chat_id},
-        {'$push': {'messages': serialized_message.model_dump()}}
+        {'$push': {'messages': new_message.model_dump()}}
     )
 
     if result.matched_count == 1 and result.modified_count == 1:
         # return {"message": "Item added to profile successfully"}
-        return serialized_message.model_dump()
+        return new_message

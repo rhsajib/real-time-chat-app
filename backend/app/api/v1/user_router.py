@@ -35,7 +35,7 @@ async def create_user(
     new_user = await db_create_user(user, db)
 
     # print(new_user)
-    return new_user
+    return new_user.model_dump()
 
 
 
