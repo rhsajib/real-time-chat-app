@@ -48,7 +48,7 @@ const Login = () => {
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="w-full bg-cyan-500 hover:bg-cyan-700 text-white font-bold py-2 rounded-md transition duration-300"
+            className="w-full bg-cyan-500 hover:bg-cyan-700 text-white font-bold py-2 rounded-xl transition duration-300"
             type="submit"
           >
             Login

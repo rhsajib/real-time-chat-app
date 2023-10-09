@@ -1,51 +1,12 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 
-const SignupInputFields = ({ handleSignup }) => {
+const SignupInputFields = ({handleSignupSubmit, formData, handleInputChange, passwordsMatch }) => {
     const inputVariants = {
         rest: { scale: 1 },
         hover: { scale: 1.05 },
     };
 
-    const initiaFormData = {
-        username: "",
-        email: "",
-        password1: "",
-        password2: "",
-    };
-
-    // State to store form data
-    const [formData, setFormData] = useState({});
-    const [passwordsMatch, setPasswordsMatch] = useState(true);
-
-    // Handle form input changes
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
-    };
-
-    const handleSignupSubmit = (e) => {
-        e.preventDefault(); // Prevent the default form submission behavior
-        //By default, when we submit a form,
-        // it performs a full-page refresh and appends the form data
-        // to the URL as query parameters.
-        // Check if passwords match
-        if (formData.password1 !== formData.password2) {
-            setPasswordsMatch(false);
-            return; // Prevent form submission if passwords do not match
-        }
-
-        // Reset the passwordsMatch state to true when they match
-        setPasswordsMatch(true);
-
-        // Perform the signup
-        const completed = handleSignup(formData);
-
-        if (completed) {
-            // Reset form data
-            setFormData(initiaFormData);
-        }
-    };
     return (
         <div className="max-w-md w-full p-6">
             <form onSubmit={handleSignupSubmit}>

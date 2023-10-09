@@ -37,7 +37,7 @@ import axios from "axios";
 const handleSignupData = async (data) => {
     try {
         // here, data = {username: 'sajib', email: 'rhsajib15@gmail.com', password1: '11', password2: '11'}
-        console.log(data);
+        // console.log(data);
         const apiUrl = "http://127.0.0.1:8000/api/v1/user/create";
 
         const response = await axios.post(apiUrl, data, {
@@ -47,7 +47,8 @@ const handleSignupData = async (data) => {
         });
 
         // Handle the response as needed
-        console.log("Sign up completed successfully:", response.data["username"]);
+        console.log("Sign up completed successfully:", response.data);
+        // console.log("Sign up completed successfully:", response.data["username"]);
 
         return response; // Return the response
     } catch (error) {
