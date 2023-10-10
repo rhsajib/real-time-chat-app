@@ -13,27 +13,27 @@ const Sidebar = () => {
             <div className="lg:ml-4 flex items-center lg:items-start ">
                 <ul className="flex lg:flex-col lg:items-start ">
                     <li className="mr-2 lg:my-2">
-                        <Link to="/chats" className="text-white hover:text-blue-500">
+                        <Link to="/ChatP/chats" className="text-white hover:text-blue-500">
                             Chats
                         </Link>
                     </li>
                     <li className="mr-2 lg:my-2">
-                        <Link to="/myprofile" className="text-white hover:text-blue-500">
+                        <Link to="/ChatP/myprofile" className="text-white hover:text-blue-500">
                             Profile
                         </Link>
                     </li>
                     <li className="mr-2 lg:my-2">
-                        <Link to="/groups" className="text-white hover:text-blue-500">
+                        <Link to="/ChatP/groups" className="text-white hover:text-blue-500">
                             Groups
                         </Link>
                     </li>
                     <li className="mr-2 lg:my-2">
-                        <Link to="/users" className="text-white hover:text-blue-500">
+                        <Link to="/ChatP/users" className="text-white hover:text-blue-500">
                             Users
                         </Link>
                     </li>
                     <li className="mr-2 lg:my-2">
-                        <Link to="/settings" className="text-white hover:text-blue-500">
+                        <Link to="/ChatP/settings" className="text-white hover:text-blue-500">
                             Settings
                         </Link>
                     </li>

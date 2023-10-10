@@ -1,71 +1,60 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useState } from "react";
+import { motion } from "framer-motion";
+import LoginInputFields from "../LoginInputFields/LoginInputFields";
+import { handleLoginData } from "../../utilities/handlers";
 
 const Login = () => {
-  const inputVariants = {
-    rest: { scale: 1 },
-    hover: { scale: 1.05 },
-  };
+    const containerVariants = {
+        initial: { opacity: 0, y: -20 },
+        animate: { opacity: 1, y: 0, transition: { duration: 0.9 } },
+    };
 
-  const containerVariants = {
-    initial: { opacity: 0, y: -20 },
-    animate: { opacity: 1, y: 0, transition: { duration: 0.9 } },
-  };
+    const initiaFormData = {
+        email: "",
+        password: "",
+    };
 
-  return (
-    <motion.div
-      className="min-h-screen flex items-center justify-center"
-      initial="initial"
-      animate="animate"
-      variants={containerVariants}
-    >
-      <div className="max-w-md w-full p-6">
-        <form>
-          <div className="mb-4">
-            <motion.input
-              variants={inputVariants}
-              whileHover="hover"
-              whileTap="rest"
-              className="w-full px-4 py-2 text-cyan-700 border rounded-xl focus:outline-none focus:border-cyan-700"
-              type="text"
-              id="usernameOrEmail"
-              name="usernameOrEmail"
-              placeholder="Enter your username or email"
+    const [formData, setFormData] = useState(initiaFormData);
+
+    const handleLoginSubmit = (e) => {
+        e.preventDefault(); // Prevent the default form submission behavior
+
+        handleLoginData(formData)
+            // When we call handleLoginSubmit(formData) , it returns a promise (since handleLoginSubmit is an asynchronous function),
+            // so we need to handle the promise using then to get the result.
+            .then((response) => {
+                // console.log(response.data);
+                setFormData(initiaFormData);
+            });
+    };
+
+    // Handle form input changes
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        // console.log(`${name}: ${value}`)
+        setFormData({ ...formData, [name]: value });
+        // console.log(formData);
+    };
+
+    return (
+        <motion.div
+            className="min-h-screen flex items-center justify-center"
+            initial="initial"
+            animate="animate"
+            variants={containerVariants}
+        >
+            <LoginInputFields
+                handleLoginSubmit={handleLoginSubmit}
+                formData={formData} // Pass the formData to the child component
+                handleInputChange={handleInputChange} // Pass the handleInputChange function to the child component
             />
-          </div>
-          <div className="mb-6">
-            <motion.input
-              variants={inputVariants}
-              whileHover="hover"
-              whileTap="rest"
-              className="w-full px-4 py-2 text-cyan-700 border rounded-xl focus:outline-none focus:border-cyan-700"
-              type="password"
-              id="password"
-              name="password"
-              placeholder="Enter your password"
-            />
-          </div>
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="w-full bg-cyan-500 hover:bg-cyan-700 text-white font-bold py-2 rounded-xl transition duration-300"
-            type="submit"
-          >
-            Login
-          </motion.button>
-        </form>
-      </div>
-    </motion.div>
-  );
+        </motion.div>
+    );
 };
 
 export default Login;
 
-
-
-
 // import React from "react";
-
 
 // const Login = () => {
 //     return (
@@ -81,13 +70,6 @@ export default Login;
 // };
 
 // export default Login;
-
-
-
-
-
-
-
 
 /* 
 

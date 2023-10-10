@@ -5,10 +5,10 @@ const userProfileLoader = (userId) =>
     fetch(`http://127.0.0.1:8000/api/v1/user/info/${userId}`);
 
 const myProfileLoader = (userId) =>
-    fetch("http://127.0.0.1:8000/api/v1/user/detail/me");
+    fetch("http://127.0.0.1:8000/api/v1/user/info/me");
 
 const privateChatsLoader = () =>
-    fetch("http://127.0.0.1:8000/api/v1/chat/private/msg_recipients/");
+    fetch("http://127.0.0.1:8000/api/v1/chat/private/msg-rcpnts/");
 
 // chat -------------------------------------------------------------
 const chatsLoader = () =>
@@ -20,7 +20,7 @@ const messageLoader = (chatId) =>
 
 const chatIdLoader =async (userId) => {
     try {
-      const response = await fetch(`http://127.0.0.1:8000/api/v1/chat/private/recipient/get_chat_id/${userId}`);
+      const response = await fetch(`http://127.0.0.1:8000/api/v1/chat/private/recipient/get-chat/${userId}`);
       const data = await response.json();
     //   console.log(data.chat_id)
       return data.chat_id;
@@ -32,7 +32,7 @@ const chatIdLoader =async (userId) => {
 
 const newChatIdLoader = async (userId) => {
     try {
-        const response = await fetch(`http://127.0.0.1:8000/api/v1/chat/private/recipient/create_chat_id/${userId}`);
+        const response = await fetch(`http://127.0.0.1:8000/api/v1/chat/private/recipient/create-chat/${userId}`);
         const data = await response.json();
       //   console.log(data.chat_id)
         return data.chat_id;

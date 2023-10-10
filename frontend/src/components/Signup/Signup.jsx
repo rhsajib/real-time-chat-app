@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import SignupInputFields from "../SignupInputFields/SignupInputFields";
 import { handleSignupData } from "../../utilities/handlers";
@@ -17,9 +17,9 @@ const Signup = () => {
     };
 
     // State to store form data
-    const [userName, setUserName] = useState("");
     const [formData, setFormData] = useState(initiaFormData);
     const [passwordsMatch, setPasswordsMatch] = useState(true);
+    const [userName, setUserName] = useState("");
 
     // Handle form input changes
     const handleInputChange = (e) => {
@@ -38,12 +38,13 @@ const Signup = () => {
             setPasswordsMatch(false);
             return; // Prevent form submission if passwords do not match
         }
+
         // Reset the passwordsMatch state to true when they match
         setPasswordsMatch(true);
 
         handleSignupData(formData)
             // When we call handleSignupData(formData) , it returns a promise (since handleSignupData is an asynchronous function),
-            // so you need to handle the promise using then to get the result.
+            // so we need to handle the promise using then to get the result.
             .then((response) => {
                 const newUserName = response.data["username"];
 

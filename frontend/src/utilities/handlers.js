@@ -31,7 +31,6 @@
 
 // export { handleSignupData };
 
-
 import axios from "axios";
 
 const handleSignupData = async (data) => {
@@ -58,5 +57,27 @@ const handleSignupData = async (data) => {
     }
 };
 
-export { handleSignupData };
+const handleLoginData = async (data) => {
+    try {
+        // here, data = {email: 'rhsajib15@gmail.com', password: '11'}
+        console.log(data);
+        const apiUrl = "http://127.0.0.1:8000/api/v1/auth/login/access-token";
 
+        const response = await axios.post(apiUrl, data, {
+            headers: {
+                "Content-Type": "application/json", // Set the content type to JSON
+            },
+        });
+
+        // Handle the response as needed
+        console.log("Login completed successfully:");
+        console.log(response.data);
+        return response; // Return the response
+    } catch (error) {
+        // Handle any errors that occur during the POST request
+        console.error("Error Login:", error);
+        throw error; // Rethrow the error
+    }
+};
+
+export { handleSignupData, handleLoginData };
