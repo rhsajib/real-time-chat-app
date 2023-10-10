@@ -1,6 +1,6 @@
 from datetime import datetime
 from pydantic import BaseModel, Field, EmailStr, root_validator
-from app.schemas.chat_schemas import MessageRecipient
+from app.schemas.chat import MessageRecipient
 from ..core.utils import(
     datetime_now, 
     get_uuid4
@@ -19,6 +19,7 @@ class UserModel(BaseModel):
     created_at: datetime = Field(default_factory=datetime_now)
     updated_at: datetime = Field(default_factory=datetime_now)
     active: bool = False
+    # disabled: bool  for disabling the account
     private_message_recipients: list[MessageRecipient | None] = Field([])   # it will store ids of the recipients
     group_chat_ids: list[str | None] = Field([])
 

@@ -2,9 +2,7 @@ from datetime import datetime
 from pydantic import BaseModel
 
 
-class MessageRecipient(BaseModel):
-    recipient_id: str
-    chat_id: str
+
 
 
 class MessageCreate(BaseModel):
@@ -26,6 +24,13 @@ class MessageResponse(Message):
 #         exclude = ["created_at"]
 
 
+
+
+class MessageRecipient(BaseModel):
+    recipient_id: str
+    chat_id: str
+
+    
 class ChatId(BaseModel):
     chat_id: str | None
 

@@ -1,7 +1,9 @@
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.api.v1 import user_router, chat_router
-from app.api.v1.wsocket import chat_websocket_endpoint
+from app.api.v1.api import api_router
+
+from app.core.config import settings
+from app.websocket.wsocket import chat_websocket_endpoint
 from app.database.db import (
     startup_db_client,
     shutdown_db_client,
@@ -27,15 +29,11 @@ async def shutdown_event():
     await shutdown_db_client(app)
 
 
-origins = [
-    'http://localhost',
-    'http://localhost:8080',
-    'http://localhost:5173',
-]
+
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=settings.ORIGINS,
     allow_credentials=True,
     allow_methods=['*'],
     allow_headers=['*'],
@@ -49,8 +47,7 @@ async def root():
 
 
 # Api Routers
-app.include_router(user_router.router, tags=['User'], prefix='/api/v1/user')
-app.include_router(chat_router.router, tags=['Chat'], prefix='/api/v1/chat')
+app.include_router(api_router, prefix=settings.API_V1_STR)
 
 
 # Register the WebSocket endpoint

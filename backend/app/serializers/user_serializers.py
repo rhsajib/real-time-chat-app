@@ -1,7 +1,8 @@
 
-from app.schemas import user_schemas 
+from app.schemas import User, UserInDb
 
 
-def user_serializer(user) -> user_schemas.UserResponse:
-    return user_schemas.UserDetail(**user)
+
+def user_serializer(user: dict) -> User:
+    return User(**user)
 

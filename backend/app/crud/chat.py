@@ -2,13 +2,13 @@ from fastapi import status, HTTPException
 from fastapi.responses import JSONResponse
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from app.core.config import settings
-from app.database.user_db import db_get_user
-from app.models.chat_models import (
+# from app.crud.user import db_get_user_by_id
+from app.models import (
     GroupChatModel,
     MessageModel,
     MessageRecipientModel,
     PrivateChatModel)
-from app.schemas import chat_schemas
+from app import schemas
 from app.serializers import serializers
 
 
@@ -21,14 +21,16 @@ from app.serializers import serializers
 # async
 
 
-USER_CCOLLECTION = settings.USERS
-PRIVATE_CHAT_COLLECTION = settings.PRIVATE_CHAT
-GROUP_CHAT_COLLECTION = settings.GROUP_CHAT
+USERS_COLLECTION = settings.USERS_COLLECTION
+PRIVATE_CHAT_COLLECTION = settings.PRIVATE_CHAT_COLLECTION
+GROUP_CHAT_COLLECTION = settings.GROUP_CHAT_COLLECTION
 
 
 async def db_get_chat(chat_id: str,
                       db: AsyncIOMotorDatabase,
-                      collection: str | None = None):
+                      *,
+                      collection: str):
+    """here, we need collection kwarg as we use it for both private and group chat"""
 
     chat = await db[collection].find_one({'chat_id': chat_id})
     if not chat:
@@ -48,7 +50,7 @@ async def db_get_existing_private_chat(current_user_id: str,
 
     # Retrieve the user with the matching query
 
-    user = await db[USER_CCOLLECTION].find_one(query)
+    user = await db[USERS_COLLECTION].find_one(query)
 
     if user:
         for recipient in user['private_message_recipients']:
@@ -70,7 +72,7 @@ async def db_get_recepient_chat_id(current_user_id: str,
 
     # Retrieve the user with the matching query
 
-    user = await db[USER_CCOLLECTION].find_one(query)
+    user = await db[USERS_COLLECTION].find_one(query)
 
     chat_id = None
     if user:
@@ -87,7 +89,7 @@ async def db_get_recepient_chat_id(current_user_id: str,
 
 
 async def update_private_message_recipients(user_id, recipient, db):
-    result = await db[USER_CCOLLECTION].update_one(
+    result = await db[USERS_COLLECTION].update_one(
         {'id': user_id},
         {'$push': {'private_message_recipients': recipient}}
     )
@@ -133,7 +135,7 @@ async def db_create_private_chat_id(current_user_id: str,
 
 
 async def db_get_all_private_msg_recipients(user_id: str, db: AsyncIOMotorDatabase):
-    user = await db_get_user(user_id, db)
+    user = await db_get_user_by_id(user_id, db)
     if user:
         return user["private_message_recipients"]
     return []
@@ -145,7 +147,7 @@ async def db_get_private_chat_info(chat_id: str, db: AsyncIOMotorDatabase):
 
 
 async def db_get_all_private_chats(user_id: str, db: AsyncIOMotorDatabase):
-    user = await db_get_user(user_id, db)
+    user = await db_get_user_by_id(user_id, db)
 
     if user:
         # Get the list of chat IDs from the user's private_message_recipients
@@ -201,7 +203,7 @@ async def get_group_chat(chat_id: str,
     return chat
 
 
-async def db_create_group_chat(group_data: chat_schemas.GroupChatCreate,
+async def db_create_group_chat(group_data: schemas.GroupChatCreate,
                                db: AsyncIOMotorDatabase,
                                collection):
     serialized_chat = GroupChatModel(**group_data.model_dump())
@@ -242,7 +244,7 @@ async def db_get_messages(chat_id: str, db: AsyncIOMotorDatabase):
 async def db_create_message(current_user_id: str,
                             chat_id: str,
                             message: str,
-                            db: AsyncIOMotorDatabase) -> chat_schemas.Message:
+                            db: AsyncIOMotorDatabase) -> schemas.Message:
 
     chat = await db_get_chat(chat_id, db, collection=PRIVATE_CHAT_COLLECTION)
 

@@ -1,11 +1,11 @@
 from fastapi import status, Depends, APIRouter
 from fastapi.responses import JSONResponse
-from app.schemas import chat_schemas
+from app import schemas
 from app.database.db import get_db
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from app.core.config import settings
 
-from app.database.chat_db import (
+from app.crud.chat import (
     db_get_all_private_msg_recipients,
     db_get_all_private_chats,
     db_get_messages,
@@ -30,9 +30,9 @@ user4 d4511f3932be45199ff23c4ae76faf96
 """
 
 
-@router.get('/private/msg_recipients/', 
+@router.get('/private/msg-rcpnts/', 
             status_code=status.HTTP_200_OK, 
-            response_model=list[chat_schemas.MessageRecipient])
+            response_model=list[schemas.MessageRecipient])
 async def get_all_private_msg_recipients(db: AsyncIOMotorDatabase = Depends(get_db)):
     current_user_id = '2123bb0ec29d4471bd295be4cca68aed'  # user2
     recipients = await db_get_all_private_msg_recipients(current_user_id, db)
@@ -41,7 +41,7 @@ async def get_all_private_msg_recipients(db: AsyncIOMotorDatabase = Depends(get_
 
 @router.get('/private/all/', 
             status_code=status.HTTP_200_OK, 
-            response_model=list[chat_schemas.ChatResponse])
+            response_model=list[schemas.ChatResponse])
 async def get_all_private_chats(db: AsyncIOMotorDatabase = Depends(get_db)):
     current_user_id = '2123bb0ec29d4471bd295be4cca68aed'  # user2
     chats = await db_get_all_private_chats(current_user_id, db)
@@ -74,9 +74,9 @@ async def get_all_private_chats(db: AsyncIOMotorDatabase = Depends(get_db)):
 
 
 # Create private chat id
-@router.get('/private/recipient/create_chat_id/{recipient_id}',
+@router.get('/private/recipient/create-chat/{recipient_id}',
             status_code=status.HTTP_200_OK,
-            response_model=chat_schemas.ChatId)
+            response_model=schemas.ChatId)
 async def create_recipient_chat_id(recipient_id: str,
                               db: AsyncIOMotorDatabase = Depends(get_db)):
 
@@ -90,9 +90,9 @@ async def create_recipient_chat_id(recipient_id: str,
 
 
 # Get private chat id
-@router.get('/private/recipient/get_chat_id/{recipient_id}',
+@router.get('/private/recipient/get-chat/{recipient_id}',
             status_code=status.HTTP_200_OK,
-            response_model=chat_schemas.ChatId)
+            response_model=schemas.ChatId)
 async def get_recipient_chat_id(recipient_id: str,
                               db: AsyncIOMotorDatabase = Depends(get_db)):
 
@@ -107,7 +107,7 @@ async def get_recipient_chat_id(recipient_id: str,
 # recipient_id = 8766afaf17bf42fc8970400e4d35ebb9
 @router.get('/private/chat-info/{chat_id}',
             status_code=status.HTTP_200_OK,
-            response_model=chat_schemas.ChatResponse)
+            response_model=schemas.ChatResponse)
 async def get_private_chat_info(chat_id: str,
                         db: AsyncIOMotorDatabase = Depends(get_db)):
 
@@ -124,7 +124,7 @@ async def get_private_chat_info(chat_id: str,
 # recipient_id = 8766afaf17bf42fc8970400e4d35ebb9
 @router.get('/private/messages/{chat_id}',
             status_code=status.HTTP_200_OK,
-            response_model=list[chat_schemas.Message])
+            response_model=list[schemas.Message])
 async def get_private_messages(chat_id: str,
                                db: AsyncIOMotorDatabase = Depends(get_db)):
 
@@ -135,9 +135,9 @@ async def get_private_messages(chat_id: str,
 # Create new private message
 @ router.post('/private/message/create/{chat_id}',
               status_code=status.HTTP_201_CREATED,
-              response_model=chat_schemas.Message)
+              response_model=schemas.Message)
 async def create_private_message(chat_id: str,
-                                 message_data: chat_schemas.MessageCreate,
+                                 message_data: schemas.MessageCreate,
                                  db: AsyncIOMotorDatabase = Depends(get_db)):
 
     # Access message_data.message to get the message from the request body
@@ -153,12 +153,12 @@ async def create_private_message(chat_id: str,
 # Create group chat
 @router.post('/group/create',
              status_code=status.HTTP_201_CREATED,
-             response_model=chat_schemas.GroupChatResponse)
-async def create_group_chat(group_data: chat_schemas.GroupChatCreate,
+             response_model=schemas.GroupChatResponse)
+async def create_group_chat(group_data: schemas.GroupChatCreate,
                             db: AsyncIOMotorDatabase = Depends(get_db)):
 
     current_user_id = '7eb9b6bdf0a343e9857467436f692118'  # admin
-    db_collection = settings.GROUP_CHAT
+    db_collection = settings.GROUP_CHAT_COLLECTION
     group_data.member_ids.append(current_user_id)
     chat = await db_create_group_chat(group_data, db, db_collection)
     return chat
@@ -168,13 +168,13 @@ async def create_group_chat(group_data: chat_schemas.GroupChatCreate,
 # chat_id: c32beeb6e7be4e7fb597622e37041226
 @ router.post('/group/message/send/{chat_id}',
               status_code=status.HTTP_201_CREATED,
-              response_model=chat_schemas.Message)
+              response_model=schemas.Message)
 async def create_group_message(chat_id: str,
                                message: str,
                                db: AsyncIOMotorDatabase = Depends(get_db)):
 
     # get collection name for group chat
-    db_collection = settings.GROUP_CHAT
+    db_collection = settings.GROUP_CHAT_COLLECTION
 
     current_user_id = '1549cdb3da5446868e21d9767b3e03cf'  # admin
     message = await db_create_message(current_user_id, chat_id, message, db, db_collection)
@@ -185,12 +185,12 @@ async def create_group_message(chat_id: str,
 # recipient_id = 8766afaf17bf42fc8970400e4d35ebb9
 @router.get('/group/messages/{chat_id}',
             status_code=status.HTTP_200_OK,
-            response_model=list[chat_schemas.Message])
+            response_model=list[schemas.Message])
 async def get_group_messages(chat_id: str,
                              db: AsyncIOMotorDatabase = Depends(get_db)):
 
     # get collection name for private chat
-    db_collection = settings.GROUP_CHAT
+    db_collection = settings.GROUP_CHAT_COLLECTION
 
     # messages = await db_get_messages(chat_id, db)
     # return messages

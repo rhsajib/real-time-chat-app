@@ -3,7 +3,7 @@ from fastapi import WebSocket, WebSocketDisconnect
 
 from fastapi import Depends
 from motor.motor_asyncio import AsyncIOMotorDatabase
-from app.database.chat_db import db_create_message
+from app.crud.chat import db_create_message
 from app.database.db import get_db
 from app.serializers.serializers import new_message_serializer
 

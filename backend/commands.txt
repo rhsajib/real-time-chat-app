@@ -1,0 +1,3 @@
+# for 'app/main.py' file
+uvicorn app.main:app --reload
+

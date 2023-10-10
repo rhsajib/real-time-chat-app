@@ -1,6 +1,6 @@
 from datetime import datetime
-from app.schemas.chat_schemas import Message
-from pydantic import BaseModel, Field, EmailStr, root_validator
+from app.schemas.chat import Message
+from pydantic import BaseModel, Field
 from ..core.utils import(
     datetime_now, 
     get_uuid4
