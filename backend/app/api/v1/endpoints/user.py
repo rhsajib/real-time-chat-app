@@ -1,5 +1,5 @@
 from fastapi import HTTPException, status, Depends, APIRouter
-from app.api.v1.dependencies import get_user_manager
+from app.api.v1.dependencies import get_current_active_user, get_user_manager, get_current_user
 from app.exceptions import UserCreationError
 from app import schemas
 from app.crud.user import User
@@ -12,7 +12,9 @@ router = APIRouter()
              response_model=schemas.User)
 async def create_user(
         user_data: schemas.UserCreate,
-        user_manager: User = Depends(get_user_manager)):
+        user_manager: User = Depends(get_user_manager),
+        # current_user: schemas.User = Depends(get_current_active_user)
+):
     try:
         if user_data.password1 != user_data.password2:
             raise UserCreationError("password", "Passwords do not match")
@@ -32,16 +34,21 @@ async def create_user(
 
 # Get current user data
 @router.get('/info/me', status_code=status.HTTP_200_OK, response_model=schemas.User)
-async def get_current_user_detail(user_manager: User = Depends(get_user_manager)):
-    current_user_id = '2123bb0ec29d4471bd295be4cca68aed'  # user2
-    user = await user_manager.get_by_id(current_user_id)
+async def get_current_user_detail(
+    user_manager: User = Depends(get_user_manager),
+    current_user: schemas.User = Depends(get_current_active_user)
+    ):
+    
+    # return current_user
+    user = await user_manager.get_by_id(current_user.id)
     return user
 
 
 # Get a user data
 @router.get('/info/{user_id}', status_code=status.HTTP_200_OK, response_model=schemas.User)
 async def get_user_detail(user_id: str,
-                          user_manager: User = Depends(get_user_manager)):
+                          user_manager: User = Depends(get_user_manager),
+                          current_user: schemas.User = Depends(get_current_user)):
 
     user = await user_manager.get_by_id(user_id)
     return user
@@ -49,7 +56,8 @@ async def get_user_detail(user_id: str,
 
 # Get all user
 @router.get('/all', status_code=status.HTTP_200_OK, response_model=list[schemas.User])
-async def get_all_user(user_manager: User = Depends(get_user_manager)):
+async def get_all_user(user_manager: User = Depends(get_user_manager),
+                       current_user: schemas.User = Depends(get_current_active_user)):
     users = await user_manager.get_all()
     return users
 
@@ -59,7 +67,8 @@ async def get_all_user(user_manager: User = Depends(get_user_manager)):
 async def update_user(
     user_id: str,
     updated_data: schemas.UserUpdate,
-    user_manager: User = Depends(get_user_manager)
+    user_manager: User = Depends(get_user_manager),
+    current_user: schemas.User = Depends(get_current_active_user)
 ):
 
     user = await user_manager.update_user(user_id, updated_data)
@@ -70,7 +79,8 @@ async def update_user(
 @router.delete('/delete/{user_id}', status_code=status.HTTP_204_NO_CONTENT)
 async def delete_use(
     user_id: str,
-    user_manager: User = Depends(get_user_manager)
+    user_manager: User = Depends(get_user_manager),
+    current_user: schemas.User = Depends(get_current_active_user)
 ):
     deleted_user = await user_manager.delete_user(user_id)
 

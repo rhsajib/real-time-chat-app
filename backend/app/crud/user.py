@@ -18,9 +18,8 @@ class BaseUserManager:
     """
 
     def __init__(self, db: AsyncIOMotorDatabase):
-        self.db = db
-        self.collection = settings.USERS_COLLECTION
-        self.user_collection = self.db[self.collection]
+        self.db = db 
+        self.user_collection = self.db[settings.USERS_COLLECTION]
 
     async def get_by_id(self, id: str) -> schemas.UserInDb:
         """
@@ -66,8 +65,14 @@ class BaseUserManager:
         # print('serialized_users', serialized_users)
         return serialized_users
     
-    
 
+
+    def is_disabled(self, user: schemas.User) -> bool:
+        return user.is_disabled
+    
+    def is_superuser(self, user: schemas.User) -> bool:
+        return user.is_superuser
+    
 
 
 class UserDBManager(BaseUserManager):
@@ -84,6 +89,16 @@ class UserDBManager(BaseUserManager):
 class UserCreator(BaseUserManager):
     async def create_user(self, user_data: schemas.UserCreate) -> schemas.User:
         try:
+            # Check if email is already in use
+            existing_user = await self.get_by_email(user_data.email)
+            if existing_user:
+                raise UserCreationError("Email", "Email already in use")
+
+            # # Check if phone number is already in use
+            # existing_user = await self.get_by_phone(user_data.phone)
+            # if existing_user:
+            #     raise UserCreationError("Phone", "Phone number already in use")
+            
             # Hash password
             password_hash = get_password_hash(user_data.password1)
 

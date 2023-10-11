@@ -1,47 +1,64 @@
 // user -------------------------------------------------------------
-const usersLoader = () => fetch("http://127.0.0.1:8000/api/v1/user/all");
+
+import { addTokenToHeaders } from "./tokenService";
+
+// Reusable function for making asynchronous API requests
+// const fetchWithAuthHeaders = (url, headers) => {
+const fetchWithAuthHeaders = (url, headers = {}) => {
+    const updatedHeaders = addTokenToHeaders(headers);
+    return fetch(url, { headers: updatedHeaders });
+};
+
+const usersLoader = () =>
+    fetchWithAuthHeaders("http://127.0.0.1:8000/api/v1/user/all");
 
 const userProfileLoader = (userId) =>
-    fetch(`http://127.0.0.1:8000/api/v1/user/info/${userId}`);
+    fetchWithAuthHeaders(`http://127.0.0.1:8000/api/v1/user/info/${userId}`);
 
 const myProfileLoader = (userId) =>
-    fetch("http://127.0.0.1:8000/api/v1/user/info/me");
+    fetchWithAuthHeaders("http://127.0.0.1:8000/api/v1/user/info/me");
 
 const privateChatsLoader = () =>
-    fetch("http://127.0.0.1:8000/api/v1/chat/private/msg-rcpnts/");
+    fetchWithAuthHeaders(
+        "http://127.0.0.1:8000/api/v1/chat/private/msg-recipients/"
+    );
 
 // chat -------------------------------------------------------------
 const chatsLoader = () =>
-    fetch("http://127.0.0.1:8000/api/v1/chat/private/all");
+    fetchWithAuthHeaders("http://127.0.0.1:8000/api/v1/chat/private/all");
 
 const messageLoader = (chatId) =>
-    fetch(`http://127.0.0.1:8000/api/v1/chat/private/chat-info/${chatId}`);
+    fetchWithAuthHeaders(
+        `http://127.0.0.1:8000/api/v1/chat/private/info/${chatId}`
+    );
 
-
-const chatIdLoader =async (userId) => {
+const chatIdLoader = async (userId) => {
     try {
-      const response = await fetch(`http://127.0.0.1:8000/api/v1/chat/private/recipient/get-chat/${userId}`);
-      const data = await response.json();
-    //   console.log(data.chat_id)
-      return data.chat_id;
+        const response = await fetchWithAuthHeaders(
+            `http://127.0.0.1:8000/api/v1/chat/private/recipient/get-chat/${userId}`
+        );
+        const data = await response.json();
+        //   console.log(data.chat_id)
+        return data.chat_id;
     } catch (error) {
-      console.error("Error fetching chat ID:", error);
-      throw error; // You can handle the error as needed
+        console.error("Error fetching chat ID:", error);
+        throw error; // You can handle the error as needed
     }
-  };
+};
 
 const newChatIdLoader = async (userId) => {
     try {
-        const response = await fetch(`http://127.0.0.1:8000/api/v1/chat/private/recipient/create-chat/${userId}`);
+        const response = await fetchWithAuthHeaders(
+            `http://127.0.0.1:8000/api/v1/chat/private/recipient/create-chat/${userId}`
+        );
         const data = await response.json();
-      //   console.log(data.chat_id)
+        //   console.log(data.chat_id)
         return data.chat_id;
-      } catch (error) {
+    } catch (error) {
         console.error("Error fetching chat ID:", error);
         throw error; // You can handle the error as needed
-      }
-}
-  
+    }
+};
 
 export {
     chatsLoader,
@@ -51,5 +68,5 @@ export {
     userProfileLoader,
     myProfileLoader,
     chatIdLoader,
-    newChatIdLoader
+    newChatIdLoader,
 };

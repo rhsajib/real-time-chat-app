@@ -10,4 +10,4 @@ class Token(BaseModel):
 
 
 class TokenPayload(BaseModel):
-    sub: int | None = None
+    sub: str | None = None

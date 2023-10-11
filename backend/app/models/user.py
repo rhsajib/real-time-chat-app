@@ -18,8 +18,9 @@ class UserModel(BaseModel):
     password: str = Field(...) 
     created_at: datetime = Field(default_factory=datetime_now)
     updated_at: datetime = Field(default_factory=datetime_now)
-    active: bool = False
-    # disabled: bool  for disabling the account
+    is_active: bool = False
+    is_disabled: bool = False     
+    is_superuser: bool = False                                                    # for disabling the account
     private_message_recipients: list[MessageRecipient | None] = Field([])   # it will store ids of the recipients
     group_chat_ids: list[str | None] = Field([])
 

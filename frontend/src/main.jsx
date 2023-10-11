@@ -26,49 +26,49 @@ const router = createBrowserRouter([
         element: <SignupLogin />
     },
     {
-        path: "/ChatP",
+        path: "/CP",
         element: <Home />,
         children: [
             {
-                path: "/ChatP/chats",
+                path: "/CP/chat",
                 element: <Chats />,
                 loader: privateChatsLoader,
                 children: [
                     {
-                        path: "/ChatP/chats/private/:chatId",
+                        path: "/CP/chat/private/:chatId",
                         element: <Messages />,
                         loader: ({ params }) => messageLoader(params.chatId),
                     },
                 ],
             },
             {
-                path: "/ChatP/myprofile",
+                path: "/CP/myprofile",
                 element: <MyProfile />,
                 loader: myProfileLoader
             },
             {
-                path: "/ChatP/groups",
+                path: "/CP/groups",
                 element: <Groups />,
                 // loader={}
             },
             {
-                path: "/ChatP/users",
+                path: "/CP/users",
                 element: <Users />,
                 loader: usersLoader,
                 children: [
                     {
-                        path: "/ChatP/users/profile/:userId",
+                        path: "/CP/users/profile/:userId",
                         element: <Profile />,
                         loader: ({params}) => userProfileLoader(params.userId)
                     },
                     {
-                        path: "/ChatP/users/profile",
+                        path: "/CP/users/profile",
                         element: <Profile />,
                     },
                 ],
             },
             {
-                path: "/ChatP/settings",
+                path: "/CP/settings",
                 element: <Settings />,
                 // loader={}
             },

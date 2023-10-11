@@ -1,22 +1,12 @@
 from fastapi import status, Depends, APIRouter
 from fastapi.responses import JSONResponse
 from app import schemas
+from app.api.v1.dependencies import get_private_chat_manager, get_current_active_user
 from app.database.db import get_db
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from app.core.config import settings
 
-from app.crud.chat import (
-    db_get_all_private_msg_recipients,
-    db_get_all_private_chats,
-    db_get_messages,
-    db_create_message,
-    # db_create_private_chat,
-    db_create_private_chat_id,
-    db_get_existing_private_chat,
-    db_get_recepient_chat_id,
-    db_create_group_chat,
-    db_get_private_chat_info
-)
+from app.crud.chat import PrivateChatManager
 
 
 router = APIRouter()
@@ -30,89 +20,80 @@ user4 d4511f3932be45199ff23c4ae76faf96
 """
 
 
-@router.get('/private/msg-rcpnts/', 
+@router.get('/private/msg-recipients/', 
             status_code=status.HTTP_200_OK, 
             response_model=list[schemas.MessageRecipient])
-async def get_all_private_msg_recipients(db: AsyncIOMotorDatabase = Depends(get_db)):
-    current_user_id = '2123bb0ec29d4471bd295be4cca68aed'  # user2
-    recipients = await db_get_all_private_msg_recipients(current_user_id, db)
+async def get_all_private_message_recipients(
+    pvt_chat_manager: PrivateChatManager = Depends(get_private_chat_manager),
+    current_user: schemas.User = Depends(get_current_active_user)
+):
+   
+    recipients = await pvt_chat_manager.get_all_msg_recipients(current_user.id)
     return recipients
 
-
-@router.get('/private/all/', 
-            status_code=status.HTTP_200_OK, 
-            response_model=list[schemas.ChatResponse])
-async def get_all_private_chats(db: AsyncIOMotorDatabase = Depends(get_db)):
-    current_user_id = '2123bb0ec29d4471bd295be4cca68aed'  # user2
-    chats = await db_get_all_private_chats(current_user_id, db)
-    return chats
-
-
-# Create private chat
-# @router.get('/private/{recipient_id}',
-# @router.get('/private/create/{recipient_id}',
-#             status_code=status.HTTP_200_OK,
-#             response_model=chat_schemas.ChatResponse)
-# async def create_private_chat(recipient_id: str,
-#                               db: AsyncIOMotorDatabase = Depends(get_db)):
-
-#     current_user_id = '2123bb0ec29d4471bd295be4cca68aed'  # user2
-
-#     if current_user_id == recipient_id:
-#         content = {'message': 'self messaging is not available!!'}
-#         return JSONResponse(content=content)
-
-#     existing_chat = await db_get_existing_private_chat(current_user_id, recipient_id, db)
-#     if existing_chat:
-#         print('chat already exists')
-#         # print(existing_chat)
-#         return existing_chat
-
-#     new_chat = await db_create_private_chat(current_user_id, recipient_id, db)
-#     # print('new_chat', new_chat)
-#     return new_chat
-
-
-# Create private chat id
-@router.get('/private/recipient/create-chat/{recipient_id}',
-            status_code=status.HTTP_200_OK,
-            response_model=schemas.ChatId)
-async def create_recipient_chat_id(recipient_id: str,
-                              db: AsyncIOMotorDatabase = Depends(get_db)):
-
-    current_user_id = '2123bb0ec29d4471bd295be4cca68aed'  # user2
-
-    chat_id = await db_create_private_chat_id(current_user_id, recipient_id, db)
-    return chat_id
-
-
-
-
-
-# Get private chat id
-@router.get('/private/recipient/get-chat/{recipient_id}',
-            status_code=status.HTTP_200_OK,
-            response_model=schemas.ChatId)
-async def get_recipient_chat_id(recipient_id: str,
-                              db: AsyncIOMotorDatabase = Depends(get_db)):
-
-    current_user_id = '2123bb0ec29d4471bd295be4cca68aed'  # user2
-
-    chat_id = await db_get_recepient_chat_id(current_user_id, recipient_id, db)
-    return chat_id
 
 
 
 # Get private chat info
 # recipient_id = 8766afaf17bf42fc8970400e4d35ebb9
-@router.get('/private/chat-info/{chat_id}',
+@router.get('/private/info/{chat_id}',
             status_code=status.HTTP_200_OK,
-            response_model=schemas.ChatResponse)
-async def get_private_chat_info(chat_id: str,
-                        db: AsyncIOMotorDatabase = Depends(get_db)):
+            response_model=schemas.PrivateChatResponse)
+async def get_private_chat(chat_id: str,
+                         pvt_chat_manager: PrivateChatManager = Depends(get_private_chat_manager),
+                         current_user: schemas.User = Depends(get_current_active_user)):
 
-    chat_info = await db_get_private_chat_info(chat_id, db)
-    return chat_info
+    chat = await pvt_chat_manager.get_chat_by_id(chat_id)
+    return chat
+
+
+
+
+@router.get('/private/all/', 
+            status_code=status.HTTP_200_OK, 
+            response_model=list[schemas.PrivateChatResponse])
+async def get_all_private_chats(
+    pvt_chat_manager: PrivateChatManager = Depends(get_private_chat_manager),
+    current_user: schemas.User = Depends(get_current_active_user)
+):
+    # current_user_id = '2123bb0ec29d4471bd295be4cca68aed'  # user2
+    chats = await pvt_chat_manager.get_all_chats(current_user.id)
+    return chats
+
+
+# Create private chat
+@router.get('/private/recipient/create-chat/{recipient_id}',
+            status_code=status.HTTP_200_OK,
+            response_model=schemas.PrivateChatCreate)
+async def create_private_chat(recipient_id: str,
+                              pvt_chat_manager: PrivateChatManager = Depends(get_private_chat_manager),
+                              current_user: schemas.User = Depends(get_current_active_user)):
+
+    # current_user_id = '2123bb0ec29d4471bd295be4cca68aed'  # user2
+
+    chat_id = await pvt_chat_manager.create_chat(current_user.id, recipient_id)
+    return chat_id
+
+
+
+
+
+# Get private chat recipient
+@router.get('/private/recipient/get-chat/{recipient_id}',
+            status_code=status.HTTP_200_OK,
+            response_model=schemas.MessageRecipient)
+async def get_chat_recipient(recipient_id: str,
+                              pvt_chat_manager: PrivateChatManager = Depends(get_private_chat_manager),
+                              current_user: schemas.User = Depends(get_current_active_user)):
+
+    # current_user_id = '2123bb0ec29d4471bd295be4cca68aed'  # user2
+
+    recipient = await pvt_chat_manager.get_recepient(current_user.id, recipient_id)
+    return recipient
+
+
+
+
 
 
 
@@ -121,14 +102,16 @@ async def get_private_chat_info(chat_id: str,
 
 
 # Get private chat messages
-# recipient_id = 8766afaf17bf42fc8970400e4d35ebb9
 @router.get('/private/messages/{chat_id}',
             status_code=status.HTTP_200_OK,
             response_model=list[schemas.Message])
-async def get_private_messages(chat_id: str,
-                               db: AsyncIOMotorDatabase = Depends(get_db)):
+async def get_private_messages(
+    chat_id: str,
+    pvt_chat_manager: PrivateChatManager = Depends(get_private_chat_manager),
+    current_user: schemas.User = Depends(get_current_active_user)
+):
 
-    messages = await db_get_messages(chat_id, db)
+    messages = await pvt_chat_manager.get_chat_messages(chat_id)
     return messages
 
 

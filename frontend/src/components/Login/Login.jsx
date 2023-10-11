@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import LoginInputFields from "../LoginInputFields/LoginInputFields";
 import { handleLoginData } from "../../utilities/handlers";
+import { getToken, setToken } from "../../utilities/tokenService";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
     const containerVariants = {
@@ -13,9 +15,21 @@ const Login = () => {
         email: "",
         password: "",
     };
+    const navigate = useNavigate(); // Initialize the navigate function
 
     const [formData, setFormData] = useState(initiaFormData);
 
+    useEffect(() => {
+        // Check if the access token exists
+        const accessToken = getToken(); // Implement your own function to retrieve the access token
+
+        if (accessToken) {
+            // If access token exists, navigate to the desired path
+            navigate("/CP"); // Replace with the path you want to navigate to
+        }
+    }, []);
+
+    
     const handleLoginSubmit = (e) => {
         e.preventDefault(); // Prevent the default form submission behavior
 
@@ -24,7 +38,18 @@ const Login = () => {
             // so we need to handle the promise using then to get the result.
             .then((response) => {
                 // console.log(response.data);
+
+                const { access_token } = response.data;
+
+                // Store the access token in cookie (or state or local storage)
+                setToken(access_token);
                 setFormData(initiaFormData);
+
+                // Navigate to the desired path after successful login
+                navigate("/CP"); // Replace with the path you want to navigate to
+            })
+            .catch((error) => {
+                console.error("Login failed", error);
             });
     };
 

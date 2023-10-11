@@ -12,9 +12,9 @@ class MessageRecipientModel(BaseModel):
 
 
 class MessageModel(BaseModel):
-    # message_id: str = Field(default_factory=get_uuid4)
-    user_id: str = Field(...)
+    id: str = Field(default_factory=get_uuid4)
     message: str = Field(...)
+    created_by: str = Field(...)
     created_at: datetime = Field(default_factory=datetime_now)
 
 class MessageResponseModel(MessageModel):
@@ -24,12 +24,16 @@ class MessageResponseModel(MessageModel):
         return self.created_at.isoformat()       # Created At (Formatted): 2023-10-04T21:05:52.637000
 
 
-class PrivateChatModel(BaseModel):
+
+class ChatBaseModel(BaseModel):
     chat_id: str = Field(default_factory=get_uuid4)
     member_ids: list[str] = Field(...)
     messages: list[Message | None] = Field([])
 
-class GroupChatModel(PrivateChatModel):
+class PrivateChatModel(ChatBaseModel):
+    pass
+
+class GroupChatModel(ChatBaseModel):
     chat_name: str | None = Field(None)
 
 

@@ -16,10 +16,15 @@ class UserCreate(UserBase):
 
 # Additional properties to return via API
 class User(UserBase):
+    id: str  
     first_name: str | None
     last_name: str | None
     phone: str | None
-    active: bool
+    created_at: datetime
+    updated_at: datetime
+    is_active: bool
+    is_disabled: bool
+    is_superuser: bool 
 
 # Properties to receive via API on update
 class UserUpdate(User):
@@ -28,9 +33,6 @@ class UserUpdate(User):
 # Additional properties stored in DB
 class UserInDb(UserUpdate):
     # disabled: bool  for disabling the account 
-    id: str  
-    created_at: datetime
-    updated_at: datetime
     private_message_recipients: list[MessageRecipient | None]
     group_chat_ids: list[str | None]
 
