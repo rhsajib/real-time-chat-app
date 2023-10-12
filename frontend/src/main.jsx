@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import Home from "./components/Layout/Home";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Chats from "./components/Chats/Chats";
 import Profile from "./components/Profile/Profile";
 import Groups from "./components/Groups/Groups";
@@ -19,56 +19,62 @@ import Users from "./components/Users/Users";
 import MyProfile from "./components/MyProfile/MyProfile";
 import Settings from "./components/Settings/Settings";
 import SignupLogin from "./components/SignupLogin/SignupLogin";
+import Auth from "./components/Auth/Auth";
 
 const router = createBrowserRouter([
     {
         path: "/",
-        element: <SignupLogin />
+        element: <SignupLogin />,
     },
     {
-        path: "/CP",
-        element: <Home />,
+        path: "/cp",
+        element:(
+            <Auth>
+              <Home />
+            </Auth>
+          ),
         children: [
             {
-                path: "/CP/chat",
+                path: "/cp/chat",
                 element: <Chats />,
                 loader: privateChatsLoader,
                 children: [
                     {
-                        path: "/CP/chat/private/:chatId",
+                        path: "/cp/chat/private/:chatId",
                         element: <Messages />,
                         loader: ({ params }) => messageLoader(params.chatId),
                     },
                 ],
             },
             {
-                path: "/CP/myprofile",
+                path: "/cp/me",
                 element: <MyProfile />,
-                loader: myProfileLoader
+                loader: myProfileLoader,
             },
             {
-                path: "/CP/groups",
+                path: "/cp/groups",
                 element: <Groups />,
                 // loader={}
             },
             {
-                path: "/CP/users",
+                path: "/cp/users",
                 element: <Users />,
                 loader: usersLoader,
                 children: [
                     {
-                        path: "/CP/users/profile/:userId",
+                        path: "/cp/users/profile/:userId",
                         element: <Profile />,
-                        loader: ({params}) => userProfileLoader(params.userId)
+                        loader: ({ params }) =>
+                            userProfileLoader(params.userId),
                     },
                     {
-                        path: "/CP/users/profile",
+                        path: "/cp/users/profile",
                         element: <Profile />,
                     },
                 ],
             },
             {
-                path: "/CP/settings",
+                path: "/cp/settings",
                 element: <Settings />,
                 // loader={}
             },

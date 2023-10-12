@@ -22,10 +22,9 @@ const Login = () => {
     useEffect(() => {
         // Check if the access token exists
         const accessToken = getToken(); // Implement your own function to retrieve the access token
-
         if (accessToken) {
             // If access token exists, navigate to the desired path
-            navigate("/CP"); // Replace with the path you want to navigate to
+            navigate("/cp"); // Replace with the path you want to navigate to
         }
     }, []);
 
@@ -44,9 +43,8 @@ const Login = () => {
                 // Store the access token in cookie (or state or local storage)
                 setToken(access_token);
                 setFormData(initiaFormData);
-
                 // Navigate to the desired path after successful login
-                navigate("/CP"); // Replace with the path you want to navigate to
+                navigate("/cp"); // Replace with the path you want to navigate to
             })
             .catch((error) => {
                 console.error("Login failed", error);

@@ -24,6 +24,7 @@ const privateChatsLoader = () =>
     );
 
 // chat -------------------------------------------------------------
+
 const chatsLoader = () =>
     fetchWithAuthHeaders("http://127.0.0.1:8000/api/v1/chat/private/all");
 
@@ -31,6 +32,21 @@ const messageLoader = (chatId) =>
     fetchWithAuthHeaders(
         `http://127.0.0.1:8000/api/v1/chat/private/info/${chatId}`
     );
+
+const authUserLoader = async () => {
+    try {
+        const response = await fetchWithAuthHeaders(
+            "http://127.0.0.1:8000/api/v1/chat/home"
+        );
+        // console.log(response)
+        const user = await response.json();
+        console.log("user", user);
+        return user;
+    } catch (error) {
+        console.error("Error fetching auth user:", error);
+        throw error; // You can handle the error as needed
+    }
+};
 
 const chatIdLoader = async (userId) => {
     try {
@@ -61,6 +77,7 @@ const newChatIdLoader = async (userId) => {
 };
 
 export {
+    authUserLoader,
     chatsLoader,
     messageLoader,
     privateChatsLoader,

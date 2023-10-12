@@ -12,14 +12,13 @@ router = APIRouter()
              response_model=schemas.User)
 async def create_user(
         user_data: schemas.UserCreate,
-        user_manager: User = Depends(get_user_manager),
         # current_user: schemas.User = Depends(get_current_active_user)
+        user_manager: User = Depends(get_user_manager),
+        # if i use current user here, it will raise '401 Unauthorized'
 ):
     try:
         if user_data.password1 != user_data.password2:
             raise UserCreationError("password", "Passwords do not match")
-
-        # def validate_unique_phone_number(cls, value):
 
         # Create a new user using the User class
         new_user = await user_manager.create_user(user_data)
@@ -27,9 +26,22 @@ async def create_user(
         # print(new_user)
         return new_user
     except UserCreationError as e:
-        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-                            detail={"error": "Validation Failed", "errors": [
-                                {"field": e.field, "message": e.message}]})
+        print(e)
+        print(e.field, e.message)
+
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail={
+                'error': 'Validation Field',
+                'errors': [
+                    {
+                        'field': e.field,
+                        'message': e.message
+                    }
+                ]
+            }
+        )
+
 
 
 # Get current user data
@@ -37,10 +49,10 @@ async def create_user(
 async def get_current_user_detail(
     user_manager: User = Depends(get_user_manager),
     current_user: schemas.User = Depends(get_current_active_user)
-    ):
-    
+):
+
     # return current_user
-    user = await user_manager.get_by_id(current_user.id)
+    user = await user_manager.get_by_id(current_user['id'])
     return user
 
 
@@ -48,7 +60,7 @@ async def get_current_user_detail(
 @router.get('/info/{user_id}', status_code=status.HTTP_200_OK, response_model=schemas.User)
 async def get_user_detail(user_id: str,
                           user_manager: User = Depends(get_user_manager),
-                          current_user: schemas.User = Depends(get_current_user)):
+                          current_user: schemas.User = Depends(get_current_active_user)):
 
     user = await user_manager.get_by_id(user_id)
     return user
@@ -58,7 +70,7 @@ async def get_user_detail(user_id: str,
 @router.get('/all', status_code=status.HTTP_200_OK, response_model=list[schemas.User])
 async def get_all_user(user_manager: User = Depends(get_user_manager),
                        current_user: schemas.User = Depends(get_current_active_user)):
-    users = await user_manager.get_all()
+    users = await user_manager.get_all_except_me(current_user['id'])
     return users
 
 

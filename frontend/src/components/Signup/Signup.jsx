@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import SignupInputFields from "../SignupInputFields/SignupInputFields";
 import { handleSignupData } from "../../utilities/handlers";
@@ -19,6 +19,7 @@ const Signup = () => {
     // State to store form data
     const [formData, setFormData] = useState(initiaFormData);
     const [passwordsMatch, setPasswordsMatch] = useState(true);
+    const [errorMessage, setErrorMessage] = useState(null);
     const [userName, setUserName] = useState("");
 
     // Handle form input changes
@@ -33,6 +34,7 @@ const Signup = () => {
         // it performs a full-page refresh and appends the form data
         // to the URL as query parameters.
         // Check if passwords match
+        setErrorMessage(null);
 
         if (formData.password1 !== formData.password2) {
             setPasswordsMatch(false);
@@ -56,6 +58,11 @@ const Signup = () => {
             })
             .catch((error) => {
                 console.error("Error signing up:", error);
+                const response = error.response;
+                // console.log("response", response, response.data);
+                const message = response.data.detail.errors[0].message;
+                // console.log('message', message)
+                setErrorMessage(message);
             });
     };
 
@@ -74,6 +81,7 @@ const Signup = () => {
                     formData={formData} // Pass the formData to the child component
                     handleInputChange={handleInputChange} // Pass the handleInputChange function to the child component
                     passwordsMatch={passwordsMatch}
+                    fieldError={errorMessage}
                 />
             )}
         </motion.div>

@@ -1,7 +1,7 @@
 from fastapi import status, Depends, APIRouter
 from fastapi.responses import JSONResponse
 from app import schemas
-from app.api.v1.dependencies import get_private_chat_manager, get_current_active_user
+from app.api.v1.dependencies import get_current_user, get_private_chat_manager, get_current_active_user
 from app.database.db import get_db
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from app.core.config import settings
@@ -18,6 +18,12 @@ user3 b3cea1638eb14ee48ec20d879f0789e4
 user4 d4511f3932be45199ff23c4ae76faf96
 
 """
+@router.get('/home', 
+            status_code=status.HTTP_200_OK,
+            response_model=schemas.User)
+async def get_authenticate_user(current_user: schemas.User = Depends(get_current_active_user)):
+    print(current_user)
+    return current_user
 
 
 @router.get('/private/msg-recipients/', 
@@ -28,7 +34,7 @@ async def get_all_private_message_recipients(
     current_user: schemas.User = Depends(get_current_active_user)
 ):
    
-    recipients = await pvt_chat_manager.get_all_msg_recipients(current_user.id)
+    recipients = await pvt_chat_manager.get_all_msg_recipients(current_user['id'])
     return recipients
 
 
@@ -57,7 +63,7 @@ async def get_all_private_chats(
     current_user: schemas.User = Depends(get_current_active_user)
 ):
     # current_user_id = '2123bb0ec29d4471bd295be4cca68aed'  # user2
-    chats = await pvt_chat_manager.get_all_chats(current_user.id)
+    chats = await pvt_chat_manager.get_all_chats(current_user['id'])
     return chats
 
 
@@ -71,7 +77,7 @@ async def create_private_chat(recipient_id: str,
 
     # current_user_id = '2123bb0ec29d4471bd295be4cca68aed'  # user2
 
-    chat_id = await pvt_chat_manager.create_chat(current_user.id, recipient_id)
+    chat_id = await pvt_chat_manager.create_chat(current_user['id'], recipient_id)
     return chat_id
 
 
@@ -88,7 +94,7 @@ async def get_chat_recipient(recipient_id: str,
 
     # current_user_id = '2123bb0ec29d4471bd295be4cca68aed'  # user2
 
-    recipient = await pvt_chat_manager.get_recepient(current_user.id, recipient_id)
+    recipient = await pvt_chat_manager.get_recepient(current_user['id'], recipient_id)
     return recipient
 
 

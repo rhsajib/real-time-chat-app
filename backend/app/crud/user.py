@@ -10,19 +10,19 @@ from app.core.config import settings
 
 
 class BaseUserManager:
-    """
+    '''
     Initialize the BaseUserManager.
 
     Args:
         db (AsyncIOMotorDatabase): The MongoDB database instance.
-    """
+    '''
 
     def __init__(self, db: AsyncIOMotorDatabase):
-        self.db = db 
+        self.db = db
         self.user_collection = self.db[settings.USERS_COLLECTION]
 
     async def get_by_id(self, id: str) -> schemas.UserInDb:
-        """
+        '''
         Get a user by their ID from the database.
 
         Args:
@@ -32,47 +32,48 @@ class BaseUserManager:
             dict: The user data.
         Raises:
             HTTPException: If the user is not found.
-        """
+        '''
         user = await self.user_collection.find_one({'id': id})
         if not user:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                                 detail=f'User not found')
         return user
-    
-
 
     async def get_by_email(self, email: str) -> schemas.UserInDb:
         user = await self.user_collection.find_one({'email': email})
         return user
 
-
     async def get_all(self) -> list[schemas.User]:
-        """
+        '''
         Get all users from the database.
 
         Returns:
             list[schemas.User]: A list of user data.
-        """
+        '''
         cursor = self.user_collection.find({})
         # to_list to retrieve the documents as a list
         users = await cursor.to_list(length=None)
 
         serialized_users = []
+        # as every user has default mongodb _id field, we can not directly export the _id.
+        # so we need to serialize it
         for user in users:
             serialized_user = serializers.user_serializer(user)
             serialized_users.append(serialized_user)
 
         # print('serialized_users', serialized_users)
         return serialized_users
-    
 
+    async def get_all_except_me(self, current_user_id: str) -> list[schemas.User]:
+        all_users = await self.get_all()
+        # print(all_users)
+        return [user for user in all_users if user.id != current_user_id]
 
-    def is_disabled(self, user: schemas.User) -> bool:
-        return user.is_disabled
-    
-    def is_superuser(self, user: schemas.User) -> bool:
-        return user.is_superuser
-    
+    # async def is_disabled(self, user: schemas.User) -> bool:
+    #     return user.is_disabled
+
+    # async def is_superuser(self, user: schemas.User) -> bool:
+    #     return user.is_superuser
 
 
 class UserDBManager(BaseUserManager):
@@ -92,13 +93,13 @@ class UserCreator(BaseUserManager):
             # Check if email is already in use
             existing_user = await self.get_by_email(user_data.email)
             if existing_user:
-                raise UserCreationError("Email", "Email already in use")
+                raise UserCreationError('Email', 'Email already in use !')
 
             # # Check if phone number is already in use
             # existing_user = await self.get_by_phone(user_data.phone)
             # if existing_user:
-            #     raise UserCreationError("Phone", "Phone number already in use")
-            
+            #     raise UserCreationError('Phone', 'Phone number already in use')
+
             # Hash password
             password_hash = get_password_hash(user_data.password1)
 
@@ -108,7 +109,7 @@ class UserCreator(BaseUserManager):
             # https://fastapi.tiangolo.com/tutorial/extra-models/
             updated_user_data = {
                 **user_data.model_dump(),
-                "password": password_hash
+                'password': password_hash
             }
             new_user = UserModel(**updated_user_data)
             print(new_user)
@@ -120,20 +121,19 @@ class UserCreator(BaseUserManager):
                 return created_user
             else:
                 # Raise the custom exception with a specific error message
-                raise UserCreationError(
-                    "User creation failed, write operation not acknowledged")
+                raise UserCreationError('User creation failed', 'write operation not acknowledged')
 
         except UserCreationError as e:
-            # Handle the custom exception
-            print(f"User creation error: {str(e)}")
-        except Exception as e:
-            # Handle other exceptions if needed
-            print(f"An unexpected error occurred: {str(e)}")
+            raise e
 
+        # except Exception as e:
+        #     return e
+        #     # Handle other exceptions if needed
+        #     print(f'An unexpected error occurred: {str(e)}')
 
 
 class UserUpdater(BaseUserManager):
-    """
+    '''
     Update user data in the database.
 
     Args:
@@ -142,7 +142,7 @@ class UserUpdater(BaseUserManager):
 
     Returns:
         dict: The updated user data.
-    """
+    '''
     async def update_user(self, id: str, updated_data: schemas.UserUpdate):
         # existing_user = await self.get_by_id(id)
 
@@ -161,7 +161,7 @@ class UserUpdater(BaseUserManager):
 
 
 class UserDeleter(BaseUserManager):
-    """
+    '''
     Delete a user from the database.
 
     Args:
@@ -171,7 +171,7 @@ class UserDeleter(BaseUserManager):
         dict: The deleted user data.
     Raises:
         HTTPException: If the user is not deleted.
-    """
+    '''
     async def delete_user(self, id: str):
         user = await self.get_by_id(id)
         deleted_user = await self.user_collection.delete_one({'id': id})

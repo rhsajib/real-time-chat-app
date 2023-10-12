@@ -15,23 +15,23 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl=f'{settings.API_V1_STR}/login/acce
 
 
 # Dependency to create a User instance
-def get_user_manager(db: AsyncIOMotorDatabase = Depends(get_db)):
+async def get_user_manager(db: AsyncIOMotorDatabase = Depends(get_db)):
     return User(db)
 
 
 
 
-def get_private_chat_manager(db: AsyncIOMotorDatabase = Depends(get_db), 
+async def get_private_chat_manager(db: AsyncIOMotorDatabase = Depends(get_db), 
                              user_manager: User = Depends(get_user_manager)):  # here User is a class
     return PrivateChatManager(db, user_manager)
 
 
 
 
-def get_current_user(
+async def get_current_user(
         token: str = Depends(oauth2_scheme),
         user_manager: User = Depends(get_user_manager)
-):
+) -> schemas.User:
     try:
         payload = jwt.decode(
             token, settings.JWT_SECRET_KEY, algorithms=[settings.ALGORITHM]
@@ -51,27 +51,29 @@ def get_current_user(
     #         detail="Could not validate credentials",
     #     )
 
-    user = user_manager.get_by_id(token_data.sub)
+    user = await user_manager.get_by_id(token_data.sub)
+    # print('get_current_user', user)
     if not user:
         raise credentials_exception
     return user
 
 
 
-def get_current_active_user(
-    current_user: schemas.User = Depends(get_current_user),
-    user_manager: User = Depends(get_user_manager)
+async def get_current_active_user(
+    current_user: schemas.User = Depends(get_current_user)
 ) -> schemas.User:
-    if user_manager.is_disabled(current_user):
+    
+    if current_user['is_disabled']:
         raise HTTPException(status_code=400, detail="Inactive user")
     return current_user
 
-def get_current_active_superuser(
-    current_user: schemas.User = Depends(get_current_user),
-    user_manager: User = Depends(get_user_manager)
+
+
+async def get_current_active_superuser(
+    current_user: schemas.User = Depends(get_current_user)
 ) -> schemas.User:
 
-    if not user_manager.is_superuser(current_user):
+    if not current_user['is_superuser']:
         raise HTTPException(
             status_code=400, detail="The user doesn't have enough privileges"
         )
