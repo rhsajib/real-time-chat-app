@@ -38,5 +38,6 @@ class UserInDb(UserUpdate):
 
 
 
-# class UserInDB(UserInDBBase):
-#     hashed_password: str
+class UserOfAll(UserBase):
+    id: str
+

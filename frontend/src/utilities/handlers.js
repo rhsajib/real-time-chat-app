@@ -75,7 +75,7 @@ const handleSignupData = async (data) => {
         return response; // Return the response
     } catch (error) {
         // Handle any errors that occur during the POST request
-        console.error("Error signing up:", error);
+        console.error("Error signing up:", error.response);
         throw error;
     }
 };

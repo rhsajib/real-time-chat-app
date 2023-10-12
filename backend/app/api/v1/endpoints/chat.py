@@ -1,4 +1,4 @@
-from fastapi import status, Depends, APIRouter
+from fastapi import status, Depends, APIRouter, HTTPException
 from fastapi.responses import JSONResponse
 from app import schemas
 from app.api.v1.dependencies import get_current_user, get_private_chat_manager, get_current_active_user
@@ -22,7 +22,7 @@ user4 d4511f3932be45199ff23c4ae76faf96
             status_code=status.HTTP_200_OK,
             response_model=schemas.User)
 async def get_authenticate_user(current_user: schemas.User = Depends(get_current_active_user)):
-    print(current_user)
+    print('current_user form get_authenticate_user', current_user)
     return current_user
 
 
@@ -52,6 +52,20 @@ async def get_private_chat(chat_id: str,
     chat = await pvt_chat_manager.get_chat_by_id(chat_id)
     return chat
 
+# Get private chat recipient
+@router.get('/private/recipient/chat-id/{recipient_id}',
+            status_code=status.HTTP_200_OK,
+            response_model=schemas.ChatId)
+async def get_recipient_chat_id(recipient_id: str,
+                              pvt_chat_manager: PrivateChatManager = Depends(get_private_chat_manager),
+                              current_user: schemas.User = Depends(get_current_active_user)):
+
+    # current_user_id = '2123bb0ec29d4471bd295be4cca68aed'  # user2
+    try:
+        recipient = await pvt_chat_manager.get_recepient(current_user['id'], recipient_id)
+        return recipient
+    except HTTPException as e:
+        raise e
 
 
 
@@ -69,33 +83,23 @@ async def get_all_private_chats(
 
 # Create private chat
 @router.get('/private/recipient/create-chat/{recipient_id}',
-            status_code=status.HTTP_200_OK,
+            status_code=status.HTTP_201_CREATED,
             response_model=schemas.PrivateChatCreate)
 async def create_private_chat(recipient_id: str,
                               pvt_chat_manager: PrivateChatManager = Depends(get_private_chat_manager),
                               current_user: schemas.User = Depends(get_current_active_user)):
 
     # current_user_id = '2123bb0ec29d4471bd295be4cca68aed'  # user2
+    try:
+        created_chat = await pvt_chat_manager.create_chat(current_user['id'], recipient_id)
+        return created_chat
+    except HTTPException as e:
+        raise e
 
-    chat_id = await pvt_chat_manager.create_chat(current_user['id'], recipient_id)
-    return chat_id
 
 
 
 
-
-# Get private chat recipient
-@router.get('/private/recipient/get-chat/{recipient_id}',
-            status_code=status.HTTP_200_OK,
-            response_model=schemas.MessageRecipient)
-async def get_chat_recipient(recipient_id: str,
-                              pvt_chat_manager: PrivateChatManager = Depends(get_private_chat_manager),
-                              current_user: schemas.User = Depends(get_current_active_user)):
-
-    # current_user_id = '2123bb0ec29d4471bd295be4cca68aed'  # user2
-
-    recipient = await pvt_chat_manager.get_recepient(current_user['id'], recipient_id)
-    return recipient
 
 
 

@@ -67,7 +67,7 @@ async def get_user_detail(user_id: str,
 
 
 # Get all user
-@router.get('/all', status_code=status.HTTP_200_OK, response_model=list[schemas.User])
+@router.get('/all', status_code=status.HTTP_200_OK, response_model=list[schemas.UserOfAll])
 async def get_all_user(user_manager: User = Depends(get_user_manager),
                        current_user: schemas.User = Depends(get_current_active_user)):
     users = await user_manager.get_all_except_me(current_user['id'])

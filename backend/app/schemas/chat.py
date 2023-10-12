@@ -8,7 +8,6 @@ class MessageCreate(MessageBase):
     pass
 
 class Message(MessageBase):
-    id: str
     created_by: str  
     created_at: datetime    # created_at=datetime(2023, 10, 4, 21, 5, 52, 637000)
 
@@ -21,14 +20,18 @@ class MessageResponse(Message):
 #         exclude = ["created_at"]
 
 
-class MessageRecipient(BaseModel):
+
+class ChatId(BaseModel):
+    chat_id: str
+
+
+class MessageRecipient(ChatId):
     recipient_id: str
-    chat_id: str
+    # chat_id: str
 
 
-
-class ChatBase(BaseModel):
-    chat_id: str
+class ChatBase(ChatId):
+    # chat_id: str
     member_ids: list[str]
     messages: list[Message | None]
 

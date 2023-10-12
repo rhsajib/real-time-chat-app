@@ -83,13 +83,19 @@ class PrivateChatManager(BaseChatManager):
         # user = await self.chat_collection.find_one(query)
 
         user = await self.user_manager.get_by_id(current_user_id)
-        if user:
+
+        # print('user[\'private_message_recipients\']: ', user['private_message_recipients'] )
+        if user['private_message_recipients']:
             for recipient in user['private_message_recipients']:
                 if recipient['recipient_id'] == recipient_id:
                     return recipient
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail= 'No private message recipients!'
+        )
 
     async def update_message_recipients(self, user_id: str, recipient_model: schemas.MessageRecipient):
-        result = await self.chat_collection.update_one(
+        result = await self.user_manager.update_one(
             {'id': user_id},
             {'$push': {'private_message_recipients': recipient_model.model_dump()}}
         )
@@ -100,8 +106,10 @@ class PrivateChatManager(BaseChatManager):
 
         ids = [current_user_id, recipient_id]
         new_chat = PrivateChatModel(member_ids=ids)
+        # print('new_chat', new_chat)
 
         inserted = await self.insert_chat_to_db(new_chat)
+        # print('inserted', inserted)
 
         if not inserted:
             raise HTTPException(
@@ -116,10 +124,13 @@ class PrivateChatManager(BaseChatManager):
         for user_id, recipient_id in message_recipients:
             recipient_model = MessageRecipientModel(
                 recipient_id=recipient_id, chat_id=new_chat.chat_id)
+            print('recipient_model', recipient_model)
 
             # add chat_id to member's private_message_recipients field
-            updated = await self.update_message_recipients(user_id, recipient_model)
-            if not updated:
+            insertd = await self.user_manager.insert_private_message_recipient(
+                user_id, recipient_model
+                )
+            if not insertd:
                 raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                                     detail='Message recipient was not added to user.')
 

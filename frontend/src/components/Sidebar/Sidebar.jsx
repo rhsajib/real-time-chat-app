@@ -5,7 +5,7 @@ import Logout from "../Logout/Logout";
 const Sidebar = ({username}) => {
     return (
         // <div className="flex flex-row lg:flex-col w-full lg:w-[150px] justify-between bg-gray-800 lg:h-screen lg:top-0 lg:left-0">
-        <div className="flex flex-row lg:flex-col justify-between bg-cyan-800 lg:h-screen lg:top-0 lg:left-0 p-2">
+        <div className="flex flex-row lg:flex-col justify-between bg-cyan-800 lg:overflow-y-auto lg:h-screen lg:top-0 lg:left-0 p-2">
             <div className="p-4 text-white items-center">
                 <h1 className="text-2xl font-bold">ChatP</h1>
             </div>

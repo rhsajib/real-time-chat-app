@@ -12,21 +12,33 @@ const Profile = () => {
     // we should use useEffect as chatId is related to asynchronous operation.
     // otherwise it will raise promise error.
     const [chatId, setChatId] = useState(null); // State to store the chat ID
+
     useEffect(() => {
-        const fetchChatId = async () => {
-            const chatIdValue = await chatIdLoader(id);
-            setChatId(chatIdValue);
-        };
-        fetchChatId();
+        chatIdLoader(id).then((loadedChatId) => {
+            // console.log("loadedChatId", loadedChatId);
+            if (loadedChatId !== null) {
+                setChatId(loadedChatId);
+            } else {
+                setChatId(null);
+            }
+        });
+        // const fetchChatId = async () => {
+        //     const chatIdValue = await chatIdLoader(id);
+        //     onclose.log('chatIdValue', chatIdValue)
+        //     if (chatIdValue) {
+        //         setChatId(chatIdValue);
+        //     }
+        // };
+        // fetchChatId();
     }, [id]);
 
     // handle Start New Chat
     const navigate = useNavigate(); // Get the navigate function for programmatic navigation
     const handleStartNewChatClick = async () => {
         const newChatIdValue = await newChatIdLoader(id);
-
+        console.log("newChatIdValue", newChatIdValue);
         // After setting the state, navigate to the new chat
-        navigate(`/chats/private/${newChatIdValue}`);
+        navigate(`/cp/chat/private/${newChatIdValue}`);
     };
 
     return (
@@ -42,8 +54,8 @@ const Profile = () => {
                 </ul>
             </div>
             <div className="w-40 mr-12 text-center">
-                {chatId ? (
-                    <Link to={`/chats/private/${chatId}`}>
+                {chatId !== null ? (
+                    <Link to={`/cp/chat/private/${chatId}`}>
                         <div className="border bg-sky-700 text-white py-3 rounded-xl">
                             Continue Chat
                         </div>

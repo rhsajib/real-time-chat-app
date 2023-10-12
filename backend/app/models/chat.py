@@ -12,7 +12,6 @@ class MessageRecipientModel(BaseModel):
 
 
 class MessageModel(BaseModel):
-    id: str = Field(default_factory=get_uuid4)
     message: str = Field(...)
     created_by: str = Field(...)
     created_at: datetime = Field(default_factory=datetime_now)

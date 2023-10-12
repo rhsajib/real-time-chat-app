@@ -68,6 +68,18 @@ class BaseUserManager:
         all_users = await self.get_all()
         # print(all_users)
         return [user for user in all_users if user.id != current_user_id]
+    
+    
+    async def insert_private_message_recipient(self, user_id: str, recipient_model: schemas.MessageRecipient):
+        result = await self.user_collection.update_one(
+            {'id': user_id},
+            {'$push': {'private_message_recipients': recipient_model.model_dump()}}
+        )
+        if result.matched_count == 1 and result.modified_count == 1:
+            return True
+        # raise HTTPException
+
+        
 
     # async def is_disabled(self, user: schemas.User) -> bool:
     #     return user.is_disabled
@@ -93,7 +105,7 @@ class UserCreator(BaseUserManager):
             # Check if email is already in use
             existing_user = await self.get_by_email(user_data.email)
             if existing_user:
-                raise UserCreationError('Email', 'Email already in use !')
+                raise UserCreationError('Email', 'Email already in use!')
 
             # # Check if phone number is already in use
             # existing_user = await self.get_by_phone(user_data.phone)
@@ -112,7 +124,7 @@ class UserCreator(BaseUserManager):
                 'password': password_hash
             }
             new_user = UserModel(**updated_user_data)
-            print(new_user)
+            print('new_user', new_user)
 
             result = await self.user_collection.insert_one(new_user.model_dump())
             # Check if the user creation was successful
@@ -187,7 +199,7 @@ class UserDeleter(BaseUserManager):
         # returning it as part of the user object.
         # otherwise it will cause error
         del user['_id']
-        print('user', user)
+        print('deleted user', user)
         return user
 
 
