@@ -12,14 +12,13 @@ class MessageCreate(MessageBase):
 
 
 class Message(MessageBase):
-    _id: str
+    id: str
     created_by: str
     # created_at=datetime(2023, 10, 4, 21, 5, 52, 637000)
     created_at: datetime
   
 
 class MessageResponse(Message):
-    _id: str
     created_at: str          # Define the field as a string
  
 

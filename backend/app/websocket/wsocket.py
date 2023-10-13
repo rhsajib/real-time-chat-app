@@ -21,7 +21,7 @@ async def chat_websocket_endpoint(
     websocket: WebSocket,
     token_manager:  JwtTokenManager = Depends(get_token_manager),
     pvt_chat_manager: PrivateChatManager = Depends(get_private_chat_manager),
-    grp_chat_manager: GroupChatManager = Depends(get_group_chat_manager),
+    # grp_chat_manager: GroupChatManager = Depends(get_group_chat_manager),
     
 ):
     """
@@ -46,7 +46,9 @@ async def chat_websocket_endpoint(
 
     # get current user
     current_user = await token_manager.get_user_form_jwt_token(token)
-    print('current_user for websocket', current_user)
+    print('current_user for websocket', 
+          'username', current_user['username'], 
+          'id', current_user['id'])
 
     # Add the WebSocket to the set of connected clients
     if chat_id in connected_clients:
@@ -59,25 +61,24 @@ async def chat_websocket_endpoint(
         while True:
 
             message = await websocket.receive_text()
-            print("Message received:", message)
+            # print("Message received:", message)
 
-            
 
             # Handle incoming messages
             if chat_type == 'private':
                 new_message = await pvt_chat_manager.create_message(current_user['id'], chat_id, message)
-            elif chat_type == 'group':
-                new_message = await grp_chat_manager.create_message(current_user['id'], chat_id, message)
+            # elif chat_type == 'group':
+            #     new_message = await grp_chat_manager.create_message(current_user['id'], chat_id, message)
 
 
             # in serialized_message date time is converted to string
-            serialized_message = message_serializer(new_message)
+            serialized_message = message_serializer(new_message.model_dump())
             print('message_response', serialized_message)
 
             # Broadcast the message to all connected clients
             for client_ws in connected_clients[chat_id]:
                 print('client_ws', client_ws)
-                await client_ws.send_json(serialized_message.model_dump())
+                await client_ws.send_json(serialized_message)
 
     except WebSocketDisconnect:
         print("WebSocket connection closed.")

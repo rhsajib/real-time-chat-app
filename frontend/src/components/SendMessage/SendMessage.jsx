@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 const SendMessage = ({ handleSendMesaage }) => {
     const [messageText, setMessageText] = useState("");
@@ -17,7 +17,7 @@ const SendMessage = ({ handleSendMesaage }) => {
         e.preventDefault(); // Prevent the default form submission behavior
 
         if (messageText.trim() !== "") {
-          handleSendMessageClick(); // Trigger the send click when the form is submitted
+            handleSendMessageClick(); // Trigger the send click when the form is submitted
         }
     };
 
@@ -34,9 +34,15 @@ const SendMessage = ({ handleSendMesaage }) => {
 
         if (value.length !== 0) {
             setTextareaClasses("max-h-24");
-            // Function to scroll to the bottom
         } else {
-            setTextareaClasses("max-h-10"); // we can do ot with dom manupulation
+            setTextareaClasses("max-h-10");
+        }
+    };
+
+    const handleKeyPress = (e) => {
+        if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault(); // Prevent the default Enter key behavior
+            handleSendMessageClick(); // Send the message
         }
     };
 
@@ -51,6 +57,7 @@ const SendMessage = ({ handleSendMesaage }) => {
                         name="message"
                         value={messageText}
                         onChange={handleMessageTextChange}
+                        onKeyDown={handleKeyPress}
                         placeholder="Write text..."
                         autoComplete="off"
                     />

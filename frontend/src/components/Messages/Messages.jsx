@@ -27,7 +27,7 @@ const Messages = () => {
     const [socket, setSocket] = useState(null);
     useEffect(() => {
         // const url = `ws://127.0.0.1:8000/ws/chat/${chat_id}`;
-        const url = `ws://127.0.0.1:8000/ws/chat/${type}/${chat_id}?token=${token}`
+        const url = `ws://127.0.0.1:8000/ws/chat/${type}/${chat_id}/token=${token}`
 
         // https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API/Writing_WebSocket_client_applications
         // Create a WebSocket instance
@@ -86,7 +86,7 @@ const Messages = () => {
 
     return (
         // <div className="flex flex-col w-[800px] border h-screen">
-        <div className="grid grid-cols-1 content-end h-screen">
+        <div className="grid grid-cols-1 bg-gray-100 content-end h-screen">
             <div
                 ref={messageContainerRef}
                 className="flex flex-col h-full overflow-y-auto"
@@ -101,7 +101,7 @@ const Messages = () => {
                 )}
             </div>
 
-            <div className="bg-white border-t-2 sticky bottom-0">
+            <div className="bg-white border-t-2 sticky rounded-md bottom-0">
                 <SendMessage
                     // messageInput={messageInput}
                     handleSendMesaage={handleSendMesaage}

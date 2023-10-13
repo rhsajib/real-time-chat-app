@@ -71,11 +71,14 @@ class BaseChatManager:
             )
 
         new_message = MessageModel(created_by=current_user_id, message=message)
-        # print(new_message)
+        print('new_message', new_message)
 
         result = await self.chat_collection.update_one(
             {'chat_id': chat_id},
             {'$push': {'messages': new_message.model_dump()}}
+            # as I pushed new message inside messages,
+            # it will not create any default '_id' for new message
+            # if i use insert_one(), it will automatically create a '_id' field
         )
 
         if result.matched_count == 1 and result.modified_count == 1:
