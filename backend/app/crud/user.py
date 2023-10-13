@@ -22,17 +22,6 @@ class BaseUserManager:
         self.user_collection = self.db[settings.USERS_COLLECTION]
 
     async def get_by_id(self, id: str) -> schemas.UserInDb:
-        '''
-        Get a user by their ID from the database.
-
-        Args:
-            id (str): The user's ID.
-
-        Returns:
-            dict: The user data.
-        Raises:
-            HTTPException: If the user is not found.
-        '''
         user = await self.user_collection.find_one({'id': id})
         if not user:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
@@ -44,12 +33,6 @@ class BaseUserManager:
         return user
 
     async def get_all(self) -> list[schemas.User]:
-        '''
-        Get all users from the database.
-
-        Returns:
-            list[schemas.User]: A list of user data.
-        '''
         cursor = self.user_collection.find({})
         # to_list to retrieve the documents as a list
         users = await cursor.to_list(length=None)
@@ -70,7 +53,11 @@ class BaseUserManager:
         return [user for user in all_users if user.id != current_user_id]
     
     
-    async def insert_private_message_recipient(self, user_id: str, recipient_model: schemas.MessageRecipient):
+    async def insert_private_message_recipient(
+            self, 
+            user_id: str, 
+            recipient_model: schemas.MessageRecipient
+    ):
         result = await self.user_collection.update_one(
             {'id': user_id},
             {'$push': {'private_message_recipients': recipient_model.model_dump()}}

@@ -210,7 +210,7 @@
 #     return chat
 
 
-# async def db_create_group_chat(group_data: schemas.GroupChatCreate,
+# async def db_create_group_chat(group_data: schemas.GroupChat,
 #                                db: AsyncIOMotorDatabase,
 #                                collection):
 #     serialized_chat = GroupChatModel(**group_data.model_dump())

@@ -1,24 +1,31 @@
 from datetime import datetime
 from pydantic import BaseModel
+from bson import ObjectId
+
 
 class MessageBase(BaseModel):
     message: str
-    
+
+
 class MessageCreate(MessageBase):
     pass
 
-class Message(MessageBase):
-    created_by: str  
-    created_at: datetime    # created_at=datetime(2023, 10, 4, 21, 5, 52, 637000)
 
+class Message(MessageBase):
+    _id: str
+    created_by: str
+    # created_at=datetime(2023, 10, 4, 21, 5, 52, 637000)
+    created_at: datetime
+  
 
 class MessageResponse(Message):
+    _id: str
     created_at: str          # Define the field as a string
+ 
 
 # class MessageResponse(Message):
 #     class Config:
 #         exclude = ["created_at"]
-
 
 
 class ChatId(BaseModel):
@@ -27,22 +34,25 @@ class ChatId(BaseModel):
 
 class MessageRecipient(ChatId):
     recipient_id: str
-    # chat_id: str
 
 
 class ChatBase(ChatId):
-    # chat_id: str
     member_ids: list[str]
     messages: list[Message | None]
+    type: str
 
-class PrivateChatCreate(ChatBase):
+
+class PrivateChat(ChatBase):
     pass
+
 
 class PrivateChatResponse(ChatBase):
     pass
 
-class GroupChatCreate(ChatBase):
+
+class GroupChat(ChatBase):
     chat_name: str | None
 
-class GroupChatResponse(GroupChatCreate):
+
+class GroupChatResponse(GroupChat):
     pass

@@ -51,7 +51,7 @@ app.include_router(api_router, prefix=settings.API_V1_STR)
 
 
 # Register the WebSocket endpoint
-app.router.routes.append(APIWebSocketRoute('/ws/chat/{chat_id}', chat_websocket_endpoint))
+app.router.routes.append(APIWebSocketRoute('/ws/chat/{chat_type}/{chat_id}?token={token}', chat_websocket_endpoint))
 
 # routes = [WebSocketRoute(path, endpoint=...), ...]
 # app = Starlette(routes=routes)

@@ -1,21 +1,52 @@
-import json
-from fastapi import WebSocket, WebSocketDisconnect
-
-from fastapi import Depends
-from motor.motor_asyncio import AsyncIOMotorDatabase
-from app.crud.chat import db_create_message
-from app.database.db import get_db
-from app.serializers.serializers import new_message_serializer
+from fastapi import WebSocket, WebSocketDisconnect, Depends
+from app import schemas
+from app.api.v1.dependencies import (
+    get_group_chat_manager, 
+    get_private_chat_manager,
+    get_token_manager
+)
+from app.crud.auth import JwtTokenManager
+from app.crud.chat import GroupChatManager, PrivateChatManager
+from app.crud.user import User
+from app.serializers.serializers import message_serializer
 
 # Store connected WebSocket clients
 connected_clients: dict[str, set] = dict()
 
 
-async def chat_websocket_endpoint(chat_id: str,
-                                  websocket: WebSocket,
-                                  db: AsyncIOMotorDatabase = Depends(get_db)):
+async def chat_websocket_endpoint(
+    chat_type: str,
+    chat_id: str,
+    token: str,
+    websocket: WebSocket,
+    token_manager:  JwtTokenManager = Depends(get_token_manager),
+    pvt_chat_manager: PrivateChatManager = Depends(get_private_chat_manager),
+    grp_chat_manager: GroupChatManager = Depends(get_group_chat_manager),
+    
+):
+    """
+        current_user: schemas.User = Depends(get_current_active_user)
+        we can't use it because get_current_active_user depends on oauth2_scheme
+        which is an instance of OAuth2PasswordBearer.
+
+        OAuth2PasswordBearer does require a Request argument to 
+        extract the token from the request. However, when working with 
+        WebSocket connections, we won't have access to the request object 
+        in the same way you do with HTTP requests.
+
+        so we have to use another technique to retrieve 
+        current_user more specifically access-token.
+
+        Thats why we created a JwtTokenManager to reuse it in http request
+        as well as in websocket
+
+    """
     await websocket.accept()
     print(f"WebSocket connection established for chat id: {chat_id}.")
+
+    # get current user
+    current_user = await token_manager.get_user_form_jwt_token(token)
+    print('current_user for websocket', current_user)
 
     # Add the WebSocket to the set of connected clients
     if chat_id in connected_clients:
@@ -26,32 +57,35 @@ async def chat_websocket_endpoint(chat_id: str,
 
     try:
         while True:
+
             message = await websocket.receive_text()
             print("Message received:", message)
 
+            
+
             # Handle incoming messages
-            current_user_id = '2123bb0ec29d4471bd295be4cca68aed'  # user2
-        
-            new_message = await db_create_message(current_user_id, chat_id, message, db)
+            if chat_type == 'private':
+                new_message = await pvt_chat_manager.create_message(current_user['id'], chat_id, message)
+            elif chat_type == 'group':
+                new_message = await grp_chat_manager.create_message(current_user['id'], chat_id, message)
+
 
             # in serialized_message date time is converted to string
-            serialized_message = new_message_serializer(new_message)
-
-            # # Convert the serialized_message to JSON format
-            message_response = serialized_message.model_dump()
-            print('message_response', message_response)
+            serialized_message = message_serializer(new_message)
+            print('message_response', serialized_message)
 
             # Broadcast the message to all connected clients
             for client_ws in connected_clients[chat_id]:
                 print('client_ws', client_ws)
-                await client_ws.send_json(message_response)
+                await client_ws.send_json(serialized_message.model_dump())
 
     except WebSocketDisconnect:
         print("WebSocket connection closed.")
 
     finally:
         # Remove disconnected client from the set
-        print(f'Removed disconnected client websocket: {websocket} from the Chat id: {chat_id}')
+        print(
+            f'Removed disconnected client websocket: {websocket} from the Chat id: {chat_id}')
         # handle removing clients
         connected_clients[chat_id].remove(websocket)
 

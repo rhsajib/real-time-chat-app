@@ -4,12 +4,13 @@ import Sidebar from "../Sidebar/Sidebar";
 import { Outlet, useLoaderData } from "react-router-dom";
 
 const Home = () => {
-    // console.log(user)
-    // const {username} = user
+    const profile = useLoaderData();
+    // console.log(profile);
+    const { username, id } = profile;
     return (
         <div className="lg:flex lg:flex-row h-screen bg-gray-200">
             <div className="lg:w-1/6">
-                <Sidebar />
+                <Sidebar username={username}/>
             </div>
             <div className="w-full border-r">
                 <Outlet />

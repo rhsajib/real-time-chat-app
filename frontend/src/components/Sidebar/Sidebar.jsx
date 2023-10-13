@@ -11,8 +11,8 @@ const Sidebar = ({username}) => {
             </div>
 
             <div className="p-4 text-white">
-                <h1 className="text-l font-bold">Profile Photo</h1>
-                <h1 className="text-l font-bold">{username}</h1>
+                <h1 className="text-xl font-bold">{username}</h1>
+                <h1 className="text-sm font-bold">Profile Photo</h1>
             </div>
 
             {/* Menu Items */}

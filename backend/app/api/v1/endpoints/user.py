@@ -13,7 +13,7 @@ router = APIRouter()
 async def create_user(
         user_data: schemas.UserCreate,
         # current_user: schemas.User = Depends(get_current_active_user)
-        user_manager: User = Depends(get_user_manager),
+        user_manager: User = Depends(get_user_manager)
         # if i use current user here, it will raise '401 Unauthorized'
 ):
     try:

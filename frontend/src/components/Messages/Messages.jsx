@@ -3,17 +3,18 @@ import Message from "../Message/Message";
 import { useLoaderData } from "react-router-dom";
 import NoMessage from "../NoMessage/NoMessage";
 import SendMessage from "../SendMessage/SendMessage";
-import axios from "axios";
+import { getToken } from "../../utilities/tokenService";
 
 const Messages = () => {
     // Load data from API
     const chatMessages = useLoaderData();
 
     // Data destructuring
-    const { chat_id, messages } = chatMessages;
+    const { chat_id, type, messages } = chatMessages;
+    const token = getToken()
 
     // Reference for the chat container
-    const chatContainerRef = useRef(null);
+    const messageContainerRef = useRef(null);
 
     // Previous messages from Api
     const [previousMessages, setPreviousMessages] = useState([]);
@@ -21,10 +22,12 @@ const Messages = () => {
         setPreviousMessages(messages);
     }, [messages]);
 
+    //--------------------------------------start handle SOCKET--------------------------------------------------
     // State to store the WebSocket instance
     const [socket, setSocket] = useState(null);
     useEffect(() => {
-        const url = `ws://127.0.0.1:8000/ws/chat/${chat_id}`;
+        // const url = `ws://127.0.0.1:8000/ws/chat/${chat_id}`;
+        const url = `ws://127.0.0.1:8000/ws/chat/${type}/${chat_id}?token=${token}`
 
         // https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API/Writing_WebSocket_client_applications
         // Create a WebSocket instance
@@ -64,11 +67,12 @@ const Messages = () => {
         }
     };
 
+    //--------------------------------------end handle SOCKET--------------------------------------------------
     // Function to scroll to the bottom
     const scrollToBottom = () => {
-        if (chatContainerRef.current) {
-            chatContainerRef.current.scrollTop =
-                chatContainerRef.current.scrollHeight;
+        if (messageContainerRef.current) {
+            messageContainerRef.current.scrollTop =
+                messageContainerRef.current.scrollHeight;
         }
     };
 
@@ -84,7 +88,7 @@ const Messages = () => {
         // <div className="flex flex-col w-[800px] border h-screen">
         <div className="grid grid-cols-1 content-end h-screen">
             <div
-                ref={chatContainerRef}
+                ref={messageContainerRef}
                 className="flex flex-col h-full overflow-y-auto"
             >
                 {/* max-h-80vh for 80% of view height*/}

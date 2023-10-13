@@ -33,6 +33,7 @@ const router = createBrowserRouter([
               <Home />
             </Auth>
           ),
+        loader: myProfileLoader,
         children: [
             {
                 path: "/cp/chat",

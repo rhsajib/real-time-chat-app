@@ -26,7 +26,7 @@ GROUP_CHAT_COLLECTION = settings.GROUP_CHAT_COLLECTION
 
 
 class BaseChatManager:
-    def __init__(self, db: AsyncIOMotorDatabase, chat_collection: str, user_manager: User):
+    def __init__(self, db: AsyncIOMotorDatabase, chat_collection: str , user_manager: User):
         self.db = db
         self.chat_collection = self.db[chat_collection]
         self.user_manager = user_manager
@@ -55,46 +55,43 @@ class BaseChatManager:
             return True
         return False
 
+    async def create_message(
+        self,
+        current_user_id: str,
+        chat_id: str,
+        message: str,
+    ) -> schemas.Message:
+
+        chat = await self.get_chat_by_id(chat_id)
+
+        if current_user_id not in chat.get('member_ids'):
+            raise HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                detail='Message was not sent!'
+            )
+
+        new_message = MessageModel(created_by=current_user_id, message=message)
+        # print(new_message)
+
+        result = await self.chat_collection.update_one(
+            {'chat_id': chat_id},
+            {'$push': {'messages': new_message.model_dump()}}
+        )
+
+        if result.matched_count == 1 and result.modified_count == 1:
+            # return {"message": "Item added to profile successfully"}
+            return new_message
+
 
 class PrivateChatManager(BaseChatManager):
     def __init__(self, db: AsyncIOMotorDatabase, user_manager: User):
         super().__init__(db, settings.PRIVATE_CHAT_COLLECTION, user_manager)
 
-    async def get_all_msg_recipients(self, user_id: str) -> list[schemas.MessageRecipient]:
-        user = await self.user_manager.get_by_id(user_id)
-        if user:
-            return user["private_message_recipients"]
-        return []
-
-    async def get_all_chats(self, user_id: str):
-        user = await self.user_manager.get_by_id(user_id)
-        if user:
-            chat_ids = [recipient['chat_id']
-                        for recipient in user.get('private_message_recipients')]
-            return await self.get_chats_from_ids(chat_ids)
-        return []
-
-    async def get_recepient(self, current_user_id: str, recipient_id: str) -> schemas.MessageRecipient:
-        # query = {
-        #     'id': current_user_id,
-        #     'private_message_recipients.recipient_id': recipient_id
-        # }
-        # Retrieve the user with the matching query
-        # user = await self.chat_collection.find_one(query)
-
-        user = await self.user_manager.get_by_id(current_user_id)
-
-        # print('user[\'private_message_recipients\']: ', user['private_message_recipients'] )
-        if user['private_message_recipients']:
-            for recipient in user['private_message_recipients']:
-                if recipient['recipient_id'] == recipient_id:
-                    return recipient
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail= 'No private message recipients!'
-        )
-
-    async def update_message_recipients(self, user_id: str, recipient_model: schemas.MessageRecipient):
+    async def update_message_recipients(
+        self,
+        user_id: str,
+        recipient_model: schemas.MessageRecipient
+    ):
         result = await self.user_manager.update_one(
             {'id': user_id},
             {'$push': {'private_message_recipients': recipient_model.model_dump()}}
@@ -102,7 +99,11 @@ class PrivateChatManager(BaseChatManager):
         if result.matched_count == 1 and result.modified_count == 1:
             return True
 
-    async def create_chat(self, current_user_id: str, recipient_id: str) -> schemas.PrivateChatCreate:
+    async def create_chat(
+        self,
+        current_user_id: str,
+        recipient_id: str
+    ) -> schemas.PrivateChat:
 
         ids = [current_user_id, recipient_id]
         new_chat = PrivateChatModel(member_ids=ids)
@@ -129,12 +130,53 @@ class PrivateChatManager(BaseChatManager):
             # add chat_id to member's private_message_recipients field
             insertd = await self.user_manager.insert_private_message_recipient(
                 user_id, recipient_model
-                )
+            )
             if not insertd:
-                raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                                    detail='Message recipient was not added to user.')
+                raise HTTPException(
+                    status_code=status.HTTP_404_NOT_FOUND,
+                    detail='Message recipient was not added to user.'
+                )
 
         return new_chat
+
+    async def get_all_msg_recipients(self, user_id: str) -> list[schemas.MessageRecipient]:
+        user = await self.user_manager.get_by_id(user_id)
+        if user:
+            return user["private_message_recipients"]
+        return []
+
+    async def get_all_chats(self, user_id: str):
+        user = await self.user_manager.get_by_id(user_id)
+        if user:
+            chat_ids = [recipient['chat_id']
+                        for recipient in user.get('private_message_recipients')]
+            return await self.get_chats_from_ids(chat_ids)
+        return []
+    
+
+    async def get_recepient(
+            self, 
+            current_user_id: str, 
+            recipient_id: str
+    ) -> schemas.MessageRecipient:
+        # query = {
+        #     'id': current_user_id,
+        #     'private_message_recipients.recipient_id': recipient_id
+        # }
+        # Retrieve the user with the matching query
+        # user = await self.chat_collection.find_one(query)
+
+        user = await self.user_manager.get_by_id(current_user_id)
+
+        # print('user[\'private_message_recipients\']: ', user['private_message_recipients'] )
+        if user['private_message_recipients']:
+            for recipient in user['private_message_recipients']:
+                if recipient['recipient_id'] == recipient_id:
+                    return recipient
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail='No private message recipients!'
+        )
 
     # async def db_get_existing_private_chat(self, current_user_id: str, recipient_id: str):
     #     query = {
@@ -203,7 +245,7 @@ async def get_group_chat(chat_id: str,
     return chat
 
 
-async def db_create_group_chat(group_data: schemas.GroupChatCreate,
+async def db_create_group_chat(group_data: schemas.GroupChat,
                                db: AsyncIOMotorDatabase,
                                collection):
     serialized_chat = GroupChatModel(**group_data.model_dump())
@@ -240,26 +282,3 @@ async def add_group_chat_id_to_users(chat_id: str,
 async def db_get_messages(chat_id: str, db: AsyncIOMotorDatabase):
     chat = await db_get_chat(chat_id, db, collection=PRIVATE_CHAT_COLLECTION)
     return chat.get('messages')
-
-
-async def db_create_message(current_user_id: str,
-                            chat_id: str,
-                            message: str,
-                            db: AsyncIOMotorDatabase) -> schemas.Message:
-
-    chat = await db_get_chat(chat_id, db, collection=PRIVATE_CHAT_COLLECTION)
-
-    if current_user_id not in chat.get('member_ids'):
-        return JSONResponse(content={'message': 'message was not sent'})
-
-    new_message = MessageModel(user_id=current_user_id, message=message)
-    # print(new_message)
-
-    result = await db[PRIVATE_CHAT_COLLECTION].update_one(
-        {'chat_id': chat_id},
-        {'$push': {'messages': new_message.model_dump()}}
-    )
-
-    if result.matched_count == 1 and result.modified_count == 1:
-        # return {"message": "Item added to profile successfully"}
-        return new_message
