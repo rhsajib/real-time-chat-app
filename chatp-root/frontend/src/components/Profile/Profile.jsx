@@ -53,17 +53,20 @@ const Profile = () => {
                     <li>Status: {active ? "Active" : "Not Active"}</li>
                 </ul>
             </div>
+            
             <div className="w-40 mr-12 text-center">
                 {chatId !== null ? (
                     <Link to={`/cp/chat/private/${chatId}`}>
-                        <div className="border bg-sky-700 text-white py-3 rounded-xl">
+                        <div className="border bg-gradient-to-r from-green-400 to-blue-500 text-white py-3 rounded-xl">
+                        {/* <div className="border bg-sky-700 text-white py-3 rounded-xl"> */}
                             Continue Chat
                         </div>
                     </Link>
                 ) : (
                     <Link>
                         <div
-                            className="border bg-yellow-800 text-white py-3 rounded-xl"
+                            className="border bg-gradient-to-r from-pink-500 hover:to-yellow-500 text-white py-3 rounded-xl"
+                            // className="border bg-yellow-800 text-white py-3 rounded-xl"
                             onClick={handleStartNewChatClick}
                         >
                             Start New Chat

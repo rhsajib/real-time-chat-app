@@ -8,6 +8,7 @@ from .chat import (
     MessageRecipient,
     PrivateChat,
     PrivateChatResponse,
+    PrivateChatResponseWithUserId,
     GroupChat,
     GroupChatResponse,
 )

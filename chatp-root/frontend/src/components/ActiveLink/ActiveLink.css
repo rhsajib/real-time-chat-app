@@ -1,16 +1,20 @@
 .active-link {
-    background-color: rgb(56, 209, 199);
-    color: rgb(11, 11, 53);
-    border: 1px solid gray;
-    border-radius: 8px;
+    /* background-color: rgb(83, 185, 178); */
+    background-color: #006D5B;
+    /* color: rgb(11, 11, 53); */
+    color: white;
+    /* border-bottom: 1px solid gray; */
+    /* border: 1px solid gray; */
+    border-radius: 5px;
     padding: 5px 10px 5px 10px;
     /* padding: top right bottom left; */
 }
 
 .inactive-link {
-    background-color: rgb(222, 238, 235);
-    border: 1px solid gray;
-    border-radius: 8px;
+    background-color: rgb(255, 255, 255);
+    /* border: 1px solid gray; */
+    /* border-bottom: 1px solid gray; */
+    border-radius: 5px;
     padding: 5px 10px 5px 10px;
     /* padding: top right bottom left; */
 }

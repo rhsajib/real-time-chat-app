@@ -4,15 +4,10 @@ import Logout from "../Logout/Logout";
 
 const Sidebar = ({ username }) => {
     return (
-        // <div className="flex flex-row lg:flex-col w-full lg:w-[150px] justify-between bg-gray-800 lg:h-screen lg:top-0 lg:left-0">
-        <div className="flex flex-row lg:flex-col text-white justify-between bg-cyan-900 lg:overflow-y-auto lg:h-screen lg:top-0 lg:left-0 p-2">
+        // <div className="flex flex-row lg:flex-col w-full lg:w-[150px] justify-between text-white bg-gray-800 lg:h-screen lg:top-0 lg:left-0">
+        <div className="flex flex-row lg:flex-col text-white justify-between  bg-teal-900 lg:overflow-y-auto lg:h-screen lg:top-0 lg:left-0 p-2">
             <div className="p-4 items-center">
                 <h1 className="text-2xl font-bold">ChatP</h1>
-            </div>
-
-            <div className="p-4">
-                <h1 className="text-xl font-bold">{username}</h1>
-                <h1 className="text-sm font-bold">Profile Photo</h1>
             </div>
 
             {/* Menu Items */}
@@ -50,6 +45,10 @@ const Sidebar = ({ username }) => {
             </div>
 
             <div>
+                <div className="p-4">
+                    <h1 className="text-xl font-bold">{username}</h1>
+                </div>
+                <h1 className="text-sm font-bold">Profile Photo</h1>
                 <Logout />
             </div>
         </div>

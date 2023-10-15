@@ -8,12 +8,13 @@ const Chats = () => {
     const chats = useLoaderData();
     return (
         <div className="flex flex-row h-screen">
-            <div className="flex flex-col w-2/5 border">
+            <div className="flex flex-col w-2/5 mx-2 border border-r-slate-300 border-l-slate-300">
                 <div className="sticky top-0 mx-3">
                     <ChatSearch />
                 </div>
 
-                <div className="flex flex-col mx-3 mb-3 overflow-y-auto">
+                <div className="flex flex-col mb-3 overflow-y-auto">
+                {/* <div className="flex flex-col mx-3 mb-3 overflow-y-auto"> */}
                     {
                         chats.map(chat => <Chat 
                             key={chat.chat_id}

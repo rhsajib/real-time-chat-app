@@ -27,5 +27,8 @@ COPY . .
 # which port the app will use
 EXPOSE 8000
 
-# Start the FastAPI app
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Start the FastAPI app with --reload (for development)
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+
+# Start the FastAPI app without --reload (for production)
+# CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]

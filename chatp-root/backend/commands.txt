@@ -1,3 +1,9 @@
 # for 'app/main.py' file
 uvicorn app.main:app --reload
 
+# mongodb
+start server:
+$ brew services start mongodb-community@4.4
+
+stop:
+$ brew services stop mongodb-community@4.4

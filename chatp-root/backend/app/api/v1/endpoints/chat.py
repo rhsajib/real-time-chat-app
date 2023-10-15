@@ -1,5 +1,4 @@
 from fastapi import status, Depends, APIRouter, HTTPException
-from fastapi.responses import JSONResponse
 from app import schemas
 from app.api.v1.dependencies import get_current_user, get_private_chat_manager, get_current_active_user
 from app.database.db import get_db
@@ -38,7 +37,7 @@ async def get_all_private_message_recipients(
 # recipient_id = 8766afaf17bf42fc8970400e4d35ebb9
 @router.get('/private/info/{chat_id}',
             status_code=status.HTTP_200_OK,
-            response_model=schemas.PrivateChatResponse)
+            response_model=schemas.PrivateChatResponseWithUserId)
 async def get_private_chat(
     chat_id: str,
     pvt_chat_manager: PrivateChatManager = Depends(get_private_chat_manager),
@@ -51,7 +50,8 @@ async def get_private_chat(
         # serialize chat messages
         serialized_messages = [message_serializer(msg) for msg in chat['messages']]
         chat['messages'] = serialized_messages
-
+    
+    chat['user_id'] = current_user['id']
     return chat
 
 # Get private chat recipient
