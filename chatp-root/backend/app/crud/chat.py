@@ -19,7 +19,6 @@ from app.serializers import serializers
 #         return True
 #     return False
 
-# async
 
 
 GROUP_CHAT_COLLECTION = settings.GROUP_CHAT_COLLECTION

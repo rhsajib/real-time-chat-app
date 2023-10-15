@@ -1,0 +1,36 @@
+# Ignore version control directories
+.git
+.gitignore
+
+# Ignore Python virtual environment (venv)
+venv
+__pycache__
+*.pyc
+
+# Ignore development and build files
+node_modules
+build
+yarn-error.log
+npm-debug.log
+
+# Ignore development and build files
+*.log
+*.lock
+*.yml
+*.config.js
+*.env
+*.md
+
+# Ignore editor and IDE-specific files
+.vscode
+.idea
+*.sublime-*
+*.swp
+
+# Ignore testing and documentation files
+tests
+docs
+
+# Ignore OS-specific files
+.DS_Store
+Thumbs.db
