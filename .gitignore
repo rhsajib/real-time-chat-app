@@ -2,11 +2,8 @@
 *.env
 *.vscode
 
-
-
 venv/
 media/
-
 
 
 *.pyc
