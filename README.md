@@ -5,11 +5,32 @@
 
 This FARM (FastAPI, React, and MongoDB) project is a full-stack web application that combines the power of FastAPI for the backend, React for the frontend, and MongoDB for data storage. The project includes various features, such as JWT authentication, field validation, real-time chat with WebSocket integration, separate collections for private and group chat, and Docker configurations for both backend and frontend. 
 
+## App Reality
 
+### Welcome Page
+![Welcome](/chatp-root/img/welcome.png)
+
+### Signup Page
+![Signup](chatp-root/img/signup.png)
+
+### Login Page
+![Login](chatp-root/img/login.png)
+
+### FastAPI Docs
+![Api Docs](chatp-root/img/api.png)
+
+### Private Chat
+![Pvt Chat](chatp-root/img/pvt-chat.png)
 
 ## Table of Contents
 
 - [Real Time Chat Application (FARM Stack Project)](#real-time-chat-application-farm-stack-project)
+  - [App Reality](#app-reality)
+    - [Welcome Page](#welcome-page)
+    - [Signup Page](#signup-page)
+    - [Login Page](#login-page)
+    - [FastAPI Docs](#fastapi-docs)
+    - [Private Chat](#private-chat)
   - [Table of Contents](#table-of-contents)
   - [Features](#features)
   - [Prerequisites](#prerequisites)

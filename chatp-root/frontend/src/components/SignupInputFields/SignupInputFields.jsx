@@ -29,6 +29,7 @@ const SignupInputFields = ({
                         placeholder="Enter your username"
                         value={formData.username}
                         onChange={handleInputChange}
+                        required
                     />
                 </div>
                 <div className="mb-4">
@@ -43,6 +44,7 @@ const SignupInputFields = ({
                         placeholder="Enter your email"
                         value={formData.email}
                         onChange={handleInputChange}
+                        required
                     />
                 </div>
                 <div className="mb-6">
@@ -57,6 +59,7 @@ const SignupInputFields = ({
                         placeholder="Choose a password"
                         value={formData.password1}
                         onChange={handleInputChange}
+                        required
                     />
                 </div>
                 <div className="mb-6">
@@ -72,6 +75,7 @@ const SignupInputFields = ({
                         autoComplete="off"
                         value={formData.password2}
                         onChange={handleInputChange}
+                        required
                     />
                 </div>
                 {fieldError && (

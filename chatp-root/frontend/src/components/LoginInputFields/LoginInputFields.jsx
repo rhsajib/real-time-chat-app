@@ -27,6 +27,7 @@ const LoginInputFields = ({
                         placeholder="Enter your email"
                         value={formData.email}
                         onChange={handleInputChange}
+                        required
                     />
                 </div>
                 <div className="mb-6">
@@ -41,6 +42,7 @@ const LoginInputFields = ({
                         placeholder="Enter your password"
                         value={formData.password}
                         onChange={handleInputChange}
+                        required
                     />
                 </div>
                 {fieldError && (

@@ -6,7 +6,7 @@ const Message = ({ message, currentUserId }) => {
     if (currentUserId === message.created_by) {
         // console.log("currentUserId", currentUserId, "created_by", message.created_by);
         container = "justify-end ";
-        text = "text-right bg-emerald-300 ml-40 rounded-l-2xl rounded-tr-2xl";
+        text = "text-left bg-emerald-300 ml-40 rounded-l-2xl rounded-tr-2xl";
     } else {
         container = "justify-start";
         text = "text-left bg-neutral-200 mr-40 rounded-r-2xl rounded-tl-2xl";

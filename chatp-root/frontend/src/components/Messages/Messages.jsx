@@ -87,16 +87,16 @@ const Messages = () => {
 
     return (
         <div>
-            <div className="bg-teal-900 h-15 px-4 py-4 border border-b-slate-200 text-white text-right sticky top-0">
-                <h className="">Chat id: {chat_id}</h>
-            </div>
-
-            <div className="grid grid-cols-1 border border-r-slate-200 bg-white content-end h-screen">
+            {/* <div className="grid grid-cols-1 border border-r-slate-200 bg-white content-end h-screen"> */}
+            <div className="flex flex-col border border-r-slate-200 bg-white content-end h-screen">
                 {/* <div className="grid grid-cols-1 bg-gradient-to-t from-cyan-700 to-blue-800 content-end h-screen"> */}
+                <div className="bg-teal-900 h-15 px-4 py-4 border border-b-slate-200 text-white text-right sticky top-0">
+                    <h className="">Chat id: {chat_id}</h>
+                </div>
 
                 <div
                     ref={messageContainerRef}
-                    className="flex flex-col h-full overflow-y-auto"
+                    className="flex flex-col h-full justify-end overflow-y-auto"
                 >
                     {/* max-h-80vh for 80% of view height*/}
                     {previousMessages.length !== 0 ? (
