@@ -14,10 +14,10 @@ This FARM (FastAPI, React, and MongoDB) project is a full-stack web application 
   - [Features](#features)
   - [Prerequisites](#prerequisites)
   - [Getting Started](#getting-started)
-  - [Project Structure](#project-structure)
+  - [Frontend](#frontend)
+  - [Backend](#backend)
   - [Docker Setup](#docker-setup)
   - [License](#license)
-
 ## Features
 
 - **FastAPI Backend**: Provides RESTful API endpoints.
@@ -33,7 +33,7 @@ This FARM (FastAPI, React, and MongoDB) project is a full-stack web application 
 
 Before you begin, ensure you have met the following requirements:
 
-- Node.js and npm installed for React development
+- Node.js and npm installed for React (+ vite) development
 - Python and pip installed for FastAPI development
 - MongoDB server up and running
 - Clone or download this repository to your local machine
@@ -66,38 +66,56 @@ Before you begin, ensure you have met the following requirements:
 
 
 
-## Project Structure
+<!-- ## Project Structure
 
 - **backend:** Contains the FastAPI backend code.
 - **frontend:** Contains the React frontend code.
 - **scripts:** Helpful scripts for development or deployment.
-- **docs:** Documentation for your project.
+- **docs:** Documentation for your project. -->
 
 <!-- ## API Endpoints
 
-- List and describe the available API endpoints here.
+- List and describe the available API endpoints here. -->
 
 ## Frontend
 
-- Describe the structure of your React frontend.
-- Highlight any key components or features.
+The frontend of our Real Time Chat Application is built with React and Vite for a fast development experience. It offers a responsive user interface for real-time chat and includes the following technologies:
+
+- **React**: A powerful JavaScript library for building user interfaces.
+- **Vite**: A modern development environment that optimizes frontend development.
+- **Dependencies**: Axios, Framer Motion, React Router, and Websocket Client for efficient communication.
+- **DevDependencies**: ESLint and Tailwind CSS for code quality and styling.
+
+Our frontend incorporates client-side authentication, enhancing security and user access control. This ensures that only authorized users can access certain features of the application.
+
+
+
 
 ## Backend
 
-- Describe the structure of your FastAPI backend.
-- Explain how to add new routes or modify existing ones.
+Our backend, powered by FastAPI, is the backbone of the Real Time Chat Application. It utilizes various dependencies to ensure high-performance and secure functionality, including:
 
-## Database
+- **FastAPI**: A modern Python framework for efficient API development.
+- **Pydantic**: Ensures data validation and settings management.
+- **Motor and PyMongo**: Connects to MongoDB for database support.
+- **WebSockets**: Enables real-time chat using libraries like python-socketio and starlette.
+- **Cryptography and Passlib**: Provide security for communication and user password storage.
+- **Other Dependencies**: Contribute to different features and utilities.
+
+Our backend offers robust user authentication and authorization, both on the client and server sides. Real-time chat functionality is seamlessly integrated with the security features. The development environment is optimized for speed and efficiency, using Uvicorn to serve the FastAPI application.
+
+
+<!-- ## Database
 
 - Explain how to set up and configure your MongoDB database.
-- Describe the organization of collections, including separate collections for private and group chat.
+- Describe the organization of collections, including separate collections for private and group chat. -->
 
-## WebSocket Integration
+<!-- ## WebSocket Integration
 
 - Explain how WebSocket integration works for real-time chat.
-- Describe the structure and functionality of WebSocket endpoints.
+- Describe the structure and functionality of WebSocket endpoints. -->
 
-## Authentication
+<!-- ## Authentication
 
 - Explain how JWT authentication is implemented for secure user access.
 - Provide details on user registration and login processes. -->
@@ -119,7 +137,7 @@ Before you begin, ensure you have met the following requirements:
   $ docker-compose up --build
   ```
 
-  The backend should be accessible at `http://localhost:8000`, and the frontend at `http://localhost:3000`.
+  The backend should be accessible at `http://localhost:8000`, and the frontend at `http://localhost:5173`.
 
 ## License
 
