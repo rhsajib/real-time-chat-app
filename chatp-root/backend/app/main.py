@@ -43,7 +43,7 @@ app.add_middleware(
 # App root
 @app.get('/', tags=['Root'])
 async def root():
-    return {'message': 'Welcome to this fantastic ChatP app! hey there!'}
+    return {'message': 'Welcome to this fantastic ChatP app! No way!!'}
 
 
 # Api Routers

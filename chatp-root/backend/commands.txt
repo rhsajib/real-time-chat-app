@@ -7,3 +7,11 @@ $ brew services start mongodb-community@4.4
 
 stop:
 $ brew services stop mongodb-community@4.4
+
+
+# invoke the service 
+$ curl -v http://localhost:8000
+
+
+docker:
+$ docker exec -it chatp-root-fastapi-1 sh
