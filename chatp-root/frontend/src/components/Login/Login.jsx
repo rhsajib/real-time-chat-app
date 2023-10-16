@@ -15,8 +15,9 @@ const Login = () => {
         email: "",
         password: "",
     };
-    const navigate = useNavigate(); // Initialize the navigate function
 
+    const navigate = useNavigate(); // Initialize the navigate function
+    const [errorMessage, setErrorMessage] = useState(null);
     const [formData, setFormData] = useState(initiaFormData);
 
     useEffect(() => {
@@ -28,7 +29,6 @@ const Login = () => {
         }
     }, []);
 
-    
     const handleLoginSubmit = (e) => {
         e.preventDefault(); // Prevent the default form submission behavior
 
@@ -48,6 +48,10 @@ const Login = () => {
             })
             .catch((error) => {
                 console.error("Login failed", error);
+                const response = error.response;
+                const message = response.data.detail;
+                // console.log(message);
+                setErrorMessage(message);
             });
     };
 
@@ -69,6 +73,7 @@ const Login = () => {
             <LoginInputFields
                 handleLoginSubmit={handleLoginSubmit}
                 formData={formData} // Pass the formData to the child component
+                fieldError={errorMessage}
                 handleInputChange={handleInputChange} // Pass the handleInputChange function to the child component
             />
         </motion.div>

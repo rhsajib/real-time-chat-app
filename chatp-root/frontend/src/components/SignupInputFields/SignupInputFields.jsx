@@ -6,6 +6,7 @@ const SignupInputFields = ({
     formData,
     handleInputChange,
     passwordsMatch,
+    passwordLengthError,
     fieldError,
 }) => {
     const inputVariants = {
@@ -79,6 +80,11 @@ const SignupInputFields = ({
                     </p>
                 )}
 
+                {passwordLengthError && (
+                    <p className=" text-center mb-2 text-red-500">
+                        Password must be atleast 6 character.
+                    </p>
+                )}
                 {!passwordsMatch && (
                     <p className=" text-center mb-2 text-red-500">
                         Passwords do not match.

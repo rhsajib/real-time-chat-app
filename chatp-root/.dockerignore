@@ -3,15 +3,31 @@
 .gitignore
 
 # Ignore Python virtual environment (venv)
-venv
-__pycache__
+venv/
+
+# Exclude backend-specific files or directories
+backend/.vscode/
+backend/venv/
+backend/app/__pycache__/
+backend/app/.env
+backend/app/.pytest_cache/
+
+# Byte-compiled / optimized / DLL files
+**/__pycache__/
+**/*.py[cod]
 *.pyc
+
+# Exclude frontend-specific files or directories
+frontend/node_modules/
+frontend/build/
 
 # Ignore development and build files
 node_modules
 build
 yarn-error.log
 npm-debug.log
+
+
 
 # Ignore development and build files
 *.log
@@ -22,7 +38,6 @@ npm-debug.log
 *.md
 
 # Ignore editor and IDE-specific files
-.vscode
 .idea
 *.sublime-*
 *.swp
@@ -33,4 +48,5 @@ docs
 
 # Ignore OS-specific files
 .DS_Store
+*/**.DS_Store
 Thumbs.db

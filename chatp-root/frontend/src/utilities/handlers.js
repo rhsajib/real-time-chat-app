@@ -98,7 +98,7 @@ const handleLoginData = async (data) => {
         return response; // Return the response
     } catch (error) {
         // Handle any errors that occur during the POST request
-        console.error("Error Login:", error);
+        console.error("Login Error:", error);
         throw error; // Rethrow the error
     }
 };

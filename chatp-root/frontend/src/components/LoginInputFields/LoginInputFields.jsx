@@ -1,7 +1,12 @@
 import React from "react";
 import { motion } from "framer-motion";
 
-const LoginInputFields = ({handleLoginSubmit, formData, handleInputChange}) => {
+const LoginInputFields = ({
+    handleLoginSubmit,
+    formData,
+    fieldError,
+    handleInputChange,
+}) => {
     const inputVariants = {
         rest: { scale: 1 },
         hover: { scale: 1.05 },
@@ -38,6 +43,11 @@ const LoginInputFields = ({handleLoginSubmit, formData, handleInputChange}) => {
                         onChange={handleInputChange}
                     />
                 </div>
+                {fieldError && (
+                    <p className=" text-center mb-2 text-red-500">
+                        {fieldError}
+                    </p>
+                )}
                 <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
