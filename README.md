@@ -2,14 +2,12 @@
 <!-- This content will not be linted. -->
 
 # Real Time Chat Application (FARM Stack Project)
----
 
 This FARM (FastAPI, React, and MongoDB) project is a full-stack web application that combines the power of FastAPI for the backend, React for the frontend, and MongoDB for data storage. The project includes various features, such as JWT authentication, field validation, real-time chat with WebSocket integration, separate collections for private and group chat, and Docker configurations for both backend and frontend. 
 
 
 
 ## Table of Contents
----
 
 - [Real Time Chat Application (FARM Stack Project)](#real-time-chat-application-farm-stack-project)
   - [Table of Contents](#table-of-contents)
@@ -21,7 +19,6 @@ This FARM (FastAPI, React, and MongoDB) project is a full-stack web application 
   - [License](#license)
 
 ## Features
----
 
 - **FastAPI Backend**: Provides RESTful API endpoints.
 - **React Frontend**: User-friendly interface.
@@ -33,7 +30,6 @@ This FARM (FastAPI, React, and MongoDB) project is a full-stack web application 
 - **Docker Setup**: Containerized development environment.
 
 ## Prerequisites
----
 
 Before you begin, ensure you have met the following requirements:
 
@@ -43,7 +39,6 @@ Before you begin, ensure you have met the following requirements:
 - Clone or download this repository to your local machine
 
 ## Getting Started
----
 
 1. **Backend Setup:**
 
@@ -72,7 +67,6 @@ Before you begin, ensure you have met the following requirements:
 
 
 ## Project Structure
----
 
 - **backend:** Contains the FastAPI backend code.
 - **frontend:** Contains the React frontend code.
@@ -104,13 +98,11 @@ Before you begin, ensure you have met the following requirements:
 - Describe the structure and functionality of WebSocket endpoints.
 
 ## Authentication
----
 
 - Explain how JWT authentication is implemented for secure user access.
 - Provide details on user registration and login processes. -->
 
 ## Docker Setup
----
 
 - **Docker Files:**
 
@@ -130,7 +122,6 @@ Before you begin, ensure you have met the following requirements:
   The backend should be accessible at `http://localhost:8000`, and the frontend at `http://localhost:3000`.
 
 ## License
----
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
 
