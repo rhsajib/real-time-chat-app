@@ -1,17 +1,19 @@
 import React, { useEffect, useState, useRef } from "react";
 import Message from "../Message/Message";
-import { useLoaderData } from "react-router-dom";
+import { useLoaderData, useLocation } from "react-router-dom";
 import NoMessage from "../NoMessage/NoMessage";
 import SendMessage from "../SendMessage/SendMessage";
 import { getToken } from "../../utilities/tokenService";
+import MessageBoxTop from "../MessageBoxTop/MessageBoxTop";
 
 const Messages = () => {
     // Load data from API
     const chat = useLoaderData();
-    // console.log(chat)
+
+    // console.log(chat);
 
     // Data destructuring
-    const { chat_id, type, messages, user_id } = chat;
+    const { chat_id, type, messages, user_id, recipient_profile } = chat;
     const token = getToken();
 
     // Reference for the chat container
@@ -22,6 +24,11 @@ const Messages = () => {
     useEffect(() => {
         setPreviousMessages(messages);
     }, [messages]);
+
+    const [clickedOnRecipient, setClickedOnRecipient] = useState(false);
+    const handleRecipientProfileClick = () => {
+        setClickedOnRecipient(true);
+    };
 
     //--------------------------------------start handle SOCKET--------------------------------------------------
     // State to store the WebSocket instance
@@ -90,10 +97,18 @@ const Messages = () => {
             {/* <div className="grid grid-cols-1 border border-r-slate-200 bg-white content-end h-screen"> */}
             <div className="flex flex-col border border-r-slate-200 bg-white content-end h-screen">
                 {/* <div className="grid grid-cols-1 bg-gradient-to-t from-cyan-700 to-blue-800 content-end h-screen"> */}
-                <div className="bg-teal-900 h-15 px-4 py-4 border border-b-slate-200 text-white text-right sticky top-0">
-                    <h className="">Chat id: {chat_id}</h>
+                <div>
+                    <MessageBoxTop
+                        recipientData={recipient_profile}
+                        handleRecipientProfileClick={
+                            handleRecipientProfileClick
+                        }
+                    />
                 </div>
 
+                {/* {clickedOnRecipient && <h1>{recipient_profile.email} </h1>} */}
+                
+                
                 <div
                     ref={messageContainerRef}
                     className="flex flex-col h-full justify-end overflow-y-auto"

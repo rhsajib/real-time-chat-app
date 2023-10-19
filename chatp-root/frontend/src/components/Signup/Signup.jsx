@@ -61,9 +61,7 @@ const Signup = () => {
             return
         }
 
-        
-
-
+    
         
         handleSignupData(formData)
             // When we call handleSignupData(formData) , it returns a promise (since handleSignupData is an asynchronous function),

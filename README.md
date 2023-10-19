@@ -3,7 +3,25 @@
 
 # Real Time Chat Application (FARM Stack Project)
 
-This FARM (FastAPI, React, and MongoDB) project is a full-stack web application that combines the power of FastAPI for the backend, React for the frontend, and MongoDB for data storage. The project includes various features, such as JWT authentication, field validation, real-time chat with WebSocket integration, separate collections for private and group chat, and Docker configurations for both backend and frontend. 
+This FARM (FastAPI, React, and MongoDB) project is a full-stack web application that combines the power of FastAPI for the backend, React for the frontend, and MongoDB for data storage. The project includes various features, such as JWT authentication, validation in bosth client side and server side, real-time chat with WebSocket integration, separate collections for private and group chat, and Docker configurations for both backend and frontend. 
+
+## Table of Contents
+
+- [Real Time Chat Application (FARM Stack Project)](#real-time-chat-application-farm-stack-project)
+  - [Table of Contents](#table-of-contents)
+  - [App Reality](#app-reality)
+    - [Welcome Page](#welcome-page)
+    - [Signup Page](#signup-page)
+    - [Login Page](#login-page)
+    - [FastAPI Docs](#fastapi-docs)
+    - [Private Chat](#private-chat)
+  - [Features](#features)
+  - [Prerequisites](#prerequisites)
+  - [Getting Started](#getting-started)
+  - [Frontend](#frontend)
+  - [Backend](#backend)
+  - [Docker Setup](#docker-setup)
+  - [License](#license)
 
 ## App Reality
 
@@ -22,23 +40,6 @@ This FARM (FastAPI, React, and MongoDB) project is a full-stack web application 
 ### Private Chat
 ![Pvt Chat](chatp-root/img/pvt-chat.png)
 
-## Table of Contents
-
-- [Real Time Chat Application (FARM Stack Project)](#real-time-chat-application-farm-stack-project)
-  - [App Reality](#app-reality)
-    - [Welcome Page](#welcome-page)
-    - [Signup Page](#signup-page)
-    - [Login Page](#login-page)
-    - [FastAPI Docs](#fastapi-docs)
-    - [Private Chat](#private-chat)
-  - [Table of Contents](#table-of-contents)
-  - [Features](#features)
-  - [Prerequisites](#prerequisites)
-  - [Getting Started](#getting-started)
-  - [Frontend](#frontend)
-  - [Backend](#backend)
-  - [Docker Setup](#docker-setup)
-  - [License](#license)
 ## Features
 
 - **FastAPI Backend**: Provides RESTful API endpoints.
@@ -64,7 +65,7 @@ Before you begin, ensure you have met the following requirements:
 1. **Backend Setup:**
 
    ```bash
-   $ cd backend
+   $ cd chatp-root/backend
    $ pip install -r requirements.txt
    $ uvicorn app.main:app --reload
    ```
@@ -74,7 +75,7 @@ Before you begin, ensure you have met the following requirements:
 2. **Frontend Setup:**
 
    ```bash
-   $ cd frontend
+   $ cd chatp-root/frontend
    $ npm install
    $ npm run dev
    ```
@@ -155,6 +156,7 @@ Our backend offers robust user authentication and authorization, both on the cli
   To start the containers, use:
 
   ```bash
+  $ cd chatp-root
   $ docker-compose up --build
   ```
 

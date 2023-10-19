@@ -1,6 +1,5 @@
 from datetime import datetime
 from pydantic import BaseModel
-from bson import ObjectId
 
 
 class MessageBase(BaseModel):
@@ -48,8 +47,7 @@ class PrivateChat(ChatBase):
 class PrivateChatResponse(ChatBase):
     pass
 
-class PrivateChatResponseWithUserId(PrivateChatResponse):
-    user_id: str
+
 
 class GroupChat(ChatBase):
     chat_name: str | None

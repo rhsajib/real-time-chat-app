@@ -57,12 +57,15 @@ async def get_current_user_detail(
 
 
 # Get a user data
-@router.get('/info/{user_id}', status_code=status.HTTP_200_OK, response_model=schemas.User)
+@router.get('/info/{user_id}', 
+            status_code=status.HTTP_200_OK, 
+            response_model=schemas.User)
 async def get_user_detail(user_id: str,
                           user_manager: User = Depends(get_user_manager),
                           current_user: schemas.User = Depends(get_current_active_user)):
 
     user = await user_manager.get_by_id(user_id)
+    # print('user', user)
     return user
 
 

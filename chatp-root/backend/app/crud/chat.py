@@ -155,7 +155,17 @@ class PrivateChatManager(BaseChatManager):
             return await self.get_chats_from_ids(chat_ids)
         return []
     
+    async def get_recipiet_id_from_chat_members(self, member_ids: list[str], current_user_id: str):
 
+        recipiet_id = member_ids[0] if member_ids[1] == current_user_id else member_ids[1]
+        return recipiet_id
+    
+    
+    async def get_recipient_profile(self, member_ids: list[str], current_user_id:str) -> schemas.User:
+        recipient_id = await self.get_recipiet_id_from_chat_members(member_ids, current_user_id)
+        user = await self.user_manager.get_by_id(recipient_id)
+        return user
+    
     async def get_recepient(
             self, 
             current_user_id: str, 
@@ -179,25 +189,6 @@ class PrivateChatManager(BaseChatManager):
             status_code=status.HTTP_404_NOT_FOUND,
             detail='No private message recipients!'
         )
-
-    # async def db_get_existing_private_chat(self, current_user_id: str, recipient_id: str):
-    #     query = {
-    #         'id': current_user_id,
-    #         'private_message_recipients.recipient_id': recipient_id
-    #     }
-
-    #     # Retrieve the user with the matching query
-
-    #     user = await self.pvt_chat_collection.find_one(query)
-
-    #     if user:
-    #         for recipient in user['private_message_recipients']:
-    #             if recipient['recipient_id'] == recipient_id:
-    #                 chat_id = recipient['chat_id']
-    #                 chat = await db_get_chat(chat_id, db, collection=PRIVATE_CHAT_COLLECTION)
-    #                 return chat
-
-    #     return []
 
 
 """------------------------Section: handle private chat------------------------"""

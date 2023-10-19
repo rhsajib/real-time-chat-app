@@ -4,6 +4,7 @@ import LoginInputFields from "../LoginInputFields/LoginInputFields";
 import { handleLoginData } from "../../utilities/handlers";
 import { getToken, setToken } from "../../utilities/tokenService";
 import { useNavigate } from "react-router-dom";
+import PasswordChange from "../PasswordChange/PasswordChange";
 
 const Login = () => {
     const containerVariants = {
@@ -19,6 +20,7 @@ const Login = () => {
     const navigate = useNavigate(); // Initialize the navigate function
     const [errorMessage, setErrorMessage] = useState(null);
     const [formData, setFormData] = useState(initiaFormData);
+    const [forgotPassword, setForgotPassword] = useState(false);
 
     useEffect(() => {
         // Check if the access token exists
@@ -63,6 +65,10 @@ const Login = () => {
         // console.log(formData);
     };
 
+    const haldleForgotPassword = () => {
+        setForgotPassword(true);
+    };
+
     return (
         <motion.div
             className="min-h-screen flex items-center justify-center"
@@ -70,12 +76,19 @@ const Login = () => {
             animate="animate"
             variants={containerVariants}
         >
-            <LoginInputFields
-                handleLoginSubmit={handleLoginSubmit}
-                formData={formData} // Pass the formData to the child component
-                fieldError={errorMessage}
-                handleInputChange={handleInputChange} // Pass the handleInputChange function to the child component
-            />
+            {!forgotPassword ? (
+                <LoginInputFields
+                    handleLoginSubmit={handleLoginSubmit}
+                    formData={formData} // Pass the formData to the child component
+                    fieldError={errorMessage}
+                    handleInputChange={handleInputChange} // Pass the handleInputChange function to the child component
+                    haldleForgotPassword={haldleForgotPassword}
+                />
+            ) : (
+                // <PasswordChange />
+                <h1>Forgot password</h1>
+
+            )}
         </motion.div>
     );
 };

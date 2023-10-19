@@ -26,6 +26,7 @@ class User(UserBase):
     is_disabled: bool
     is_superuser: bool 
 
+
 # Properties to receive via API on update
 class UserUpdate(User):
     password: str | None = None
@@ -35,6 +36,7 @@ class UserInDb(UserUpdate):
     # disabled: bool  for disabling the account 
     private_message_recipients: list[MessageRecipient | None]
     group_chat_ids: list[str | None]
+
 
 
 

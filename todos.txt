@@ -1,0 +1,4 @@
+- to make iit responsive
+- password length validation in server side
+- password change
+- email verificaation

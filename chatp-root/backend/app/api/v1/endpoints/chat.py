@@ -1,5 +1,6 @@
 from fastapi import status, Depends, APIRouter, HTTPException
 from app import schemas
+from app.schemas import shared
 from app.api.v1.dependencies import get_current_user, get_private_chat_manager, get_current_active_user
 from app.database.db import get_db
 from motor.motor_asyncio import AsyncIOMotorDatabase
@@ -37,7 +38,7 @@ async def get_all_private_message_recipients(
 # recipient_id = 8766afaf17bf42fc8970400e4d35ebb9
 @router.get('/private/info/{chat_id}',
             status_code=status.HTTP_200_OK,
-            response_model=schemas.PrivateChatResponseWithUserId)
+            response_model=shared.PrivateChatResponseWithRecipient)
 async def get_private_chat(
     chat_id: str,
     pvt_chat_manager: PrivateChatManager = Depends(get_private_chat_manager),
@@ -51,7 +52,13 @@ async def get_private_chat(
         serialized_messages = [message_serializer(msg) for msg in chat['messages']]
         chat['messages'] = serialized_messages
     
+
+    recipient_profile = await pvt_chat_manager.get_recipient_profile(
+        chat['member_ids'], current_user['id']
+    )
+    print('recipient_profile', recipient_profile)
     chat['user_id'] = current_user['id']
+    chat['recipient_profile'] = recipient_profile
     return chat
 
 # Get private chat recipient

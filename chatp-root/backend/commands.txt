@@ -15,3 +15,26 @@ $ curl -v http://localhost:8000
 
 docker:
 $ docker exec -it chatp-root-fastapi-1 sh
+
+
+
+redis:
+$ redis-server
+$ redis-cli    
+
+
+# celery
+
+$ celery -A app.worker.celery worker --loglevel=info    
+
+
+The following steps illustrate, how we can use Celery along with FastAPI to perform asynchronous tasks:
+
+Setup and Installation
+Set up Message Broker
+Add Celery
+Add Celery Tasks
+Add APIRouter
+Start the Application and Celery Worker Server
+Test the Application
+Monitor the Tasks

@@ -1,18 +1,6 @@
-import React from "react";
-import { motion } from "framer-motion";
+import React from 'react';
 
-const LoginInputFields = ({
-    handleLoginSubmit,
-    formData,
-    fieldError,
-    handleInputChange,
-    haldleForgotPassword,
-}) => {
-    const inputVariants = {
-        rest: { scale: 1 },
-        hover: { scale: 1.05 },
-    };
-
+const PasswordChangeInputFields = () => {
     return (
         <div className="max-w-md w-full p-6">
             <form onSubmit={handleLoginSubmit}>
@@ -54,23 +42,23 @@ const LoginInputFields = ({
                 <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className="w-full bg-cyan-500 hover:bg-cyan-700 text-white font-bold py-2 rounded-xl transition duration-300"
-                    type="submit"
-                >
-                    Login
-                </motion.button>
-                <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
                     className="text-sm text-cyan-800 pl-2"
                     type="text"
                     onClick={haldleForgotPassword}
                 >
                     Forgot Password
                 </motion.button>
+                <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="w-full bg-cyan-500 hover:bg-cyan-700 text-white font-bold py-2 rounded-xl transition duration-300"
+                    type="submit"
+                >
+                    Login
+                </motion.button>
             </form>
         </div>
     );
 };
 
-export default LoginInputFields;
+export default PasswordChangeInputFields;
