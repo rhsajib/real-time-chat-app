@@ -13,6 +13,10 @@ from app.database.db import (
 from fastapi.routing import APIWebSocketRoute
 
 
+
+API_VERSION = settings.API_V1_STR
+
+
 app = FastAPI()
 
 
@@ -47,7 +51,7 @@ async def root():
 
 
 # Api Routers
-app.include_router(api_router, prefix=settings.API_V1_STR)
+app.include_router(api_router, prefix=API_VERSION)
 
 
 # Register the WebSocket endpoint

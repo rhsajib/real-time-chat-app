@@ -2,7 +2,7 @@ from celery import Celery
 
 from app.core.config import settings
 
-celery_app = Celery(
+celery = Celery(
     'app.main',                       # Specify the path to your main module
     include=['app.worker.tasks'],     # Make sure to provide the correct path to your tasks
     broker=settings.CELERY_BROKER_URL,

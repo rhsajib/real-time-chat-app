@@ -5,7 +5,7 @@ from app.api.v1.dependencies import (
     get_private_chat_manager,
     get_token_manager
 )
-from app.crud.auth import JwtTokenManager
+from app.crud.auth import TokenManager
 from app.crud.chat import GroupChatManager, PrivateChatManager
 from app.crud.user import User
 from app.serializers.serializers import message_serializer
@@ -19,7 +19,7 @@ async def chat_websocket_endpoint(
     chat_id: str,
     token: str,
     websocket: WebSocket,
-    token_manager:  JwtTokenManager = Depends(get_token_manager),
+    token_manager:  TokenManager = Depends(get_token_manager),
     pvt_chat_manager: PrivateChatManager = Depends(get_private_chat_manager),
     # grp_chat_manager: GroupChatManager = Depends(get_group_chat_manager),
     
@@ -37,7 +37,7 @@ async def chat_websocket_endpoint(
         so we have to use another technique to retrieve 
         current_user more specifically access-token.
 
-        Thats why we created a JwtTokenManager to reuse it in http request
+        Thats why we created a TokenManager to reuse it in http request
         as well as in websocket
 
     """

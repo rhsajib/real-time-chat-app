@@ -1,0 +1,22 @@
+ref: https://www.androidpolice.com/how-to-allow-less-secure-apps-in-gmail/
+
+
+Use app password to allow less secure apps in Gmail. 
+An app password can only be used with accounts that have two-step verification turned on.
+
+Steps:
+- Open a web browser and go to your Google account.
+- Select Security.
+- Enable two-step verification.
+- Under `How you sign in to Google`, select `2-Step Verification`.
+- Scroll to the bottom and click App passwords.
+- Enter a descriptive name to help you remember where you'll use this app password.
+- Select Create.
+- Copy the 16-character password
+
+
+To use the app password, 
+- go to the Google Account settings of your email client.
+- replace your regular password with the 16-character password you created.
+
+After you complete the process, return to the App passwords page and click Done

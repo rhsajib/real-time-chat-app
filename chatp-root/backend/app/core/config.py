@@ -19,11 +19,12 @@ class CommonSettings(BaseSettings):
 
 class TokenSettings(BaseSettings):
     # created by '$ openssl rand -hex 32'
-    JWT_SECRET_KEY: str = os.environ.get('SECRET_KEY')
+    JWT_SECRET_KEY: str = os.environ.get('JWT_SECRET_KEY')
     ALGORITHM: str = os.environ.get('ALGORITHM')
     # 60 minutes * 24 hours * 7 days = 7 days
     ACCESS_TOKEN_EXPIRE_MINUTES: int = int(
-        os.environ.get('ACCESS_TOKEN_EXPIRE_MINUTES'))
+        os.environ.get('ACCESS_TOKEN_EXPIRE_MINUTES'))   
+    ACTIVATION_SECRET_KEY: str = os.environ.get('ACTIVATION_SECRET_KEY')
 
 
 class ServerSettings(BaseSettings):
@@ -44,6 +45,9 @@ class CelerySettings(BaseSettings):
     CELERY_BROKER_URL: str = os.environ.get('CELERY_BROKER', 'redis://redis:6379/0')
     CELERY_RESULT_BACKEND: str = os.environ.get('CELERY_BACKEND', 'redis://redis:6379/0')
 
+class EmailSettings(BaseSettings):
+    SENDER_EMAIL: str = os.environ.get('SENDER_EMAIL')
+    EMAIL_PASSWORD: str= os.environ.get('EMAIL_PASSWORD')
 
 class Settings(
     CommonSettings, 
@@ -51,7 +55,8 @@ class Settings(
     ServerSettings, 
     DatabaseSettings, 
     CollectionSettings,
-    CelerySettings
+    CelerySettings,
+    EmailSettings
     ):
     model_config = SettingsConfigDict(case_sensitive=True)
 

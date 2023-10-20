@@ -1,4 +1,4 @@
-from app.crud.auth import JwtTokenManager
+from app.crud.auth import TokenManager
 from app.crud.chat import GroupChatManager, PrivateChatManager
 from app.crud.user import User
 from app.database.db import get_db
@@ -23,7 +23,7 @@ async def get_user_manager(db: AsyncIOMotorDatabase = Depends(get_db)):
 async def get_token_manager(
         user_manager: User = Depends(get_user_manager)
 ):
-    return JwtTokenManager(user_manager)
+    return TokenManager(user_manager)
 
 
 async def get_private_chat_manager(
@@ -43,7 +43,7 @@ async def get_group_chat_manager(
 # process 1
 async def get_current_user(
         token: str = Depends(oauth2_scheme),
-        token_manager: JwtTokenManager = Depends(get_token_manager)
+        token_manager: TokenManager = Depends(get_token_manager)
 ) -> schemas.User:
     current_user = await token_manager.get_user_form_jwt_token(token)
     return current_user
