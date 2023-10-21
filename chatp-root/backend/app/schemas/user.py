@@ -29,7 +29,7 @@ class User(UserBase):
 
 # Properties to receive via API on update
 class UserUpdate(User):
-    password: str | None = None
+    password: str | None
     
 # Additional properties stored in DB
 class UserInDb(UserUpdate):

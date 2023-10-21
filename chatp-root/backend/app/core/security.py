@@ -23,28 +23,33 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
     return pwd_context.verify(plain_password, hashed_password)
 
 
-def get_access_token(subject: str, expires_delta: timedelta) -> str:
-    if expires_delta:
-        expire = datetime.utcnow() + expires_delta
-    else:
-        expire = datetime.utcnow() + timedelta(minutes=20)
 
-    to_encode = {"exp": expire, "sub": subject}
-    encoded_jwt = jwt.encode(
-        to_encode, JWT_SECRET_KEY, algorithm= ALGORITHM)
-    return encoded_jwt
+
+
+
+
+# def get_access_token(subject: str, expires_delta: timedelta) -> str:
+#     if expires_delta:
+#         expire = datetime.utcnow() + expires_delta
+#     else:
+#         expire = datetime.utcnow() + timedelta(minutes=20)
+
+#     to_encode = {"exp": expire, "sub": subject}
+#     encoded_jwt = jwt.encode(
+#         to_encode, JWT_SECRET_KEY, algorithm= ALGORITHM)
+#     return encoded_jwt
 
 
 # Activation token during signup
-def generate_activation_token(email: str) -> str:
-    return ts.dumps(email, salt="activation-salt")
+# def generate_activation_token(email: str) -> str:
+#     return ts.dumps(email, salt="activation-salt")
 
 
-def is_valid_activation_token(token: str, email: str) -> bool:
-    try:
-        # Adjust max_age as needed
-        loaded_email = ts.loads(token, salt="activation-salt", max_age=3600)
-        print('loaded_email:', loaded_email )
-        return loaded_email == email
-    except:
-        return False
+# def is_valid_activation_token(token: str, email: str) -> bool:
+#     try:
+#         # Adjust max_age as needed
+#         loaded_email = ts.loads(token, salt="activation-salt", max_age=3600)
+#         print('loaded_email:', loaded_email )
+#         return loaded_email == email
+#     except:
+#         return False

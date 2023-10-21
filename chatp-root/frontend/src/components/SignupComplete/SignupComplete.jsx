@@ -36,7 +36,7 @@ const SignupComplete = ({userName}) => {
                 className="text-l mt-2 text-cyan-800 font-semibold"
                 variants={textVariants}
             >
-                Please Login to Explore!
+                Please check your email to activate ChatP account!
             </motion.div>
         </motion.div>
     );

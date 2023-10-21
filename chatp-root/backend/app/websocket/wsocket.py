@@ -3,9 +3,11 @@ from app import schemas
 from app.api.v1.dependencies import (
     get_group_chat_manager, 
     get_private_chat_manager,
-    get_token_manager
+    get_token_manager,
+    get_user_manager
 )
-from app.crud.auth import TokenManager
+from app.core.config import settings
+from app.services.token import TokenManager
 from app.crud.chat import GroupChatManager, PrivateChatManager
 from app.crud.user import User
 from app.serializers.serializers import message_serializer
@@ -19,6 +21,7 @@ async def chat_websocket_endpoint(
     chat_id: str,
     token: str,
     websocket: WebSocket,
+    token_subject_key:str =settings.ACCESS_TOKEN_SUBJECT_KEY,
     token_manager:  TokenManager = Depends(get_token_manager),
     pvt_chat_manager: PrivateChatManager = Depends(get_private_chat_manager),
     # grp_chat_manager: GroupChatManager = Depends(get_group_chat_manager),
@@ -45,7 +48,7 @@ async def chat_websocket_endpoint(
     print(f"WebSocket connection established for chat id: {chat_id}.")
 
     # get current user
-    current_user = await token_manager.get_user_form_jwt_token(token)
+    current_user = await token_manager.get_user_form_jwt_token(token, token_subject_key)
     print('current_user for websocket', 
           'username', current_user['username'], 
           'id', current_user['id'])

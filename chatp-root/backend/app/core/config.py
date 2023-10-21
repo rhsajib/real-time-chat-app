@@ -21,6 +21,7 @@ class TokenSettings(BaseSettings):
     # created by '$ openssl rand -hex 32'
     JWT_SECRET_KEY: str = os.environ.get('JWT_SECRET_KEY')
     ALGORITHM: str = os.environ.get('ALGORITHM')
+    ACCESS_TOKEN_SUBJECT_KEY: str = 'id'
     # 60 minutes * 24 hours * 7 days = 7 days
     ACCESS_TOKEN_EXPIRE_MINUTES: int = int(
         os.environ.get('ACCESS_TOKEN_EXPIRE_MINUTES'))   

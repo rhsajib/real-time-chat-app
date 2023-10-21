@@ -1,8 +1,15 @@
 from fastapi import HTTPException, status, Depends, APIRouter
-from app.api.v1.dependencies import get_current_active_user, get_user_manager, get_current_user
+from app.api.v1.dependencies import(
+     get_token_manager, 
+     get_current_active_user, 
+     get_user_manager, 
+     get_current_user
+)
 from app.exceptions import UserCreationError
 from app import schemas
 from app.crud.user import User
+from app.services.token import TokenManager
+from app.services.worker.tasks import send_account_activation_email
 
 
 router = APIRouter()
@@ -12,8 +19,9 @@ router = APIRouter()
              response_model=schemas.User)
 async def create_user(
         user_data: schemas.UserCreate,
+        user_manager: User = Depends(get_user_manager),
+        token_manager: TokenManager = Depends(get_token_manager)
         # current_user: schemas.User = Depends(get_current_active_user)
-        user_manager: User = Depends(get_user_manager)
         # if i use current user here, it will raise '401 Unauthorized'
 ):
     try:
@@ -22,9 +30,26 @@ async def create_user(
 
         # Create a new user using the User class
         new_user = await user_manager.create_user(user_data)
-
         # print(new_user)
+
+        # Send account activation email to new 
+
+        recipient_email = new_user.get('email')
+        activation_token = await token_manager.generate_activation_token(recipient_email)
+        send_account_activation_email.delay(activation_token, recipient_email)
         return new_user
+        # print('result', result, dir(result))
+
+        # Wait for the Celery task to complete and get the result
+        # result_value = result.get()     # same as result_value = AsyncResult(result.id).get()
+        
+        # Retrieve the result of the task once it's completed
+        # result_value = result.get()
+        # if result_value:
+        # return new_user
+            # return {"message": "Task triggered", "task_id": result.id}
+            # return {"message": "Task triggered", "task_id": result.id, "result": result_value}
+
     except UserCreationError as e:
         print(e)
         print(e.field, e.message)

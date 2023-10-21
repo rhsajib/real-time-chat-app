@@ -37,7 +37,7 @@ const Signup = () => {
         console.log("Clearing errors...");
         setErrorMessage(null);
         setPasswordLengthError(false);
-        setPasswordsMatch(true);   // Reset the passwordsMatch state to true when they match
+        setPasswordsMatch(true); // Reset the passwordsMatch state to true when they match
     };
 
     const handleSignupSubmit = async (e) => {
@@ -48,52 +48,50 @@ const Signup = () => {
         // Check if passwords match
 
         clearErrors();
-        console.log('handleSignupSubmit')
+        console.log("handleSignupSubmit");
 
         if (formData.password1.length < 6) {
             console.log("Password length is less than 6");
             setPasswordLengthError(true);
-            return
+            return;
         }
 
         if (formData.password1 !== formData.password2) {
             setPasswordsMatch(false);
-            return
+            return;
         }
 
-    
-        
-        handleSignupData(formData)
-            // When we call handleSignupData(formData) , it returns a promise (since handleSignupData is an asynchronous function),
-            // so we need to handle the promise using then to get the result.
+        // handleSignupData(formData)
+        // When we call handleSignupData(formData) , it returns a promise (since handleSignupData is an asynchronous function),
+        // so we need to handle the promise using then to get the result.
 
-            
-            // process 1  (remove async from handleSignupSubmit)
-            // .then((response) => {
-            //     const newUserName = response.data["username"];
-            //     setUserName(newUserName);
-            //     // Reset the form data after successful signup
-            //     resetForm();
-            // })
-            // .catch((error) => {
-            //     console.error("Error signing up:", error);
-            //     const response = error.response;
-            //     const message = response.data.detail.errors[0].message;
-            //     setErrorMessage(message);
-            // });
+        // process 1  (remove async from handleSignupSubmit)
+        // .then((response) => {
+        //     const newUserName = response.data["username"];
+        //     setUserName(newUserName);
+        //     // Reset the form data after successful signup
+        //     resetForm();
+        // })
+        // .catch((error) => {
+        //     console.error("Error signing up:", error);
+        //     const response = error.response;
+        //     const message = response.data.detail.errors[0].message;
+        //     setErrorMessage(message);
+        // });
 
-
-            // process 2
-            try {
-                const response = await handleSignupData(formData);
-                const newUserName = response.data.username;
-                setUserName(newUserName);
-                resetForm();
-            } catch (error) {
-                console.error("Error signing up:", error);
-                const message = error.response?.data.detail.errors[0].message || "An error occurred.";
-                setErrorMessage(message);
-            }
+        // process 2
+        try {
+            const response = await handleSignupData(formData);
+            const newUserName = response.data.username;
+            setUserName(newUserName);
+            resetForm();
+        } catch (error) {
+            console.error("Error signing up:", error);
+            const message =
+                error.response?.data.detail.errors[0].message ||
+                "An error occurred.";
+            setErrorMessage(message);
+        }
     };
 
     return (

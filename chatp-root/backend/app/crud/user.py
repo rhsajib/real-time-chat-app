@@ -51,11 +51,10 @@ class BaseUserManager:
         all_users = await self.get_all()
         # print(all_users)
         return [user for user in all_users if user.id != current_user_id]
-    
-    
+
     async def insert_private_message_recipient(
-            self, 
-            user_id: str, 
+            self,
+            user_id: str,
             recipient_model: schemas.MessageRecipient
     ):
         result = await self.user_collection.update_one(
@@ -65,8 +64,6 @@ class BaseUserManager:
         if result.matched_count == 1 and result.modified_count == 1:
             return True
         # raise HTTPException
-
-        
 
     # async def is_disabled(self, user: schemas.User) -> bool:
     #     return user.is_disabled
@@ -81,7 +78,7 @@ class UserDBManager(BaseUserManager):
         # print('user', user)
         if not user:
             return None
-        if not verify_password(user_data.password, user.get('password')):
+        elif not verify_password(user_data.password, user.get('password')):
             return None
         return user
 
@@ -120,7 +117,8 @@ class UserCreator(BaseUserManager):
                 return created_user
             else:
                 # Raise the custom exception with a specific error message
-                raise UserCreationError('User creation failed', 'write operation not acknowledged')
+                raise UserCreationError(
+                    'User creation failed', 'write operation not acknowledged')
 
         except UserCreationError as e:
             raise e
@@ -142,19 +140,25 @@ class UserUpdater(BaseUserManager):
     Returns:
         dict: The updated user data.
     '''
-    async def update_user(self, id: str, updated_data: schemas.UserUpdate):
-        # existing_user = await self.get_by_id(id)
-
+    async def update_user(
+        self,
+        updated_data: schemas.UserUpdate
+    ) -> schemas.UserInDb | None:
+        
+        # mycollection.update_one(myquery, newvalues)
         result = await self.user_collection.update_one(
-            {'id': id},
+            {'id': updated_data.id},
             {'$set': updated_data.model_dump()}
         )
-
-        # Check if the update was successful
-        if result.modified_count == 1:
+        # print(result.modified_count)
+        # print(result.matched_count)
+        # Check if the document was matched and modified
+        if result.matched_count == 1 and result.modified_count == 1:
             # If the update was successful, return the updated user data
-            updated_user = await self.get_by_id(id)
+            updated_user = await self.get_by_id(updated_data.id)
             return updated_user
+        return None
+
 
 # Delete user from database
 

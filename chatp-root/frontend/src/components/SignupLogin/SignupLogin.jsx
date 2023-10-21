@@ -3,8 +3,18 @@ import Login from "../Login/Login";
 import Signup from "../SignUp/SignUp";
 import LandingPage from "../LandingPge/LandingPage";
 import { motion } from "framer-motion";
+import { useLocation } from "react-router-dom";
+import AccountActivatedPage from "../AccountActivatedPage/AccountActivatedPage";
 
 const SignupLogin = () => {
+    // use useLocatio to access params / data
+    const location = useLocation();
+    const params = new URLSearchParams(location.search);
+
+    // Access query parameters after activating account by email verification
+    const accountActivated = params.get("activated");
+    console.log(accountActivated);
+
     const defaultBtnBg = "bg-white text-cyan-700";
     const containerVariants = {
         initial: { opacity: 0, y: -10 },
@@ -12,6 +22,12 @@ const SignupLogin = () => {
     };
 
     const [currentPage, setCurrentPage] = useState("landing");
+    useEffect(() => {
+        if (accountActivated == "true") {
+            setCurrentPage("activated");
+        }
+    }, []);
+
     const [signupBtnBackground, setSignupBtnBackground] =
         useState(defaultBtnBg);
     const [haveAccBtnBackground, setHaveAccBtnBackground] =
@@ -60,6 +76,7 @@ const SignupLogin = () => {
             <div className="flex justify-center items-center overflow-y-auto w-2/3">
                 <div className="w-full px-6">
                     {currentPage === "landing" && <LandingPage />}
+                    {currentPage === "activated" && <AccountActivatedPage />}
                     {currentPage === "login" && <Login />}
                     {currentPage === "signup" && <Signup />}
                 </div>

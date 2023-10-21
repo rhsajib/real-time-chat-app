@@ -6,7 +6,7 @@ from app.core.security import settings
 SENDER_EMAIL = settings.SENDER_EMAIL
 EMAIL_PASSWORD = settings.EMAIL_PASSWORD
 
-def send_signup_email(recipient_email, activation_link):
+def send_email(recipient_email, activation_link):
     subject = "Activate Your Account"
     message = MIMEMultipart()
     message["From"] = SENDER_EMAIL

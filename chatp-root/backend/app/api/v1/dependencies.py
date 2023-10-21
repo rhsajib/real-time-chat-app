@@ -1,4 +1,4 @@
-from app.crud.auth import TokenManager
+from app.services.token import TokenManager
 from app.crud.chat import GroupChatManager, PrivateChatManager
 from app.crud.user import User
 from app.database.db import get_db
@@ -43,10 +43,17 @@ async def get_group_chat_manager(
 # process 1
 async def get_current_user(
         token: str = Depends(oauth2_scheme),
-        token_manager: TokenManager = Depends(get_token_manager)
+        token_manager: TokenManager = Depends(get_token_manager),
 ) -> schemas.User:
-    current_user = await token_manager.get_user_form_jwt_token(token)
-    return current_user
+    
+    user = await token_manager.get_user_form_jwt_token(
+        token,
+        settings.ACCESS_TOKEN_SUBJECT_KEY
+    )
+
+    if not user:
+            raise credentials_exception
+    return user
 
 
 # process 2
@@ -139,7 +146,7 @@ async def get_current_active_user(
         current_user: schemas.User = Depends(get_current_user)
 ) -> schemas.User:
 
-    if current_user['is_disabled']:
+    if not current_user['is_active']:
         raise HTTPException(status_code=400, detail="Inactive user")
     return current_user
 

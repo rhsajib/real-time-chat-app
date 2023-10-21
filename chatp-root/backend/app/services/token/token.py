@@ -14,7 +14,8 @@ class TokenManager:
         self.jwt_secret_key = settings.JWT_SECRET_KEY
         self.jwt_algorithm = settings.ALGORITHM
         self.ts = URLSafeTimedSerializer(settings.ACTIVATION_SECRET_KEY)
-        self.expires_delta = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+        self.expires_delta = timedelta(
+            minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
 
     async def get_jwt_access_token(self, subject: str) -> str:
         if self.expires_delta:
@@ -32,25 +33,36 @@ class TokenManager:
 
         return encoded_jwt
 
-    async def get_user_form_jwt_token(self, token) -> schemas.User:
+    async def get_data_form_jwt_token(self, token) -> schemas.TokenPayload:
         try:
             payload = jwt.decode(
                 token, self.jwt_secret_key,
                 algorithms=[self.jwt_algorithm]
             )
-            id: str = payload.get("sub")
-            if id is None:
+
+            print('payload', payload)
+
+            subject: str = payload.get("sub")
+            if subject is None:
                 raise credentials_exception
 
-            token_data = schemas.TokenPayload(**payload)
+            # token_data = schemas.TokenPayload(**payload)
+            return payload
         except JWTError:
             raise credentials_exception
 
-        user = await self.user_manager.get_by_id(token_data.sub)
-        # print('get_current_user', user)
+    async def get_user_form_jwt_token(self, token: str, subject_key: str) -> schemas.User:
+        token_data = await self.get_data_form_jwt_token(token)
+        print('token_data', token_data)
+        subject = token_data.get('sub')
+
+        if subject_key == 'id':
+            user = await self.user_manager.get_by_id(subject)
+        elif subject_key == 'email':
+            user = await self.user_manager.get_by_email(subject)
+
         if not user:
             raise credentials_exception
-
         return user
 
     async def generate_activation_token(self, email: str) -> str:
@@ -60,8 +72,11 @@ class TokenManager:
         try:
             # Adjust max_age as needed
             loaded_email = self.ts.loads(
-                token, salt="activation-salt", max_age=3600)
-            print('loaded_email:', loaded_email)
+                token, 
+                salt="activation-salt", 
+                max_age=3600
+            )
+            # print('loaded_email:', loaded_email)
             return loaded_email
         except:
             return None
