@@ -43,8 +43,8 @@ class CollectionSettings(BaseSettings):
     GROUP_CHAT_COLLECTION: str = os.environ.get('GROUP_CHAT_COLLECTION')
 
 class CelerySettings(BaseSettings):
-    CELERY_BROKER_URL: str = os.environ.get('CELERY_BROKER', 'redis://redis:6379/0')
-    CELERY_RESULT_BACKEND: str = os.environ.get('CELERY_BACKEND', 'redis://redis:6379/0')
+    CELERY_BROKER_URL: str = os.environ.get('CELERY_BROKER')
+    CELERY_RESULT_BACKEND: str = os.environ.get('CELERY_BACKEND')
 
 class EmailSettings(BaseSettings):
     SENDER_EMAIL: str = os.environ.get('SENDER_EMAIL')

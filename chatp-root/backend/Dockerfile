@@ -2,14 +2,12 @@
 FROM python:3.11.6-alpine
 
 # Set environment variables 
-# prevent pip to check its version for upgrade
-# ENV PIP_DISABLE_PIP_VERSION_CHECK 1 
 # prevent python from writing .pyc files
 ENV PYTHONDONTWRITEBYTECODE 1 
 # ensure python output is sent directly to the terminal without buffering
 ENV PYTHONUNBUFFERED 1
 
-RUN pip install --upgrade pip
+RUN pip install --no-cache-dir --upgrade pip
 
 # Set the working directory in the container
 WORKDIR /app

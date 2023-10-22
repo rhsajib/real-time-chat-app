@@ -25,7 +25,7 @@ $ redis-cli
 
 # celery
 
-$ celery -A app.worker.celery worker --loglevel=info    
+$ celery -A app.services.worker.celery.celery worker --loglevel=info
 
 
 The following steps illustrate, how we can use Celery along with FastAPI to perform asynchronous tasks:

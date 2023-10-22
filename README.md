@@ -3,7 +3,7 @@
 
 # Real Time Chat Application (FARM Stack Project)
 
-This FARM (FastAPI, React, and MongoDB) project is a full-stack web application that combines the power of FastAPI for the backend, React for the frontend, and MongoDB for data storage. The project includes various features, such as JWT authentication, validation in bosth client side and server side, real-time chat with WebSocket integration, separate collections for private and group chat, and Docker configurations for both backend and frontend. 
+This FARM (FastAPI, React, and MongoDB) project is a full-stack web application that combines the power of FastAPI for the backend, React for the frontend, and MongoDB for data storage. The project includes various features, such as JWT authentication, validation in bosth client side and server side, real-time chat with WebSocket integration, separate collections for private and group chat, and Docker configurations for both backend and frontend.
 
 ## Table of Contents
 
@@ -26,67 +26,79 @@ This FARM (FastAPI, React, and MongoDB) project is a full-stack web application 
 ## App Reality
 
 ### Welcome Page
+
 ![Welcome](/chatp-root/img/welcome.png)
 
 ### Signup Page
+
 ![Signup](chatp-root/img/signup.png)
 
 ### Login Page
+
 ![Login](chatp-root/img/login.png)
 
 ### FastAPI Docs
+
 ![Api Docs](chatp-root/img/api.png)
 
 ### Private Chat
+
 ![Pvt Chat](chatp-root/img/pvt-chat.png)
 
 ## Features
 
-- **FastAPI Backend**: Provides RESTful API endpoints.
-- **React Frontend**: User-friendly interface.
-- **MongoDB Database**: Efficient data storage.
-- **JWT Authentication**: Secure user access.
-- **Field Validation**: Ensures data integrity.
-- **WebSocket Integration**: Real-time chat functionality.
-- **Separate Collections**: Distinct storage for private and group chat.
-- **Docker Setup**: Containerized development environment.
+-   **FastAPI Backend**: Provides RESTful API endpoints.
+-   **React Frontend**: User-friendly interface.
+-   **MongoDB Database**: Efficient data storage.
+-   **JWT Authentication**: Secure user access.
+-   **Email Verification**: Required verification of email addresses for account activation.
+-   **Field Validation**: Ensures data integrity.
+-   **WebSocket Integration**: Real-time chat functionality.
+-   **Separate Collections**: Distinct storage for private and group chat.
+-   **Docker Setup**: Containerized development environment.
 
 ## Prerequisites
 
 Before you begin, ensure you have met the following requirements:
 
-- Node.js and npm installed for React (+ vite) development
-- Python and pip installed for FastAPI development
-- MongoDB server up and running
-- Clone or download this repository to your local machine
+-   Node.js and npm installed for React (+ vite) development
+-   Python and pip installed for FastAPI development
+-   MongoDB server up and running
+-   Clone or download this repository to your local machine
 
 ## Getting Started
 
 1. **Backend Setup:**
 
-   ```bash
-   $ cd chatp-root/backend
-   $ pip install -r requirements.txt
-   $ uvicorn app.main:app --reload
-   ```
+    ```bash
+    $ cd chatp-root/backend
+    $ pip install -r requirements.txt
+    $ uvicorn app.main:app --reload
+    ```
 
-   Your FastAPI server should be running on `http://localhost:8000`.
+    Your FastAPI server should be running on `http://localhost:8000`.
 
 2. **Frontend Setup:**
 
-   ```bash
-   $ cd chatp-root/frontend
-   $ npm install
-   $ npm run dev
-   ```
+    ```bash
+    $ cd chatp-root/frontend
+    $ npm install
+    $ npm run dev
+    ```
 
-   Your React development server should be running on `http://localhost:5173`.
+    Your React development server should be running on `http://localhost:5173`.
 
-3. **Database Configuration:**
+3. **Celery Setup**
+    ```bash
+    $ cd chatp-root/backend
+    $ celery -A app.services.worker.celery.celery worker --loglevel=info
+    ```
+4. **Redis Configuration:**
 
-   - Set up your MongoDB connection in the backend.
+    - Set up your Redis in the backend
 
-
+5. **Database Configuration:**
+    - Set up your MongoDB connection in the backend.
 
 <!-- ## Project Structure
 
@@ -103,29 +115,25 @@ Before you begin, ensure you have met the following requirements:
 
 The frontend of our Real Time Chat Application is built with React and Vite for a fast development experience. It offers a responsive user interface for real-time chat and includes the following technologies:
 
-- **React**: A powerful JavaScript library for building user interfaces.
-- **Vite**: A modern development environment that optimizes frontend development.
-- **Dependencies**: Axios, Framer Motion, React Router, and Websocket Client for efficient communication.
-- **DevDependencies**: ESLint and Tailwind CSS for code quality and styling.
+-   **React**: A powerful JavaScript library for building user interfaces.
+-   **Vite**: A modern development environment that optimizes frontend development.
+-   **Dependencies**: Axios, Framer Motion, React Router, and Websocket Client for efficient communication.
+-   **DevDependencies**: ESLint and Tailwind CSS for code quality and styling.
 
 Our frontend incorporates client-side authentication, enhancing security and user access control. This ensures that only authorized users can access certain features of the application.
-
-
-
 
 ## Backend
 
 Our backend, powered by FastAPI, is the backbone of the Real Time Chat Application. It utilizes various dependencies to ensure high-performance and secure functionality, including:
 
-- **FastAPI**: A modern Python framework for efficient API development.
-- **Pydantic**: Ensures data validation and settings management.
-- **Motor and PyMongo**: Connects to MongoDB for database support.
-- **WebSockets**: Enables real-time chat using libraries like python-socketio and starlette.
-- **Cryptography and Passlib**: Provide security for communication and user password storage.
-- **Other Dependencies**: Contribute to different features and utilities.
+-   **FastAPI**: A modern Python framework for efficient API development.
+-   **Pydantic**: Ensures data validation and settings management.
+-   **Motor and PyMongo**: Connects to MongoDB for database support.
+-   **WebSockets**: Enables real-time chat using libraries like python-socketio and starlette.
+-   **Cryptography and Passlib**: Provide security for communication and user password storage.
+-   **Celery**: Implements asynchronous processing for tasks like email verification, enhancing the application's responsiveness and scalability.
 
 Our backend offers robust user authentication and authorization, both on the client and server sides. Real-time chat functionality is seamlessly integrated with the security features. The development environment is optimized for speed and efficiency, using Uvicorn to serve the FastAPI application.
-
 
 <!-- ## Database
 
@@ -144,28 +152,27 @@ Our backend offers robust user authentication and authorization, both on the cli
 
 ## Docker Setup
 
-- **Docker Files:**
+-   **Docker Files:**
 
-  - `Dockerfile` in the `backend` directory for the FastAPI backend.
-  - `Dockerfile` in the `frontend` directory for the React frontend.
+    -   `Dockerfile` in the `backend` directory for the FastAPI backend.
+    -   `Dockerfile` in the `frontend` directory for the React frontend.
 
-- **Docker Compose:**
+-   **Docker Compose:**
 
-  - `docker-compose.yml` for setting up the development environment with both backend and frontend containers.
+    -   `docker-compose.yml` for setting up the development environment with both backend and frontend containers.
 
-  To start the containers, use:
+    To start the containers, use:
 
-  ```bash
-  $ cd chatp-root
-  $ docker-compose up --build
-  ```
+    ```bash
+    $ cd chatp-root
+    $ docker-compose up --build
+    ```
 
-  The backend should be accessible at `http://localhost:8000`, and the frontend at `http://localhost:5173`.
+    The backend should be accessible at `http://localhost:8000`, and the frontend at `http://localhost:5173`.
 
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
-
 
 <!-- markdownlint-restore -->
 <!-- This content will be linted. -->

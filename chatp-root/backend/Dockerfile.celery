@@ -1,0 +1,20 @@
+FROM python:3.11.6-alpine
+
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+# Set the working directory in the container
+WORKDIR /app
+
+# Copy the requirements file for Celery to the container
+COPY requirements.celery.txt .
+
+# Install any needed packages specified in requirements.celery.txt
+RUN pip install --no-cache-dir --upgrade -r requirements.celery.txt
+
+# Copy the entire Celery application to the container
+COPY app/services/worker .
+
+# Command to run the Celery worker
+CMD ["celery", "-A", "app.services.worker.celery.celery", "worker", "--loglevel=info"]

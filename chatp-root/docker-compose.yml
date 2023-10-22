@@ -23,13 +23,35 @@ services:
     volumes:
       - ./backend:/app
     environment:
-      - MONGODB_URI=mongodb://mongo:27017  # Reference the MongoDB service
+      - MONGODB_URI=mongodb://mongo:27017  # Reference the MongoDB 
+      - CELERY_BROKER=redis://redis:6379/0
+      - CELERY_BACKEND=redis://redis:6379/0
     depends_on:
       - mongo
+      - redis
+      - celery_worker
 
   mongo:
     image: mongo
     ports:
       - "27017:27017"
 
+  redis:
+    image: redis:latest
+
+  
+  celery_worker:
+    build: ./backend
+    command: celery -A app.services.worker.celery.celery worker --loglevel=info
+    env_file:
+      - ./backend/app/.env 
+    volumes:
+      - ./backend:/app
+    environment: 
+      - MONGODB_URI=mongodb://mongo:27017  # Reference the MongoDB service
+      - CELERY_BROKER=redis://redis:6379/0
+      - CELERY_BACKEND=redis://redis:6379/0
+    depends_on:
+      - redis
+      
  
