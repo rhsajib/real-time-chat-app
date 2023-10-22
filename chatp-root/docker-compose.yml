@@ -54,4 +54,21 @@ services:
     depends_on:
       - redis
       
+  flower:
+    build: ./backend  
+    # command: flower -A app.services.worker.celery.celery --port=5555
+    command: celery --broker=redis://redis:6379/0 flower --port=5555
+    # command: flower --broker=redis://redis:6379/0
+    ports:
+      - "5555:5555"
+    env_file:
+      - ./backend/app/.env
+    environment: 
+      - MONGODB_URI=mongodb://mongo:27017  # Reference the MongoDB service
+      - CELERY_BROKER=redis://redis:6379/0
+      - CELERY_BACKEND=redis://redis:6379/0
+    depends_on:
+      - fastapi
+      - celery_worker
+      - redis
  

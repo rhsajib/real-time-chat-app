@@ -40,7 +40,7 @@ class TokenManager:
                 algorithms=[self.jwt_algorithm]
             )
 
-            print('payload', payload)
+            # print('payload', payload)
 
             subject: str = payload.get("sub")
             if subject is None:
@@ -53,7 +53,7 @@ class TokenManager:
 
     async def get_user_form_jwt_token(self, token: str, subject_key: str) -> schemas.User:
         token_data = await self.get_data_form_jwt_token(token)
-        print('token_data', token_data)
+        # print('token_data', token_data)
         subject = token_data.get('sub')
 
         if subject_key == 'id':
