@@ -3,7 +3,7 @@
 
 # Real Time Chat Application (FARM Stack Project)
 
-This FARM (FastAPI, React, and MongoDB) project is a full-stack web application that combines the power of FastAPI for the backend, React for the frontend, and MongoDB for data storage. The project includes various features, such as JWT authentication, validation in bosth client side and server side, real-time chat with WebSocket integration, separate collections for private and group chat, and Docker configurations for both backend and frontend.
+This FARM (FastAPI, React, and MongoDB) project is a full-stack web application that combines the power of FastAPI for the backend, React for the frontend, and MongoDB for data storage. The project includes various features, such as JWT authentication, email verification, field validation in both client side and server side, real-time chat with WebSocket integration, separate collections for private and group chat, and Docker configurations for both backend and frontend.
 
 ## Table of Contents
 
@@ -18,6 +18,7 @@ This FARM (FastAPI, React, and MongoDB) project is a full-stack web application 
   - [Features](#features)
   - [Prerequisites](#prerequisites)
   - [Getting Started](#getting-started)
+  - [Usage Instructions:](#usage-instructions)
   - [Frontend](#frontend)
   - [Backend](#backend)
   - [Docker Setup](#docker-setup)
@@ -99,6 +100,27 @@ Before you begin, ensure you have met the following requirements:
 
 5. **Database Configuration:**
     - Set up your MongoDB connection in the backend.
+  
+6. **How to use:**
+    - Initially there would be no users in database.
+    - So, one have to create multiple accounts with distinct email address in the very first time.
+    - After creating two or more accounts, you can chat with other users.
+
+
+## Usage Instructions:
+
+- **Initialization:**
+  - When you first launch the application, the database will be devoid of any user accounts.
+  - To commence, you must establish multiple user accounts, each possessing a unique email address.
+  - This initial setup is a one-time process.
+
+- **Creating User Accounts:**
+  - Begin by creating individual user profiles with distinct email addresses.
+  - Ensure that each account is uniquely identified to avoid any validation error.
+
+- **Engaging in Conversations:**
+  - Once you have successfully created two or more user accounts, you can commence meaningful conversations with other users.
+  - This is where the real-time chat functionality comes to life, allowing you to interact seamlessly with other users on the platform.
 
 <!-- ## Project Structure
 
