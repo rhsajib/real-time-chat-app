@@ -100,11 +100,7 @@ Before you begin, ensure you have met the following requirements:
 
 5. **Database Configuration:**
     - Set up your MongoDB connection in the backend.
-  
-6. **How to use:**
-    - Initially there would be no users in database.
-    - So, one have to create multiple accounts with distinct email address in the very first time.
-    - After creating two or more accounts, you can chat with other users.
+
 
 
 ## Usage Instructions:
