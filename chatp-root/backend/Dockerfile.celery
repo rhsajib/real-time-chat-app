@@ -8,10 +8,10 @@ ENV PYTHONUNBUFFERED 1
 WORKDIR /app
 
 # Copy the requirements file for Celery to the container
-COPY requirements.celery.txt .
+COPY requirements.txt .
 
 # Install any needed packages specified in requirements.celery.txt
-RUN pip install --no-cache-dir --upgrade -r requirements.celery.txt
+RUN pip install --no-cache-dir --upgrade -r requirements.txt
 
 # Copy the entire Celery application to the container
 COPY . .
