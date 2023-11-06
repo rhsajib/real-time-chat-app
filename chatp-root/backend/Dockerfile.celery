@@ -14,7 +14,7 @@ COPY requirements.celery.txt .
 RUN pip install --no-cache-dir --upgrade -r requirements.celery.txt
 
 # Copy the entire Celery application to the container
-COPY app/services/worker .
+COPY . .
 
 # Command to run the Celery worker
 CMD ["celery", "-A", "app.services.worker.celery.celery", "worker", "--loglevel=info"]
