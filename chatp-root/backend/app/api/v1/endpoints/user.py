@@ -25,8 +25,11 @@ async def create_user(
         # if i use current user here, it will raise '401 Unauthorized'
 ):
     try:
+        if len(user_data.password1) < 6:
+            raise UserCreationError('password', 'Password length is less than 6')
+        
         if user_data.password1 != user_data.password2:
-            raise UserCreationError("password", "Passwords do not match")
+            raise UserCreationError('password', 'Passwords do not match')
 
         # Create a new user using the User class
         new_user = await user_manager.create_user(user_data)
@@ -47,8 +50,8 @@ async def create_user(
         # result_value = result.get()
         # if result_value:
         # return new_user
-            # return {"message": "Task triggered", "task_id": result.id}
-            # return {"message": "Task triggered", "task_id": result.id, "result": result_value}
+            # return {'message': 'Task triggered', 'task_id': result.id}
+            # return {'message': 'Task triggered', 'task_id': result.id, 'result': result_value}
 
     except UserCreationError as e:
         print(e)
