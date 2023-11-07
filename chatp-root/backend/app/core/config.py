@@ -9,6 +9,7 @@ load_dotenv()
 class CommonSettings(BaseSettings):
     API_V_STR: str = os.environ.get('API_V_STR')
     ORIGINS: list[str] = os.environ.get("ALLOWED_ORIGINS").split(',')
+    API_ORIGIN: str = os.environ.get('API_ORIGIN')
     APP_NAME: str = os.environ.get('APP_NAME')
     DEBUG_MODE: bool = os.environ.get('DEBUG_MODE', False)
 
