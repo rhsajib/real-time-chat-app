@@ -12,7 +12,7 @@ from app import schemas
 
 
 oauth2_scheme = OAuth2PasswordBearer(
-    tokenUrl=f'{settings.API_V1_STR}/login/access-token')
+    tokenUrl=f'{settings.API_V_STR}/login/access-token')
 
 
 # Dependency to create a User instance

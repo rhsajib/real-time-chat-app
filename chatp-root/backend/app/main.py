@@ -14,7 +14,7 @@ from fastapi.routing import APIWebSocketRoute
 
 
 
-API_VERSION = settings.API_V1_STR
+API_VERSION = settings.API_V_STR
 
 
 app = FastAPI()
