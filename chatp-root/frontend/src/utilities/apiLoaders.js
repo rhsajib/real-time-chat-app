@@ -1,6 +1,7 @@
-// user -------------------------------------------------------------
-
 import { addTokenToHeaders } from "./tokenService";
+
+// user -------------------------------------------------------------
+const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
 
 // Reusable function for making asynchronous API requests
 // const fetchWithAuthHeaders = (url, headers) => {
@@ -10,27 +11,27 @@ const fetchWithAuthHeaders = (url, headers = {}) => {
 };
 
 const usersLoader = () =>
-    fetchWithAuthHeaders("http://127.0.0.1:8000/api/v1/user/all");
+    fetchWithAuthHeaders(`${apiBaseUrl}/user/all`);
 
 const userProfileLoader = (userId) =>
-    fetchWithAuthHeaders(`http://127.0.0.1:8000/api/v1/user/info/${userId}`);
+    fetchWithAuthHeaders(`${apiBaseUrl}/user/info/${userId}`);
 
 const myProfileLoader = (userId) =>
-    fetchWithAuthHeaders("http://127.0.0.1:8000/api/v1/user/info/me");
+    fetchWithAuthHeaders(`${apiBaseUrl}/user/info/me`);
 
 const privateChatsLoader = () =>
     fetchWithAuthHeaders(
-        "http://127.0.0.1:8000/api/v1/chat/private/msg-recipients/"
+        `${apiBaseUrl}/chat/private/msg-recipients/`
     );
 
 // chat -------------------------------------------------------------
 
 const chatsLoader = () =>
-    fetchWithAuthHeaders("http://127.0.0.1:8000/api/v1/chat/private/all");
+    fetchWithAuthHeaders(`${apiBaseUrl}/chat/private/all`);
 
 const messageLoader = (chatId) =>
     fetchWithAuthHeaders(
-        `http://127.0.0.1:8000/api/v1/chat/private/info/${chatId}`
+        `${apiBaseUrl}/chat/private/info/${chatId}`
     );
 
 // the following loaders are not directly being used in loader in react router
@@ -39,7 +40,7 @@ const messageLoader = (chatId) =>
 const authUserLoader = async () => {
     try {
         const response = await fetchWithAuthHeaders(
-            "http://127.0.0.1:8000/api/v1/chat/home"
+            `${apiBaseUrl}/chat/home`
         );
         // console.log(response)
         const user = await response.json();
@@ -54,7 +55,7 @@ const authUserLoader = async () => {
 const chatIdLoader = async (userId) => {
     /*
     // Make an HTTP POST request to create a new user
-    fetch("http://127.0.0.1:8000/api/v1/user/create", {
+    fetch(`${apiBaseUrl}/user/create`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -85,7 +86,7 @@ const chatIdLoader = async (userId) => {
 
     try {
         const response = await fetchWithAuthHeaders(
-            `http://127.0.0.1:8000/api/v1/chat/private/recipient/chat-id/${userId}`
+            `${apiBaseUrl}/chat/private/recipient/chat-id/${userId}`
         );
 
         console.log(response);
@@ -105,7 +106,7 @@ const chatIdLoader = async (userId) => {
 // const chatIdLoader = async (userId) => {
 //     try {
 //         const response = await fetchWithAuthHeaders(
-//             `http://127.0.0.1:8000/api/v1/chat/private/recipient/chat-id/${userId}`
+//             `${apiBaseUrl}/chat/private/recipient/chat-id/${userId}`
 //         );
 //         const data = await response.json();
 //           console.log(data.chat_id)
@@ -120,7 +121,7 @@ const newChatIdLoader = async (userId) => {
     console.log('newChatIdLoader', userId)
     try {
         const response = await fetchWithAuthHeaders(
-            `http://127.0.0.1:8000/api/v1/chat/private/recipient/create-chat/${userId}`
+            `${apiBaseUrl}/chat/private/recipient/create-chat/${userId}`
         );
         const data = await response.json();
           console.log(data)
