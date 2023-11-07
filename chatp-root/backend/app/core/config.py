@@ -8,13 +8,9 @@ load_dotenv()
 
 class CommonSettings(BaseSettings):
     API_V1_STR: str = "/api/v1"
-    ORIGINS: list[str] = [
-        'http://localhost',
-        'http://localhost:8080',
-        'http://localhost:5173',
-    ]
+    ORIGINS: list[str] = os.environ.get("ALLOWED_ORIGINS").split(',')
     APP_NAME: str = os.environ.get('APP_NAME')
-    DEBUG_MODE: bool = os.environ.get('DEBUG_MODE')
+    DEBUG_MODE: bool = os.environ.get('DEBUG_MODE', False)
 
 
 class TokenSettings(BaseSettings):
