@@ -1,7 +1,7 @@
 import { addTokenToHeaders } from "./tokenService";
+import { apiBaseUrl } from './config';
 
 // user -------------------------------------------------------------
-const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
 
 // Reusable function for making asynchronous API requests
 // const fetchWithAuthHeaders = (url, headers) => {
