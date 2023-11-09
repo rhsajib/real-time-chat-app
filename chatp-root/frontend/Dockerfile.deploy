@@ -1,0 +1,78 @@
+# # Use an official Node runtime as a parent image
+# FROM node:alpine
+
+# # Set the working directory in the container
+# WORKDIR /app
+
+# # Copy package.json and package-lock.json to the container
+# COPY package*.json .
+
+# # Install project dependencies
+# RUN npm i
+
+# # Copy the entire project to the container
+# COPY . .
+
+# EXPOSE 5173
+
+# # Start the development server with npm run dev
+# CMD [ "npm", "run", "dev"]
+
+
+# FROM node:18-alpine
+
+# WORKDIR /app
+
+# COPY package.json .
+# COPY package-lock.json .
+
+# RUN npm install
+
+# COPY . .
+
+# RUN npm run build
+
+# EXPOSE 8080
+
+# CMD [ "npm", "run", "preview" ]
+
+
+
+
+
+# https://bobbyhadz.com/blog/failed-to-load-config-from-vite-config-js
+# Stage 1: Build
+FROM node:18-alpine as build
+WORKDIR /app
+COPY package.json .
+COPY package-lock.json .
+RUN npm install
+COPY . .
+RUN npm run build
+
+# Stage 2: Run
+FROM node:18-alpine
+WORKDIR /app
+
+COPY package.json .
+COPY vite.config.js .
+COPY --from=build app/dist /app
+
+
+# Add node_modules/.bin to the PATH to make npm binaries available globally
+ENV PATH /app/node_modules/.bin:$PATH
+
+# Install Vite globally
+RUN npm install -g vite
+
+EXPOSE 8080
+CMD ["npm", "run", "preview"]
+
+
+# FROM node:18-alpine
+
+# WORKDIR /app
+# COPY package*.json .
+# RUN npm install
+# COPY . .
+# CMD [ "npm", "run", "dev" ]

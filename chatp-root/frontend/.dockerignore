@@ -1,0 +1,13 @@
+.vscode/
+
+
+# Ignore development and build files
+node_modules
+
+
+
+
+# Ignore OS-specific files
+.DS_Store
+*/**.DS_Store
+Thumbs.db
