@@ -1,7 +1,9 @@
 import { addTokenToHeaders } from "./tokenService";
-import { apiBaseUrl } from './config';
+import { apiBaseUrl, apiVersion } from './configCore';
 
 // user -------------------------------------------------------------
+
+const apiUrl = apiBaseUrl + apiVersion
 
 // Reusable function for making asynchronous API requests
 // const fetchWithAuthHeaders = (url, headers) => {
@@ -11,27 +13,27 @@ const fetchWithAuthHeaders = (url, headers = {}) => {
 };
 
 const usersLoader = () =>
-    fetchWithAuthHeaders(`${apiBaseUrl}/user/all`);
+    fetchWithAuthHeaders(`${apiUrl}/user/all`);
 
 const userProfileLoader = (userId) =>
-    fetchWithAuthHeaders(`${apiBaseUrl}/user/info/${userId}`);
+    fetchWithAuthHeaders(`${apiUrl}/user/info/${userId}`);
 
 const myProfileLoader = (userId) =>
-    fetchWithAuthHeaders(`${apiBaseUrl}/user/info/me`);
+    fetchWithAuthHeaders(`${apiUrl}/user/info/me`);
 
 const privateChatsLoader = () =>
     fetchWithAuthHeaders(
-        `${apiBaseUrl}/chat/private/msg-recipients/`
+        `${apiUrl}/chat/private/msg-recipients/`
     );
 
 // chat -------------------------------------------------------------
 
 const chatsLoader = () =>
-    fetchWithAuthHeaders(`${apiBaseUrl}/chat/private/all`);
+    fetchWithAuthHeaders(`${apiUrl}/chat/private/all`);
 
 const messageLoader = (chatId) =>
     fetchWithAuthHeaders(
-        `${apiBaseUrl}/chat/private/info/${chatId}`
+        `${apiUrl}/chat/private/info/${chatId}`
     );
 
 // the following loaders are not directly being used in loader in react router
@@ -40,11 +42,11 @@ const messageLoader = (chatId) =>
 const authUserLoader = async () => {
     try {
         const response = await fetchWithAuthHeaders(
-            `${apiBaseUrl}/chat/home`
+            `${apiUrl}/chat/home`
         );
         // console.log(response)
         const user = await response.json();
-        console.log("auth user", user);
+        // console.log("auth user", user);
         return user;
     } catch (error) {
         console.error("Error fetching auth user:", error);
@@ -55,7 +57,7 @@ const authUserLoader = async () => {
 const chatIdLoader = async (userId) => {
     /*
     // Make an HTTP POST request to create a new user
-    fetch(`${apiBaseUrl}/user/create`, {
+    fetch(`${apiUrl}/user/create`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -86,7 +88,7 @@ const chatIdLoader = async (userId) => {
 
     try {
         const response = await fetchWithAuthHeaders(
-            `${apiBaseUrl}/chat/private/recipient/chat-id/${userId}`
+            `${apiUrl}/chat/private/recipient/chat-id/${userId}`
         );
 
         console.log(response);
@@ -106,7 +108,7 @@ const chatIdLoader = async (userId) => {
 // const chatIdLoader = async (userId) => {
 //     try {
 //         const response = await fetchWithAuthHeaders(
-//             `${apiBaseUrl}/chat/private/recipient/chat-id/${userId}`
+//             `${apiUrl}/chat/private/recipient/chat-id/${userId}`
 //         );
 //         const data = await response.json();
 //           console.log(data.chat_id)
@@ -121,7 +123,7 @@ const newChatIdLoader = async (userId) => {
     console.log('newChatIdLoader', userId)
     try {
         const response = await fetchWithAuthHeaders(
-            `${apiBaseUrl}/chat/private/recipient/create-chat/${userId}`
+            `${apiUrl}/chat/private/recipient/create-chat/${userId}`
         );
         const data = await response.json();
           console.log(data)
