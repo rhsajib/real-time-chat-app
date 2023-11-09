@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Login from "../Login/Login";
-import Signup from "../SignUp/SignUp";
+import Signup from "../Signup/Signup";
 import LandingPage from "../LandingPge/LandingPage";
 import { motion } from "framer-motion";
 import { useLocation } from "react-router-dom";

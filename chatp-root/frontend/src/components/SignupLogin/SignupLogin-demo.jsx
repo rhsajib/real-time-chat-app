@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Login from "../Login/Login";
-import Signup from "../SignUp/SignUp";
+import Signup from "../Signup/Signup";
 
 const SignupLogin = () => {
   const [currentPage, setCurrentPage] = useState("landing");
