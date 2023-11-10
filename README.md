@@ -16,12 +16,13 @@ This FARM (FastAPI, React, and MongoDB) project is a full-stack web application 
     - [FastAPI Docs](#fastapi-docs)
     - [Private Chat](#private-chat)
   - [Features](#features)
-  - [Prerequisites](#prerequisites)
-  - [Getting Started](#getting-started)
-  - [Usage Instructions:](#usage-instructions)
   - [Frontend](#frontend)
   - [Backend](#backend)
+  - [Getting Started](#getting-started)
+    - [Prerequisites](#prerequisites)
+    - [Explore ChatP](#explore-chatp)
   - [Docker Setup](#docker-setup)
+  - [Usage Instructions:](#usage-instructions)
   - [License](#license)
 
 ## App Reality
@@ -58,76 +59,7 @@ This FARM (FastAPI, React, and MongoDB) project is a full-stack web application 
 -   **Separate Collections**: Distinct storage for private and group chat.
 -   **Docker Setup**: Containerized development environment.
 
-## Prerequisites
 
-Before you begin, ensure you have met the following requirements:
-
--   Node.js and npm installed for React (+ vite) development
--   Python and pip installed for FastAPI development
--   MongoDB server up and running
--   Clone or download this repository to your local machine
-
-## Getting Started
-
-1. **Backend Setup:**
-
-    ```bash
-    $ cd chatp-root/backend
-    $ pip install -r requirements.txt
-    $ uvicorn app.main:app --reload
-    ```
-
-    Your FastAPI server should be running on `http://localhost:8000`.
-
-2. **Frontend Setup:**
-
-    ```bash
-    $ cd chatp-root/frontend
-    $ npm install
-    $ npm run dev
-    ```
-
-    Your React development server should be running on `http://localhost:5173`.
-
-3. **Celery Setup**
-    ```bash
-    $ cd chatp-root/backend
-    $ celery -A app.services.worker.celery.celery worker --loglevel=info
-    ```
-4. **Redis Configuration:**
-
-    - Set up your Redis in the backend
-
-5. **Database Configuration:**
-    - Set up your MongoDB connection in the backend.
-
-
-
-## Usage Instructions:
-
-- **Initialization:**
-  - When you first launch the application, the database will be devoid of any user accounts.
-  - To commence, you must establish multiple user accounts, each possessing a unique email address.
-  - This initial setup is a one-time process.
-
-- **Creating User Accounts:**
-  - Begin by creating individual user profiles with distinct email addresses.
-  - Ensure that each account is uniquely identified to avoid any validation error.
-
-- **Engaging in Conversations:**
-  - Once you have successfully created two or more user accounts, you can commence meaningful conversations with other users.
-  - This is where the real-time chat functionality comes to life, allowing you to interact seamlessly with other users on the platform.
-
-<!-- ## Project Structure
-
-- **backend:** Contains the FastAPI backend code.
-- **frontend:** Contains the React frontend code.
-- **scripts:** Helpful scripts for development or deployment.
-- **docs:** Documentation for your project. -->
-
-<!-- ## API Endpoints
-
-- List and describe the available API endpoints here. -->
 
 ## Frontend
 
@@ -153,6 +85,126 @@ Our backend, powered by FastAPI, is the backbone of the Real Time Chat Applicati
 
 Our backend offers robust user authentication and authorization, both on the client and server sides. Real-time chat functionality is seamlessly integrated with the security features. The development environment is optimized for speed and efficiency, using Uvicorn to serve the FastAPI application.
 
+
+
+## Getting Started
+### Prerequisites
+Before you begin, ensure you have met the following requirements:
+
+-   Node.js and npm installed for React (+ vite) development
+-   Python and pip installed for FastAPI development
+-   MongoDB server up and running
+-   Clone or download this repository to your local machine
+  
+### Explore ChatP
+
+1. **Clone or Download Repository**
+
+    - Use https://github.com/rhsajib/real-time-chat-app.git
+
+
+2. **Backend Setup:**
+
+    ```bash
+    # Environment variable setup
+
+    $ cd real-time-chat-app/chatp-root/backend/app
+
+    - follow the steps written in .env.demo file
+    ```
+
+    ```bash
+    $ cd real-time-chat-app/chatp-root/backend
+    $ pip install -r requirements.txt
+    $ uvicorn app.main:app --reload
+    ```
+
+    Your FastAPI server should be running on `http://localhost:8000`.
+
+3. **Frontend Setup:**
+   
+     ```bash
+    # Environment variable setup
+
+    $ cd real-time-chat-app/chatp-root/frontend
+
+    - follow the steps written in .env.demo file
+    ```
+
+    ```bash
+    $ cd real-time-chat-app/chatp-root/frontend
+    $ npm install
+    $ npm run dev
+    ```
+
+    Your React development server should be running on `http://localhost:8080`.
+
+4. **Celery Setup**
+    ```bash
+    $ cd real-time-chat-app/chatp-root/backend
+    $ celery -A app.services.worker.celery.celery worker --loglevel=info
+    ```
+5. **Redis Configuration:**
+
+    - Set up your Redis in the backend
+
+6. **Database Configuration:**
+    - Set up your MongoDB connection in the backend.
+
+
+
+## Docker Setup
+
+-  **Docker Compose:**
+
+    `docker-compose.yml` for setting up the development environment with both backend and frontend containers.
+
+    First setup environment variavles.
+
+    - Follow Backend Setup and Frontend Setup in [Explore ChatP](#explore-chatp) section.
+
+    
+    
+    Now use the following command to start the containers.
+
+    ```bash
+    $ cd real-time-chat-app/chatp-root
+    $ docker-compose up --build
+    ```
+
+    The backend should be accessible at `http://localhost:8000`, and the frontend at `http://localhost:8080`.
+
+
+
+## Usage Instructions:
+
+- **Initialization:**
+  - When you first launch the application, the database will be devoid of any user accounts.
+  - To commence, you must establish multiple user accounts, each possessing a unique email address.
+  - This initial setup is a one-time process.
+
+- **Creating User Accounts:**
+  - Begin by creating individual user profiles with distinct email addresses.
+  - Ensure that each account is uniquely identified to avoid any validation error.
+
+- **Engaging in Conversations:**
+  - Once you have successfully created two or more user accounts, you can commence meaningful conversations with other users. 
+  - You will get all user in `Users` from siderbar.
+  - This is where the real-time chat functionality comes to life, allowing you to interact seamlessly with other users on the platform.
+
+<!-- ## Project Structure
+
+- **backend:** Contains the FastAPI backend code.
+- **frontend:** Contains the React frontend code.
+- **scripts:** Helpful scripts for development or deployment.
+- **docs:** Documentation for your project. -->
+
+<!-- ## API Endpoints
+
+- List and describe the available API endpoints here. -->
+
+
+
 <!-- ## Database
 
 - Explain how to set up and configure your MongoDB database.
@@ -168,25 +220,7 @@ Our backend offers robust user authentication and authorization, both on the cli
 - Explain how JWT authentication is implemented for secure user access.
 - Provide details on user registration and login processes. -->
 
-## Docker Setup
 
--   **Docker Files:**
-
-    -   `Dockerfile` in the `backend` directory for the FastAPI backend.
-    -   `Dockerfile` in the `frontend` directory for the React frontend.
-
--   **Docker Compose:**
-
-    -   `docker-compose.yml` for setting up the development environment with both backend and frontend containers.
-
-    To start the containers, use:
-
-    ```bash
-    $ cd chatp-root
-    $ docker-compose up --build
-    ```
-
-    The backend should be accessible at `http://localhost:8000`, and the frontend at `http://localhost:5173`.
 
 ## License
 
