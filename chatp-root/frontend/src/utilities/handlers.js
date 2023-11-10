@@ -1,4 +1,7 @@
 import axios from "axios";
+import { apiBaseUrl, apiVersion } from './configCore';
+
+const apiBase = apiBaseUrl + apiVersion
 
 const handleSignupData = async (data) => {
     /*
@@ -60,7 +63,7 @@ const handleSignupData = async (data) => {
     try {
         // here, data = {username: 'sajib', email: 'rhsajib15@gmail.com', password1: '11', password2: '11'}
         // console.log(data);
-        const apiUrl = "http://127.0.0.1:8000/api/v1/user/create";
+        const apiUrl = `${apiBase}/user/create`;
 
         const response = await axios.post(apiUrl, data, {
             headers: {
@@ -84,7 +87,7 @@ const handleLoginData = async (data) => {
     try {
         // here, data = {email: 'rhsajib15@gmail.com', password: '11'}
         console.log(data);
-        const apiUrl = "http://127.0.0.1:8000/api/v1/auth/login/access-token";
+        const apiUrl = `${apiBase}/auth/login/access-token`;
 
         const response = await axios.post(apiUrl, data, {
             headers: {

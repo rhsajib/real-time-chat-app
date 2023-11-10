@@ -3,7 +3,7 @@ import { apiBaseUrl, apiVersion } from './configCore';
 
 // user -------------------------------------------------------------
 
-const apiUrl = apiBaseUrl + apiVersion
+const apiBase = apiBaseUrl + apiVersion
 
 // Reusable function for making asynchronous API requests
 // const fetchWithAuthHeaders = (url, headers) => {
@@ -13,27 +13,27 @@ const fetchWithAuthHeaders = (url, headers = {}) => {
 };
 
 const usersLoader = () =>
-    fetchWithAuthHeaders(`${apiUrl}/user/all`);
+    fetchWithAuthHeaders(`${apiBase}/user/all`);
 
 const userProfileLoader = (userId) =>
-    fetchWithAuthHeaders(`${apiUrl}/user/info/${userId}`);
+    fetchWithAuthHeaders(`${apiBase}/user/info/${userId}`);
 
 const myProfileLoader = (userId) =>
-    fetchWithAuthHeaders(`${apiUrl}/user/info/me`);
+    fetchWithAuthHeaders(`${apiBase}/user/info/me`);
 
 const privateChatsLoader = () =>
     fetchWithAuthHeaders(
-        `${apiUrl}/chat/private/msg-recipients/`
+        `${apiBase}/chat/private/msg-recipients/`
     );
 
 // chat -------------------------------------------------------------
 
 const chatsLoader = () =>
-    fetchWithAuthHeaders(`${apiUrl}/chat/private/all`);
+    fetchWithAuthHeaders(`${apiBase}/chat/private/all`);
 
 const messageLoader = (chatId) =>
     fetchWithAuthHeaders(
-        `${apiUrl}/chat/private/info/${chatId}`
+        `${apiBase}/chat/private/info/${chatId}`
     );
 
 // the following loaders are not directly being used in loader in react router
@@ -42,7 +42,7 @@ const messageLoader = (chatId) =>
 const authUserLoader = async () => {
     try {
         const response = await fetchWithAuthHeaders(
-            `${apiUrl}/chat/home`
+            `${apiBase}/chat/home`
         );
         // console.log(response)
         const user = await response.json();
@@ -57,7 +57,7 @@ const authUserLoader = async () => {
 const chatIdLoader = async (userId) => {
     /*
     // Make an HTTP POST request to create a new user
-    fetch(`${apiUrl}/user/create`, {
+    fetch(`${apiBase}/user/create`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -88,7 +88,7 @@ const chatIdLoader = async (userId) => {
 
     try {
         const response = await fetchWithAuthHeaders(
-            `${apiUrl}/chat/private/recipient/chat-id/${userId}`
+            `${apiBase}/chat/private/recipient/chat-id/${userId}`
         );
 
         console.log(response);
@@ -108,7 +108,7 @@ const chatIdLoader = async (userId) => {
 // const chatIdLoader = async (userId) => {
 //     try {
 //         const response = await fetchWithAuthHeaders(
-//             `${apiUrl}/chat/private/recipient/chat-id/${userId}`
+//             `${apiBase}/chat/private/recipient/chat-id/${userId}`
 //         );
 //         const data = await response.json();
 //           console.log(data.chat_id)
@@ -123,7 +123,7 @@ const newChatIdLoader = async (userId) => {
     console.log('newChatIdLoader', userId)
     try {
         const response = await fetchWithAuthHeaders(
-            `${apiUrl}/chat/private/recipient/create-chat/${userId}`
+            `${apiBase}/chat/private/recipient/create-chat/${userId}`
         );
         const data = await response.json();
           console.log(data)
