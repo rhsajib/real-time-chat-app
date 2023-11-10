@@ -12,8 +12,7 @@ from app.crud.user import User
 
 
 router = APIRouter()
-
-REACT_LOGIN_URL = "http://localhost:5173"
+FRONTEND_LOGIN_URL = settings.FRONTEND_LOGIN_URL
 
 @router.post('/login/access-token', response_model=schemas.Token)
 async def login_access_token(
@@ -80,8 +79,8 @@ async def activate_account(
 
     # print('active_user', active_user)
     # Provide the URL to redirect to the login page
-    redirect_url = f"{REACT_LOGIN_URL}/?activated=true"  # Adjust the path as needed
-    #  redirect_url = f"{REACT_LOGIN_URL}/login?activated=true"
+    redirect_url = f"{FRONTEND_LOGIN_URL}/?activated=true"  # Adjust the path as needed
+    #  redirect_url = f"{FRONTEND_LOGIN_URL}/login?activated=true"
 
     # process 1
     # ref https://stackoverflow.com/questions/70656412/how-to-redirect-to-dynamic-url-inside-a-fastapi-endpoint
